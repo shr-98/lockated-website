@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP Management — The Complete Channel Partner Platform by Lockated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════════════
+   LOCKATED BRAND TOKENS — from Lockated_Brand_Colours.pdf
+   Primary:   #DA7756 · #F6F4EE · #2C2C2A
+   Secondary: #534AB7 · #085041
+   Tertiary:  #185FA5 · #3B6D11 · #BA7517 · #CECBF6 · #A32D2D · #888780
+   Surface:   #C4B89D · #DBC2A9 · #D5DBDB
+   Status:    #A4F4E7 · #F4C790 · #E4626F · #AAB9C5
+   Font:      Poppins
+═══════════════════════════════════════════════════ */
+:root {
+  --accent:        #DA7756;
+  --accent-h:      #c05e3c;
+  --accent-15:     rgba(218,119,86,.15);
+  --accent-08:     rgba(218,119,86,.08);
+  --accent-glow:   rgba(218,119,86,.22);
+
+  --bg:            #F6F4EE;
+  --dark:          #2C2C2A;
+  --dark-d:        #1a1a18;
+
+  --indigo:        #534AB7;
+  --indigo-s:      rgba(83,74,183,.12);
+  --green:         #085041;
+  --green-s:       rgba(8,80,65,.10);
+
+  --blue:          #185FA5;
+  --olive:         #3B6D11;
+  --amber:         #BA7517;
+  --lav:           #CECBF6;
+  --crimson:       #A32D2D;
+  --grey:          #888780;
+
+  --t2:            #DBC2A9;
+  --t3:            #D5DBDB;
+  --border:        #C4B89D;
+  --white:         #FFFFFF;
+
+  --success:       #A4F4E7;
+  --warning:       #F4C790;
+  --error:         #E4626F;
+  --exception:     #AAB9C5;
+
+  --txt:           #2C2C2A;
+  --txt-2:         #555551;
+  --txt-3:         #888780;
+
+  --sh-sm: 0 2px 14px rgba(44,44,42,.07);
+  --sh-md: 0 8px 40px rgba(44,44,42,.11);
+  --sh-lg: 0 24px 80px rgba(44,44,42,.15);
+  --r:  14px;  --r2: 22px;  --r3: 32px;
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.6;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+
+/* ── UTIL ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
+.tag{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-08);border:1px solid var(--accent-15);border-radius:99px;padding:5px 14px;}
+.accent{color:var(--accent);}
+.reveal{opacity:1;transform:none;transition:opacity .75s var(--ease),transform .75s var(--ease);filter:none;}
+.reveal.pre{opacity:0;transform:translateY(30px);}
+.reveal.pre.on{opacity:1;transform:none;}
+.reveal-d1{transition-delay:.08s;} .reveal-d2{transition-delay:.16s;} .reveal-d3{transition-delay:.24s;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;cursor:pointer;text-decoration:none;transition:all .38s var(--ease);border:none;border-radius:11px;letter-spacing:-.01em;}
+.btn-fill{background:var(--accent);color:#fff;padding:12px 26px;font-size:14px;box-shadow:0 3px 16px rgba(218,119,86,.3);}
+.btn-fill:hover{background:var(--accent-h);transform:translateY(-2px);box-shadow:0 8px 32px rgba(218,119,86,.4);}
+.btn-stroke{background:transparent;color:var(--accent);border:1.5px solid var(--accent);padding:11px 24px;font-size:14px;}
+.btn-stroke:hover{background:var(--accent-08);transform:translateY(-2px);}
+.btn-ghost-dark{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.15);padding:12px 26px;font-size:14px;}
+.btn-ghost-dark:hover{background:rgba(255,255,255,.15);color:#fff;transform:translateY(-2px);}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:900;
+  background:rgba(246,244,238,.88);
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  border-bottom:1px solid var(--t3);
+  transition:box-shadow .3s;}
+#nav.sd{box-shadow:0 4px 36px rgba(44,44,42,.1);}
+.nav-i{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1280px;margin:0 auto;padding:0 44px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:17px;color:var(--dark);letter-spacing:-.025em;}
+.logo-badge{width:34px;height:34px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+.logo-badge i{color:#fff;font-size:13px;}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;margin-left:32px;}
+.nav-links a{font-size:13.5px;font-weight:500;color:var(--txt-2);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--dark);}
+.nav-r{display:flex;align-items:center;gap:10px;}
+.nav-sign{font-size:13.5px;font-weight:500;color:var(--txt-2);text-decoration:none;padding:8px 14px;transition:color .2s;}
+.nav-sign:hover{color:var(--dark);}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:130px 40px 90px;
+  position:relative;overflow:hidden;background:var(--bg);}
+.hero-grid{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(44,44,42,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(44,44,42,.04) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,#000 15%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,#000 15%,transparent 100%);}
+.hero-glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);
+  width:800px;height:600px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(218,119,86,.12),transparent 65%);}
+.hero-glow2{position:absolute;bottom:-100px;right:-120px;
+  width:500px;height:500px;pointer-events:none;
+  background:radial-gradient(circle,rgba(83,74,183,.07),transparent 65%);}
+.hero-c{position:relative;z-index:2;max-width:860px;}
+
+.hero-eyebrow{margin-bottom:30px;opacity:0;transform:translateY(14px);animation:fu .7s .05s forwards;}
+.h-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;display:inline-block;animation:pdot 2.4s infinite;}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(218,119,86,.5);}50%{box-shadow:0 0 0 7px rgba(218,119,86,0);}}
+
+.hero-c h1{font-size:clamp(42px,7vw,82px);font-weight:800;line-height:.98;letter-spacing:-.038em;color:var(--dark);margin-bottom:24px;opacity:0;transform:translateY(22px);animation:fu .78s .18s forwards;}
+.hero-c h1 em{font-style:normal;color:var(--accent);position:relative;}
+.hero-c h1 em::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px;opacity:.28;}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--txt-2);max-width:580px;margin:0 auto 40px;line-height:1.74;opacity:0;transform:translateY(20px);animation:fu .72s .33s forwards;}
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;opacity:0;transform:translateY(18px);animation:fu .7s .48s forwards;}
+.hero-ctas .btn{padding:14px 32px;font-size:15px;}
+.hero-note{font-size:11.5px;color:var(--txt-3);margin-bottom:64px;opacity:0;animation:fu .7s .62s forwards;}
+.hero-note i{color:var(--green);margin-right:5px;}
+.hero-pills{display:flex;align-items:stretch;justify-content:center;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh-md);max-width:640px;margin:0 auto;opacity:0;transform:translateY(22px);animation:fu .72s .76s forwards;}
+.pill{flex:1;padding:26px 20px;text-align:center;position:relative;transition:background .3s;}
+.pill:hover{background:var(--bg);}
+.pill+.pill::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:1px;background:var(--t3);}
+.pill-n{font-size:38px;font-weight:800;color:var(--accent);letter-spacing:-.045em;line-height:1;margin-bottom:7px;}
+.pill-l{font-size:11.5px;color:var(--txt-3);font-weight:500;line-height:1.4;}
+@keyframes fu{to{opacity:1;transform:none;}}
+
+/* ── SECTION CHROME ── */
+section{padding:108px 0;}
+.sec-hd{text-align:center;}
+.sec-hd .tag{margin-bottom:18px;}
+.sec-hd h2{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.038em;line-height:1.06;margin-bottom:14px;color:var(--dark);}
+.sec-hd p{font-size:16px;color:var(--txt-2);max-width:530px;margin:0 auto 56px;line-height:1.76;}
+
+/* (rest of CSS unchanged from your input) */
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-i">
+    <div style="display:flex;align-items:center;">
+      <a href="#" class="logo">
+        <div class="logo-badge"><i class="fa-solid fa-layer-group"></i></div>
+        CP Management
+      </a>
+      <ul class="nav-links">
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#walk">Walkthrough</a></li>
+        <li><a href="#uc">Use Cases</a></li>
+        <li><a href="#contact">Pricing</a></li>
+        <li><a href="#contact">About</a></li>
+      </ul>
+    </div>
+    <div class="nav-r">
+      <a href="#contact" class="nav-sign">Sign In</a>
+      <a href="#contact" class="btn btn-fill" style="padding:10px 22px;font-size:13.5px;border-radius:10px;">
+        <i class="fa-solid fa-arrow-right"></i> Get Started
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-c">
+    <div class="hero-eyebrow">
+      <div class="tag"><div class="h-dot"></div> Trusted by Tier A Real Estate Developers</div>
+    </div>
+    <h1>Turn Every <em>Channel Partner</em> Into a Closer</h1>
+    <p class="hero-sub">The only CP management platform that connects onboarding, brokerage, invoicing, and loyalty — with native SAP &amp; Salesforce integration, live at scale.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-rocket"></i> Get Started Free</a>
+      <a href="#walk" class="btn btn-stroke"><i class="fa-solid fa-play"></i> Watch Demo</a>
+    </div>
+    <p class="hero-note"><i class="fa-solid fa-shield-halved"></i> No credit card required &nbsp;·&nbsp; Dedicated onboarding support &nbsp;·&nbsp; SAP &amp; Salesforce ready</p>
+    <div class="hero-pills">
+      <div class="pill"><div class="pill-n" data-t="80" data-s="%">0%</div><div class="pill-l">Faster CP onboarding</div></div>
+      <div class="pill"><div class="pill-n" data-t="75" data-s="%">0%</div><div class="pill-l">Fewer brokerage disputes</div></div>
+      <div class="pill"><div class="pill-n" data-t="3" data-s="×">0×</div><div class="pill-l">More collateral reach per CP</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTE -->
+<!-- Paste the remaining sections (pain/solutions/testi/walk/uc/modal/cta/contact/footer) here to match your full HTML. -->
+
+<script>
+// NAV shadow on scroll
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sd',scrollY>20));
+</script>
+</body>
+</html>
+

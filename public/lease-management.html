@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockated Lease Management — The Only Enterprise Lease Platform Built for India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root {
+  --primary: #DA7756;
+  --primary-15: rgba(218,119,86,0.15);
+  --primary-8: rgba(218,119,86,0.08);
+  --cream: #F6F4EE;
+  --dark: #2C2C2C;
+  --olive: #798C5E;
+  --olive-15: rgba(121,140,94,0.15);
+  --lavender: #CECBF6;
+  --sage: #9EC8BA;
+  --border: #C4B89D;
+  --subtle: #D5DBDB;
+  --muted: #D3D1C7;
+  --warning: #EDC488;
+  --info: #6B9BCC;
+  --success: #89F7E7;
+  --font: 'Poppins', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--cream);color:var(--dark);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* GRAIN OVERLAY */
+body::before{content:'';position:fixed;inset:0;background:none;pointer-events:none;z-index:9999;opacity:0;}
+
+/* ── NAVBAR ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;background:rgba(246,244,238,0.95);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid rgba(196,184,157,0.3);transition:all 0.3s ease;}
+nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,44,0.07);}
+.nav-left{display:flex;align-items:center;gap:48px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-mark{width:36px;height:36px;background:var(--dark);border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.nav-logo-mark::after{content:'';position:absolute;inset:3px;background:var(--primary);border-radius:5px;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+.nav-logo-text{font-size:18px;font-weight:700;color:var(--dark);letter-spacing:-0.3px;}
+.nav-logo-text span{color:var(--primary);}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+.nav-links a{font-size:13.5px;font-weight:500;color:var(--dark);text-decoration:none;opacity:0.7;transition:opacity 0.2s;position:relative;}
+.nav-links a:hover{opacity:1;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1.5px;background:var(--primary);transition:width 0.25s;}
+.nav-links a:hover::after{width:100%;}
+.nav-ctas{display:flex;align-items:center;gap:10px;}
+.btn-ghost{font-family:var(--font);font-size:13.5px;font-weight:500;color:var(--dark);background:none;border:1.5px solid rgba(196,184,157,0.6);cursor:pointer;padding:8px 18px;border-radius:8px;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-ghost:hover{border-color:rgba(196,184,157,1);transform:translateY(-1px);}
+.btn-primary{font-family:var(--font);font-size:13.5px;font-weight:600;color:#fff;background:var(--primary);border:none;cursor:pointer;padding:10px 22px;border-radius:9px;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 30px rgba(218,119,86,0.25);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 34px rgba(218,119,86,0.3);}
+
+/* ── HERO ── */
+.hero{padding:140px 48px 96px;max-width:1300px;margin:0 auto;position:relative;}
+.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:64px;align-items:center;}
+.hero h1{font-size:56px;line-height:1.06;letter-spacing:-1.2px;margin-bottom:18px;}
+.hero h1 .accent{color:var(--primary);}
+.hero p{font-size:17px;line-height:1.55;opacity:0.78;max-width:560px;}
+.hero-cta-row{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;}
+.hero-badges{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+.badge{font-size:12px;padding:8px 10px;border:1px solid rgba(196,184,157,0.45);border-radius:999px;display:inline-flex;align-items:center;gap:6px;background:rgba(246,244,238,0.7);}
+.badge-dot{width:8px;height:8px;border-radius:999px;background:var(--olive);}
+.hero-visual{position:relative;aspect-ratio:1/1;background:radial-gradient(circle at 30% 30%, rgba(218,119,86,0.18), transparent 55%),radial-gradient(circle at 70% 80%, rgba(121,140,94,0.2), transparent 55%);border:1px solid rgba(196,184,157,0.45);border-radius:28px;overflow:hidden;}
+.hero-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg, rgba(246,244,238,0.7), rgba(246,244,238,0.2));mix-blend-mode:overlay;}
+.hero-card{position:absolute;left:18px;bottom:18px;background:rgba(246,244,238,0.97);border:1px solid rgba(196,184,157,0.55);border-radius:18px;padding:18px 18px;min-width:260px;backdrop-filter:none;-webkit-backdrop-filter:none;}
+.hero-card h4{font-size:13px;letter-spacing:0.2px;opacity:0.78;margin-bottom:10px;}
+.hero-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.metric{background:rgba(218,119,86,0.08);border:1px solid rgba(218,119,86,0.15);border-radius:14px;padding:12px;}
+.metric .num{font-weight:800;font-size:20px;}
+.metric .lbl{font-size:12px;opacity:0.7;margin-top:2px;}
+.hero-countdown{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap;}
+.count{border:1px dashed rgba(196,184,157,0.7);border-radius:14px;padding:10px 12px;min-width:110px;background:rgba(246,244,238,0.65);}
+.count .num{font-size:20px;font-weight:800;}
+.count .lbl{font-size:12px;opacity:0.7;}
+
+/* ── SECTION BASE ── */
+section{scroll-margin-top:88px;}
+.section{padding:96px 48px;max-width:1300px;margin:0 auto;}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px;}
+.section-title h2{font-size:38px;letter-spacing:-0.7px;line-height:1.12;}
+.section-title p{max-width:520px;opacity:0.78;line-height:1.55;}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.7s ease, transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);filter:none;}
+
+/* ── PAIN / WHY ── */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.pain-card{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.9);backdrop-filter:none;-webkit-backdrop-filter:none;position:relative;overflow:hidden;}
+.pain-card::after{content:'';position:absolute;inset:-60px;background:radial-gradient(circle at 20% 20%, rgba(218,119,86,0.16), transparent 55%);opacity:0.9;}
+.pain-card > *{position:relative;}
+.pain-icon{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(121,140,94,0.14);border:1px solid rgba(121,140,94,0.2);margin-bottom:14px;}
+.pain-card h3{font-size:18px;letter-spacing:-0.2px;margin-bottom:8px;}
+.pain-card p{font-size:13.5px;opacity:0.78;line-height:1.55;}
+
+/* ── FEATURES ── */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.feature{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.9);backdrop-filter:none;-webkit-backdrop-filter:none;}
+.feature h3{font-size:18px;margin-bottom:8px;}
+.feature p{font-size:13.5px;opacity:0.78;line-height:1.55;}
+.feature .tag{display:inline-flex;font-size:11px;padding:6px 10px;border-radius:999px;background:rgba(218,119,86,0.08);border:1px solid rgba(218,119,86,0.18);margin-bottom:12px;}
+
+/* ── USP / ROLES ── */
+.role-switch{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.role-btn{font-family:var(--font);font-size:13px;padding:10px 14px;border-radius:999px;border:1.5px solid rgba(196,184,157,0.65);background:rgba(246,244,238,0.7);cursor:pointer;opacity:0.78;transition:all 0.2s;}
+.role-btn.active{border-color:rgba(218,119,86,0.8);background:rgba(218,119,86,0.08);opacity:1;}
+.usp-layout{display:grid;grid-template-columns:0.9fr 1.1fr;gap:18px;align-items:start;}
+.usp-tabs{display:flex;flex-direction:column;gap:10px;}
+.usp-tab{border:1px solid rgba(196,184,157,0.45);border-radius:18px;padding:16px;background:rgba(246,244,238,0.8);cursor:pointer;transition:all 0.2s;}
+.usp-tab.active{border-color:rgba(218,119,86,0.55);background:rgba(218,119,86,0.06);}
+.usp-tab h4{font-size:15px;margin-bottom:5px;}
+.usp-tab p{font-size:12.8px;opacity:0.78;line-height:1.5;}
+.usp-panels{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.8);min-height:260px;}
+.usp-panel{display:none;}
+.usp-panel.active{display:block;}
+.usp-panel h3{font-size:20px;letter-spacing:-0.2px;margin-bottom:10px;}
+.usp-panel ul{list-style:none;display:grid;gap:10px;margin-top:14px;}
+.usp-panel li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.55;opacity:0.82;}
+.check{width:18px;height:18px;border-radius:6px;background:rgba(121,140,94,0.16);border:1px solid rgba(121,140,94,0.25);flex:0 0 auto;margin-top:2px;}
+
+/* ── WALKTHROUGH ── */
+.walkthrough{display:grid;grid-template-columns:0.85fr 1.15fr;gap:18px;align-items:start;}
+.wt-tabs{display:flex;flex-direction:column;gap:10px;}
+.wt-tab{border:1px solid rgba(196,184,157,0.45);border-radius:18px;padding:14px 16px;background:rgba(246,244,238,0.8);cursor:pointer;transition:all 0.2s;}
+.wt-tab.active{border-color:rgba(218,119,86,0.55);background:rgba(218,119,86,0.06);}
+.wt-tab h4{font-size:14.5px;margin-bottom:4px;}
+.wt-tab p{font-size:12.5px;opacity:0.78;line-height:1.5;}
+.wt-panels{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.8);min-height:300px;}
+.wt-panel{display:none;}
+.wt-panel.active{display:block;}
+.wt-panel h3{font-size:20px;margin-bottom:10px;}
+.wt-steps{display:grid;gap:10px;margin-top:14px;}
+.step{border:1px solid rgba(196,184,157,0.35);border-radius:16px;padding:14px;background:rgba(246,244,238,0.65);}
+.step .k{font-size:11.5px;letter-spacing:0.6px;text-transform:uppercase;opacity:0.65;}
+.step .t{font-size:14px;margin-top:4px;font-weight:600;}
+.step .d{font-size:12.8px;opacity:0.78;line-height:1.5;margin-top:4px;}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:18px;}
+.team-tabs{display:flex;flex-direction:column;gap:10px;}
+.team-tab{border:1px solid rgba(196,184,157,0.45);border-radius:18px;padding:14px 16px;background:rgba(246,244,238,0.8);cursor:pointer;transition:all 0.2s;}
+.team-tab.active{border-color:rgba(218,119,86,0.55);background:rgba(218,119,86,0.06);}
+.team-panels{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.8);min-height:280px;}
+.team-panel{display:none;}
+.team-panel.active{display:block;}
+.team-panel h3{font-size:20px;margin-bottom:10px;}
+.roles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;}
+.role{border:1px solid rgba(196,184,157,0.35);border-radius:16px;padding:14px;background:rgba(246,244,238,0.65);}
+.role .t{font-size:14px;font-weight:700;margin-bottom:6px;}
+.role .d{font-size:12.8px;opacity:0.78;line-height:1.5;}
+
+/* ── TESTIMONIALS ── */
+.testimonials{border:1px solid rgba(196,184,157,0.45);border-radius:28px;padding:28px;background:rgba(246,244,238,0.82);position:relative;overflow:hidden;}
+.quote{font-size:18px;line-height:1.6;letter-spacing:-0.1px;opacity:0.92;}
+.quote-author{margin-top:16px;font-size:13px;opacity:0.7;}
+.dots{display:flex;gap:8px;margin-top:18px;}
+.dot{width:8px;height:8px;border-radius:999px;border:1px solid rgba(196,184,157,0.8);background:transparent;cursor:pointer;}
+.dot.active{background:var(--primary);border-color:rgba(218,119,86,0.9);}
+
+/* ── USE CASES ── */
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.uc-card{border:1px solid rgba(196,184,157,0.45);border-radius:22px;padding:22px;background:rgba(246,244,238,0.8);cursor:pointer;transition:transform 0.2s, box-shadow 0.2s;}
+.uc-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(44,44,44,0.08);}
+.uc-card h3{font-size:18px;margin-bottom:8px;}
+.uc-card p{font-size:13.5px;opacity:0.78;line-height:1.55;}
+.uc-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(44,44,44,0.45);z-index:2000;padding:24px;}
+.uc-modal.open{display:flex;}
+.uc-modal-card{max-width:860px;width:100%;background:rgba(246,244,238,0.98);border:1px solid rgba(196,184,157,0.6);border-radius:26px;padding:26px;position:relative;}
+.uc-modal-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:12px;border:1px solid rgba(196,184,157,0.55);background:rgba(246,244,238,0.9);cursor:pointer;}
+.uc-modal-card h3{font-size:22px;margin-bottom:10px;}
+.uc-modal-card p{font-size:13.5px;opacity:0.78;line-height:1.6;}
+.uc-modal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+.uc-p{border:1px solid rgba(196,184,157,0.35);border-radius:16px;padding:14px;background:rgba(246,244,238,0.7);}
+.uc-p .t{font-size:12px;letter-spacing:0.6px;text-transform:uppercase;opacity:0.65;}
+.uc-p .d{font-size:13px;margin-top:6px;line-height:1.55;opacity:0.82;}
+
+/* ── CONTACT ── */
+.contact-card{border:1px solid rgba(196,184,157,0.45);border-radius:28px;padding:28px;background:rgba(246,244,238,0.82);display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
+.contact-card h3{font-size:22px;margin-bottom:10px;}
+.contact-card p{font-size:13.5px;opacity:0.78;line-height:1.6;}
+.form{display:grid;gap:10px;}
+.input{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(196,184,157,0.6);background:rgba(246,244,238,0.9);font-family:var(--font);font-size:13.5px;}
+.textarea{min-height:110px;resize:vertical;}
+.small{font-size:12px;opacity:0.7;line-height:1.5;}
+
+/* ── FOOTER ── */
+footer{padding:44px 48px;border-top:1px solid rgba(196,184,157,0.4);opacity:0.9;}
+.footer-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;opacity:0.72;text-decoration:none;color:inherit;}
+.footer-links a:hover{opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 980px){
+  nav{padding:0 18px;}
+  .nav-links{display:none;}
+  .hero{padding:120px 18px 80px;}
+  .hero-grid{grid-template-columns:1fr;gap:28px;}
+  .section{padding:80px 18px;}
+  .pain-grid,.feature-grid,.uc-grid{grid-template-columns:1fr;}
+  .usp-layout,.walkthrough,.team-grid{grid-template-columns:1fr;}
+  .contact-card{grid-template-columns:1fr;}
+  .uc-modal-grid{grid-template-columns:1fr;}
+  .roles{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <div class="nav-left">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-mark"></div>
+      <span class="nav-logo-text">Lockated <span>Lease</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#pain">Why Lockated</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#walkthrough">Walkthrough</a></li>
+      <li><a href="#usecases">Use Cases</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="nav-ctas">
+    <a href="#contact" class="btn-ghost">Contact Sales</a>
+    <a href="#contact" class="btn-primary"><span>Get Started</span></a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div class="reveal">
+      <h1>The only lease platform built for <span class="accent">Indian commercial real estate</span>.</h1>
+      <p>Lockated Lease Management centralizes tenant onboarding, rent and CAM billing, escalations, notices, compliance, and reporting — with audit-ready workflows for enterprise portfolios.</p>
+      <div class="hero-cta-row">
+        <a class="btn-primary" href="#contact">Book a demo</a>
+        <a class="btn-ghost" href="#walkthrough">See walkthrough</a>
+      </div>
+      <div class="hero-badges">
+        <span class="badge"><span class="badge-dot"></span> Audit-ready workflows</span>
+        <span class="badge"><span class="badge-dot" style="background: var(--primary)"></span> Automated escalations</span>
+        <span class="badge"><span class="badge-dot" style="background: var(--lavender)"></span> Portfolio analytics</span>
+      </div>
+
+      <div class="hero-countdown reveal">
+        <div class="count">
+          <div class="num" data-target="45" data-suffix="%">0%</div>
+          <div class="lbl">Less manual effort</div>
+        </div>
+        <div class="count">
+          <div class="num" data-target="99" data-suffix="%">0%</div>
+          <div class="lbl">Billing accuracy</div>
+        </div>
+        <div class="count">
+          <div class="num" data-target="24" data-suffix="h">0h</div>
+          <div class="lbl">Turnaround</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="hero-card">
+        <h4>Portfolio snapshot</h4>
+        <div class="hero-metrics">
+          <div class="metric">
+            <div class="num">₹ 4.2 Cr</div>
+            <div class="lbl">Invoices raised</div>
+          </div>
+          <div class="metric">
+            <div class="num">98%</div>
+            <div class="lbl">Collections</div>
+          </div>
+          <div class="metric">
+            <div class="num">112</div>
+            <div class="lbl">Active leases</div>
+          </div>
+          <div class="metric">
+            <div class="num">7</div>
+            <div class="lbl">Sites</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY / PAIN ═══ -->
+<section class="section" id="pain">
+  <div class="section-title">
+    <h2 class="reveal">Why teams struggle with leases</h2>
+    <p class="reveal">Spreadsheets and disconnected tools break down at scale. Lockated helps you standardize processes, automate billing, and ensure data integrity across teams.</p>
+  </div>
+
+  <div class="pain-grid">
+    <div class="pain-card reveal">
+      <div class="pain-icon">⏱</div>
+      <h3>Manual billing cycles</h3>
+      <p>Rent, CAM, utilities, and escalations are recalculated every month with manual checks.</p>
+    </div>
+    <div class="pain-card reveal">
+      <div class="pain-icon">🧾</div>
+      <h3>Audit risk</h3>
+      <p>Missed clauses, wrong GST application, and missing backups create audit exposure.</p>
+    </div>
+    <div class="pain-card reveal">
+      <div class="pain-icon">📄</div>
+      <h3>Slow approvals</h3>
+      <p>Lease exceptions and renewals get stuck across email threads and versions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="section" id="features">
+  <div class="section-title">
+    <h2 class="reveal">Everything you need to run leases</h2>
+    <p class="reveal">Purpose-built modules for enterprise portfolios: onboarding, billing, escalations, notices, documents, compliance, and reporting.</p>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature reveal">
+      <div class="tag">Lease onboarding</div>
+      <h3>Structured onboarding</h3>
+      <p>Capture terms, clauses, deposits, approvals, and critical dates in a standardized workflow.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="tag">Billing</div>
+      <h3>Automated invoicing</h3>
+      <p>Generate rent/CAM/utilities with escalations, proration, GST rules, and backups in one click.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="tag">Collections</div>
+      <h3>Collections tracking</h3>
+      <p>Track receivables, reminders, and reconciliation to reduce revenue leakage.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="tag">Documents</div>
+      <h3>Central repository</h3>
+      <p>Store leases, addendums, notices, and supporting docs with version control.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="tag">Compliance</div>
+      <h3>Audit-ready compliance</h3>
+      <p>Maintain clause-level backups and logs to stay audit-ready for every site.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="tag">Reporting</div>
+      <h3>Portfolio analytics</h3>
+      <p>Understand occupancy, receivables, escalations, and expiries across your portfolio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ USP / ROLES ═══ -->
+<section class="section" id="usp">
+  <div class="section-title">
+    <h2 class="reveal">Built for every stakeholder</h2>
+    <p class="reveal">Switch views to see what matters for finance, operations, and leasing teams.</p>
+  </div>
+
+  <div class="role-switch reveal">
+    <button class="role-btn active" data-role="finance">Finance</button>
+    <button class="role-btn" data-role="ops">Operations</button>
+    <button class="role-btn" data-role="leasing">Leasing</button>
+  </div>
+
+  <div class="usp-layout reveal" data-role-layout="finance" style="display:grid">
+    <div class="usp-tabs">
+      <div class="usp-tab active" data-panel="fin-1">
+        <h4>Billing accuracy</h4>
+        <p>Clause-backed invoices with backups.</p>
+      </div>
+      <div class="usp-tab" data-panel="fin-2">
+        <h4>GST + rules</h4>
+        <p>Configurable rules per site/tenant.</p>
+      </div>
+      <div class="usp-tab" data-panel="fin-3">
+        <h4>Collections</h4>
+        <p>Receivables, aging, reconciliation.</p>
+      </div>
+    </div>
+    <div class="usp-panels">
+      <div class="usp-panel active" id="fin-1">
+        <h3>Billing that stands up to audits</h3>
+        <p>Create invoices with automatic escalations, proration, and clause-level backups.</p>
+        <ul>
+          <li><span class="check"></span>Escalation schedules and proration</li>
+          <li><span class="check"></span>Backups for CAM and utilities</li>
+          <li><span class="check"></span>Approval and change logs</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="fin-2">
+        <h3>GST and billing rules built-in</h3>
+        <p>Apply GST logic per line item with configurable rules for each tenant and site.</p>
+        <ul>
+          <li><span class="check"></span>Site-level configurations</li>
+          <li><span class="check"></span>Rule overrides for exceptions</li>
+          <li><span class="check"></span>Export-ready backups</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="fin-3">
+        <h3>Collections & reconciliation</h3>
+        <p>Track payments, TDS, adjustments, and generate reconciliation reports.</p>
+        <ul>
+          <li><span class="check"></span>Aging dashboards</li>
+          <li><span class="check"></span>Automated reminders</li>
+          <li><span class="check"></span>Export to accounting systems</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="usp-layout reveal" data-role-layout="ops" style="display:none">
+    <div class="usp-tabs">
+      <div class="usp-tab active" data-panel="ops-1">
+        <h4>Work orders</h4>
+        <p>Track tasks tied to lease obligations.</p>
+      </div>
+      <div class="usp-tab" data-panel="ops-2">
+        <h4>Compliance</h4>
+        <p>Never miss a critical date.</p>
+      </div>
+      <div class="usp-tab" data-panel="ops-3">
+        <h4>Notices</h4>
+        <p>Standardize notices and logs.</p>
+      </div>
+    </div>
+    <div class="usp-panels">
+      <div class="usp-panel active" id="ops-1">
+        <h3>Operational clarity</h3>
+        <p>Map obligations and workflows to teams and track completion.</p>
+        <ul>
+          <li><span class="check"></span>Assignable tasks with SLA</li>
+          <li><span class="check"></span>Document attachments</li>
+          <li><span class="check"></span>Activity timeline</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="ops-2">
+        <h3>Critical-date compliance</h3>
+        <p>Automated reminders for renewals, escalations, and expiries.</p>
+        <ul>
+          <li><span class="check"></span>Renewal reminders</li>
+          <li><span class="check"></span>Escalation alerts</li>
+          <li><span class="check"></span>Expiry dashboards</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="ops-3">
+        <h3>Notices without chaos</h3>
+        <p>Generate standard notice templates with logs and approvals.</p>
+        <ul>
+          <li><span class="check"></span>Templates library</li>
+          <li><span class="check"></span>Approval workflows</li>
+          <li><span class="check"></span>Delivery & response tracking</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="usp-layout reveal" data-role-layout="leasing" style="display:none">
+    <div class="usp-tabs">
+      <div class="usp-tab active" data-panel="lea-1">
+        <h4>Pipeline</h4>
+        <p>Track renewals and expansions.</p>
+      </div>
+      <div class="usp-tab" data-panel="lea-2">
+        <h4>Approvals</h4>
+        <p>Route exceptions quickly.</p>
+      </div>
+      <div class="usp-tab" data-panel="lea-3">
+        <h4>Docs</h4>
+        <p>Version control for addendums.</p>
+      </div>
+    </div>
+    <div class="usp-panels">
+      <div class="usp-panel active" id="lea-1">
+        <h3>Leasing visibility</h3>
+        <p>Track renewals, expansions, and expiries in one place.</p>
+        <ul>
+          <li><span class="check"></span>Expiry heatmaps</li>
+          <li><span class="check"></span>Negotiation notes</li>
+          <li><span class="check"></span>Offer comparisons</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="lea-2">
+        <h3>Fast approvals</h3>
+        <p>Route exception terms and pricing for approvals with a full audit trail.</p>
+        <ul>
+          <li><span class="check"></span>Approval routing</li>
+          <li><span class="check"></span>Auto reminders</li>
+          <li><span class="check"></span>Versioned changes</li>
+        </ul>
+      </div>
+      <div class="usp-panel" id="lea-3">
+        <h3>Document control</h3>
+        <p>Centralize drafts, redlines, addendums, and final documents.</p>
+        <ul>
+          <li><span class="check"></span>Version history</li>
+          <li><span class="check"></span>Access permissions</li>
+          <li><span class="check"></span>Searchable repository</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WALKTHROUGH ═══ -->
+<section class="section" id="walkthrough">
+  <div class="section-title">
+    <h2 class="reveal">A simple workflow, end-to-end</h2>
+    <p class="reveal">From onboarding to invoicing to renewals — your entire lease lifecycle, in one system.</p>
+  </div>
+
+  <div class="walkthrough reveal">
+    <div class="wt-tabs">
+      <div class="wt-tab active" data-wt="wt-1">
+        <h4>1. Onboard</h4>
+        <p>Capture terms, docs, approvals.</p>
+      </div>
+      <div class="wt-tab" data-wt="wt-2">
+        <h4>2. Bill</h4>
+        <p>Generate rent/CAM/utilities.</p>
+      </div>
+      <div class="wt-tab" data-wt="wt-3">
+        <h4>3. Collect</h4>
+        <p>Track receivables + reconcile.</p>
+      </div>
+      <div class="wt-tab" data-wt="wt-4">
+        <h4>4. Renew</h4>
+        <p>Expiry alerts and renewals.</p>
+      </div>
+    </div>
+    <div class="wt-panels">
+      <div class="wt-panel active" id="wt-1">
+        <h3>Onboard with structure</h3>
+        <p>Standardize onboarding so you always capture the same critical information.</p>
+        <div class="wt-steps">
+          <div class="step"><div class="k">TERMS</div><div class="t">Define rent, escalations, CAM</div><div class="d">Capture details once; reuse across billing.</div></div>
+          <div class="step"><div class="k">DOCS</div><div class="t">Store agreements & annexures</div><div class="d">Version control + permissions.</div></div>
+          <div class="step"><div class="k">APPROVALS</div><div class="t">Route exceptions</div><div class="d">Keep an audit trail of who approved what.</div></div>
+        </div>
+      </div>
+      <div class="wt-panel" id="wt-2">
+        <h3>Bill automatically</h3>
+        <p>Raise invoices in minutes with clause-backed backups.</p>
+        <div class="wt-steps">
+          <div class="step"><div class="k">PRORATION</div><div class="t">Auto proration</div><div class="d">Handle move-in/move-out smoothly.</div></div>
+          <div class="step"><div class="k">GST</div><div class="t">Apply GST rules</div><div class="d">Configurable per tenant/site.</div></div>
+          <div class="step"><div class="k">EXPORT</div><div class="t">Export-ready</div><div class="d">Share invoices and backups instantly.</div></div>
+        </div>
+      </div>
+      <div class="wt-panel" id="wt-3">
+        <h3>Collect and reconcile</h3>
+        <p>Know what’s due, what’s paid, and what’s overdue — always.</p>
+        <div class="wt-steps">
+          <div class="step"><div class="k">AGING</div><div class="t">Aging dashboards</div><div class="d">See receivables by tenant/site.</div></div>
+          <div class="step"><div class="k">REMINDERS</div><div class="t">Automated reminders</div><div class="d">Reduce follow-ups via scheduled nudges.</div></div>
+          <div class="step"><div class="k">RECON</div><div class="t">Reconcile payments</div><div class="d">Track TDS/adjustments and generate reports.</div></div>
+        </div>
+      </div>
+      <div class="wt-panel" id="wt-4">
+        <h3>Renew confidently</h3>
+        <p>Track expiries, plan negotiations, and ensure nothing falls through cracks.</p>
+        <div class="wt-steps">
+          <div class="step"><div class="k">ALERTS</div><div class="t">Expiry alerts</div><div class="d">Never miss renewals or escalations.</div></div>
+          <div class="step"><div class="k">NOTES</div><div class="t">Negotiation notes</div><div class="d">Track discussions and changes.</div></div>
+          <div class="step"><div class="k">DOCS</div><div class="t">Addendums</div><div class="d">Generate and store renewed agreements.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEAM ═══ -->
+<section class="section" id="team">
+  <div class="section-title">
+    <h2 class="reveal">Designed for cross-functional teams</h2>
+    <p class="reveal">Finance, operations, and leasing teams stay aligned — with one source of truth.</p>
+  </div>
+
+  <div class="team-grid reveal">
+    <div class="team-tabs">
+      <div class="team-tab active" data-team="tm-1"><h4>Finance</h4><p>Billing, GST, receivables.</p></div>
+      <div class="team-tab" data-team="tm-2"><h4>Operations</h4><p>Obligations, notices.</p></div>
+      <div class="team-tab" data-team="tm-3"><h4>Leasing</h4><p>Renewals, pipeline.</p></div>
+    </div>
+    <div class="team-panels">
+      <div class="team-panel active" id="tm-1">
+        <h3>Finance teams</h3>
+        <p>Cut billing cycles and increase accuracy with rule-based automation.</p>
+        <div class="roles">
+          <div class="role"><div class="t">Billing manager</div><div class="d">Raise invoices and backups in minutes.</div></div>
+          <div class="role"><div class="t">Accounts receivable</div><div class="d">Track collections and aging dashboards.</div></div>
+          <div class="role"><div class="t">Controller</div><div class="d">Audit-ready logs and approvals.</div></div>
+          <div class="role"><div class="t">CFO</div><div class="d">Portfolio-level revenue visibility.</div></div>
+        </div>
+      </div>
+      <div class="team-panel" id="tm-2">
+        <h3>Operations teams</h3>
+        <p>Track obligations and keep compliance on track across properties.</p>
+        <div class="roles">
+          <div class="role"><div class="t">Property ops</div><div class="d">Track tasks tied to lease clauses.</div></div>
+          <div class="role"><div class="t">Facility lead</div><div class="d">Maintain logs and attachments.</div></div>
+          <div class="role"><div class="t">Compliance</div><div class="d">Monitor critical dates and reminders.</div></div>
+          <div class="role"><div class="t">Site head</div><div class="d">See site dashboards and pending actions.</div></div>
+        </div>
+      </div>
+      <div class="team-panel" id="tm-3">
+        <h3>Leasing teams</h3>
+        <p>Manage renewals and exceptions with faster approvals and full history.</p>
+        <div class="roles">
+          <div class="role"><div class="t">Leasing manager</div><div class="d">Track expiries and renewals pipeline.</div></div>
+          <div class="role"><div class="t">Legal</div><div class="d">Versioned documents and redlines.</div></div>
+          <div class="role"><div class="t">Business head</div><div class="d">Offer comparisons and decision logs.</div></div>
+          <div class="role"><div class="t">Operations</div><div class="d">Coordinate move-in/move-out workflows.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="section" id="testimonials">
+  <div class="section-title">
+    <h2 class="reveal">What teams say</h2>
+    <p class="reveal">Enterprise teams use Lockated to reduce manual work and standardize processes.</p>
+  </div>
+  <div class="testimonials reveal">
+    <div class="quote" id="quote">“Lockated made our billing cycle predictable — with clause-backed backups and fewer exceptions.”</div>
+    <div class="quote-author" id="quoteAuthor">Finance Lead, Commercial Portfolio</div>
+    <div class="dots" id="dots">
+      <button class="dot active" data-i="0"></button>
+      <button class="dot" data-i="1"></button>
+      <button class="dot" data-i="2"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ USE CASES ═══ -->
+<section class="section" id="usecases">
+  <div class="section-title">
+    <h2 class="reveal">Use cases</h2>
+    <p class="reveal">Real workflows for the way Indian commercial real estate teams operate.</p>
+  </div>
+
+  <div class="uc-grid">
+    <div class="uc-card reveal" onclick="openUCModal('invoice')">
+      <h3>Invoice automation</h3>
+      <p>Automate rent/CAM/utilities with escalations and proration.</p>
+    </div>
+    <div class="uc-card reveal" onclick="openUCModal('renewal')">
+      <h3>Renewal tracking</h3>
+      <p>Expiry alerts, negotiation notes, addendums — all in one place.</p>
+    </div>
+    <div class="uc-card reveal" onclick="openUCModal('compliance')">
+      <h3>Compliance</h3>
+      <p>Stay audit-ready with clause-level logs and document trails.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Modals -->
+<div class="uc-modal" id="modal-invoice" onclick="if(event.target===this)closeUCModal('invoice')">
+  <div class="uc-modal-card">
+    <button class="uc-modal-close" onclick="closeUCModal('invoice')">✕</button>
+    <h3>Invoice automation</h3>
+    <p>Raise accurate invoices with backups and approvals.</p>
+    <div class="uc-modal-grid">
+      <div class="uc-p"><div class="t">ESCALATIONS</div><div class="d">Auto apply escalation schedules.</div></div>
+      <div class="uc-p"><div class="t">PRORATION</div><div class="d">Prorate for move-in/out dates.</div></div>
+      <div class="uc-p"><div class="t">BACKUPS</div><div class="d">Clause-level backup exports.</div></div>
+    </div>
+  </div>
+</div>
+<div class="uc-modal" id="modal-renewal" onclick="if(event.target===this)closeUCModal('renewal')">
+  <div class="uc-modal-card">
+    <button class="uc-modal-close" onclick="closeUCModal('renewal')">✕</button>
+    <h3>Renewal tracking</h3>
+    <p>Never miss expiries and renewals again.</p>
+    <div class="uc-modal-grid">
+      <div class="uc-p"><div class="t">ALERTS</div><div class="d">Expiry reminders and heatmaps.</div></div>
+      <div class="uc-p"><div class="t">NOTES</div><div class="d">Negotiation notes and changes.</div></div>
+      <div class="uc-p"><div class="t">DOCS</div><div class="d">Versioned addendums and approvals.</div></div>
+    </div>
+  </div>
+</div>
+<div class="uc-modal" id="modal-compliance" onclick="if(event.target===this)closeUCModal('compliance')">
+  <div class="uc-modal-card">
+    <button class="uc-modal-close" onclick="closeUCModal('compliance')">✕</button>
+    <h3>Compliance</h3>
+    <p>Audit-ready processes across sites.</p>
+    <div class="uc-modal-grid">
+      <div class="uc-p"><div class="t">LOGS</div><div class="d">Approval and activity logs.</div></div>
+      <div class="uc-p"><div class="t">DOCS</div><div class="d">Centralized document repository.</div></div>
+      <div class="uc-p"><div class="t">DATES</div><div class="d">Critical-date alerts and dashboards.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="section" id="contact">
+  <div class="section-title">
+    <h2 class="reveal">Talk to sales</h2>
+    <p class="reveal">Tell us about your portfolio. We’ll show you how Lockated fits your workflow.</p>
+  </div>
+
+  <div class="contact-card reveal">
+    <div>
+      <h3>Get a demo</h3>
+      <p>See how Lockated Lease Management works for your properties and tenants.</p>
+      <p class="small" style="margin-top:12px">We typically respond within 1 business day.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault(); alert('Thanks! We\\'ll reach out soon.');">
+      <input class="input" placeholder="Name" required>
+      <input class="input" placeholder="Work email" type="email" required>
+      <input class="input" placeholder="Company" required>
+      <textarea class="input textarea" placeholder="What are you looking to solve?" required></textarea>
+      <button class="btn-primary" type="submit">Request demo</button>
+      <div class="small">By submitting, you agree to be contacted by Lockated.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>© <span id="year"></span> Lockated. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#hero">Top</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // keep year current
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // testimonials rotation
+  const testimonials = [
+    { quote: '“Lockated made our billing cycle predictable — with clause-backed backups and fewer exceptions.”', author: 'Finance Lead, Commercial Portfolio' },
+    { quote: '“We standardized renewals and critical dates. Teams now work from one source of truth.”', author: 'Leasing Manager, Mixed-use assets' },
+    { quote: '“Receivables and reconciliation got simpler. Leadership now has clear portfolio visibility.”', author: 'Controller, Enterprise RE' }
+  ];
+  let tIndex = 0;
+  const quoteEl = document.getElementById('quote');
+  const authorEl = document.getElementById('quoteAuthor');
+  const dotsEl = document.getElementById('dots');
+  function renderTestimonial(i){
+    tIndex = i;
+    quoteEl.textContent = testimonials[i].quote;
+    authorEl.textContent = testimonials[i].author;
+    [...dotsEl.querySelectorAll('.dot')].forEach((d,idx)=>d.classList.toggle('active', idx===i));
+  }
+  dotsEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.dot');
+    if(!btn) return;
+    renderTestimonial(Number(btn.dataset.i||0));
+  });
+  setInterval(()=>renderTestimonial((tIndex+1)%testimonials.length), 5500);
+</script>
+
+</body>
+</html>
