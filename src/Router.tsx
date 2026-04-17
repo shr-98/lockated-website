@@ -15,6 +15,8 @@ import Snag360LandingPage from './pages/Snag360LandingPage'
 import PostPossessionLandingPage from './pages/PostPossessionLandingPage'
 import PATMLandingPage from './pages/PATMLandingPage'
 import SurveyLandingPage from './pages/SurveyLandingPage'
+import VendorManagementLandingPage from './pages/VendorManagementLandingPage'
+import PostSalesLandingPage from './pages/PostSalesLandingPage'
 import SlugPage from './pages/SlugPage'
 
 export default function Router() {
@@ -30,6 +32,8 @@ export default function Router() {
       <Route path="post-possession" element={<PostPossessionLandingPage />} />
       <Route path="patm" element={<PATMLandingPage />} />
       <Route path="survey" element={<SurveyLandingPage />} />
+      <Route path="vendor-management" element={<VendorManagementLandingPage />} />
+      <Route path="post-sales" element={<PostSalesLandingPage />} />
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />

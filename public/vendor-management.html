@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+<style>
+  :root {
+    --primary: #DA7756;
+    --bg: #F6F4EE;
+    --dark: #2C2C2C;
+    --green: #798C5E;
+    --teal: #9EC8BA;
+    --card-border: #C4B89D;
+    --divider: #D5DBDB;
+    --muted: #D3D1C7;
+    --info-blue: #6B9BCC;
+    --warning: #EDC488;
+    --success: #89F7E7;
+    --font: 'Poppins', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 48px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(246,244,238,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+  }
+  nav.scrolled {
+    box-shadow: 0 4px 32px rgba(44,44,44,0.08);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-mark {
+    width: 36px; height: 36px;
+    background: var(--primary);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-mark svg { width: 20px; height: 20px; color: white; }
+  .nav-logo-text { font-size: 17px; font-weight: 700; color: var(--dark); letter-spacing: -0.3px; }
+  .nav-logo-text span { color: var(--primary); }
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13.5px; font-weight: 500; color: var(--dark);
+    text-decoration: none; opacity: 0.7;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 1.5px; background: var(--primary);
+    transform: scaleX(0); transition: transform 0.25s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--primary); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-ctas { display: flex; align-items: center; gap: 10px; }
+  .btn-secondary {
+    padding: 9px 20px; border-radius: 8px;
+    border: 1.5px solid var(--card-border);
+    font-size: 13px; font-weight: 500;
+    color: var(--dark); background: transparent;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover { border-color: var(--primary); color: var(--primary); background: rgba(218,119,86,0.06); }
+  .btn-primary {
+    padding: 9px 22px; border-radius: 8px;
+    background: var(--primary); color: white;
+    border: none; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(218,119,86,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(218,119,86,0.4);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 48px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* BENTO GRID BACKGROUND */
+  .hero-bento-bg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 1px;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-bento-bg .cell {
+    border: 1px solid var(--dark);
+    border-radius: 4px;
+    animation: cellPulse 4s ease-in-out infinite;
+  }
+  .hero-bento-bg .cell:nth-child(3n) { animation-delay: 0.5s; background: var(--primary); }
+  .hero-bento-bg .cell:nth-child(5n) { animation-delay: 1.2s; background: var(--green); }
+  .hero-bento-bg .cell:nth-child(7n) { animation-delay: 0.8s; background: var(--teal); }
+  @keyframes cellPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    background: rgba(218,119,86,0.1); border: 1px solid rgba(218,119,86,0.25);
+    font-size: 12px; font-weight: 600; color: var(--primary);
+    letter-spacing: 0.5px; text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative; z-index: 2;
+    animation: fadeDown 0.6s ease both;
+  }
+  .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: blink 1.4s ease infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .hero h1 {
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
+    color: var(--dark);
+    max-width: 860px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.15s both;
+  }
+  .hero h1 .accent { color: var(--primary); }
+  .hero h1 .accent-green { color: var(--green); }
+  .hero-sub {
+    font-size: 17px; font-weight: 400; color: rgba(44,44,44,0.65);
+    max-width: 560px; line-height: 1.65;
+    margin: 20px auto 0;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+  .hero-ctas {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 36px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.45s both;
+  }
+  .btn-hero-primary {
+    padding: 14px 32px; border-radius: 10px;
+    background: var(--primary); color: white;
+    font-size: 15px; font-weight: 600;
+    text-decoration: none; border: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(218,119,86,0.35);
+  }
+  .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(218,119,86,0.45); }
+  .btn-hero-secondary {
+    padding: 14px 32px; border-radius: 10px;
+    border: 1.5px solid var(--card-border);
+    color: var(--dark); background: rgba(255,255,255,0.6);
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(10px);
+  }
+  .btn-hero-secondary:hover { border-color: var(--primary); color: var(--primary); background: rgba(218,119,86,0.05); }
+
+  /* STATS ROW */
+  .hero-stats {
+    display: flex; gap: 48px; align-items: center;
+    margin-top: 56px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.6s both;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-number {
+    font-size: 38px; font-weight: 800; color: var(--dark);
+    letter-spacing: -1.5px; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-stat-number .unit { font-size: 22px; font-weight: 600; color: var(--dark); }
+  .hero-stat-label { font-size: 12px; color: rgba(44,44,44,0.55); font-weight: 500; margin-top: 4px; }
+  .stat-divider { width: 1px; height: 44px; background: var(--divider); }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CLIENT STRIP */
+  .client-strip {
+    background: white;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    padding: 22px 0;
+    overflow: hidden;
+  }
+  .client-strip-label {
+    text-align: center; font-size: 11px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(44,44,44,0.4); margin-bottom: 18px;
+  }
+  .clients-track {
+    display: flex; align-items: center; gap: 64px;
+    width: max-content;
+    animation: scrollLeft 28s linear infinite;
+  }
+  .client-strip:hover .clients-track { animation-play-state: paused; }
+  .clients-wrapper { display: flex; overflow: hidden; }
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .client-logo {
+    font-size: 14px; font-weight: 700; color: rgba(44,44,44,0.35);
+    white-space: nowrap; letter-spacing: -0.3px;
+    transition: color 0.25s ease;
+  }
+  .client-logo:hover { color: var(--primary); }
+
+  /* SECTIONS */
+  section { padding: 96px 48px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--primary);
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 20px; height: 2px; background: var(--primary);
+  }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 800; letter-spacing: -1.5px;
+    color: var(--dark); line-height: 1.12;
+  }
+  .section-sub {
+    font-size: 16px; color: rgba(44,44,44,0.6);
+    line-height: 1.65; max-width: 520px;
+    margin-top: 14px;
+  }
+
+  /* PAIN POINTS */
+  .pain-section { background: var(--bg); }
+  .pain-section .section-label { color: var(--primary); }
+  .pain-section .section-label::before { background: var(--primary); }
+  .pain-section .section-title { color: var(--dark); }
+  .pain-section .section-sub { color: rgba(44,44,44,0.6); }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 52px;
+  }
+  .pain-card {
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(44,44,44,0.06);
+  }
+  .pain-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .pain-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(44,44,44,0.1); }
+  .pain-card:hover::before { opacity: 1; }
+  .pain-num {
+    font-size: 60px; font-weight: 800;
+    color: rgba(44,44,44,0.06); letter-spacing: -3px;
+    line-height: 1; margin-bottom: 12px;
+  }
+  .pain-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(218,119,86,0.1);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .pain-icon svg { color: var(--primary); }
+  .pain-card h3 { font-size: 19px; font-weight: 700; color: var(--dark); line-height: 1.3; margin-bottom: 12px; }
+  .pain-card p { font-size: 14px; color: rgba(44,44,44,0.6); line-height: 1.7; }
+  .pain-impact {
+    margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 6px;
+    background: rgba(218,119,86,0.08); border: 1px solid rgba(218,119,86,0.2);
+    font-size: 12px; font-weight: 600; color: var(--primary);
+  }
+
+  /* FEATURES */
+  .features-section { background: var(--bg); }
+  .features-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 60px;
+  }
+  .feature-accordion { display: flex; flex-direction: column; gap: 2px; }
+  .feature-item {
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+  }
+  .feature-item.active {
+    border-color: var(--primary);
+    box-shadow: 0 4px 24px rgba(218,119,86,0.12);
+  }
+  .feature-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    gap: 12px;
+  }
+  .feature-trigger:hover { background: rgba(218,119,86,0.04); }
+  .feature-trigger-left { display: flex; align-items: center; gap: 12px; }
+  .feature-icon-small {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: rgba(218,119,86,0.1);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .feature-icon-small svg { color: var(--primary); width: 18px; height: 18px; }
+  .feature-item.active .feature-icon-small { background: var(--primary); }
+  .feature-item.active .feature-icon-small svg { color: white; }
+  .feature-name { font-size: 14.5px; font-weight: 600; color: var(--dark); }
+  .feature-add-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--card-border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.25s ease;
+  }
+  .feature-add-icon svg { width: 14px; height: 14px; color: var(--dark); transition: transform 0.3s ease; }
+  .feature-item.active .feature-add-icon { background: var(--primary); border-color: var(--primary); }
+  .feature-item.active .feature-add-icon svg { color: white; transform: rotate(45deg); }
+  .feature-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 22px;
+  }
+  .feature-item.active .feature-body { max-height: 300px; padding: 0 22px 22px; }
+  .feature-body-inner {
+    padding-top: 16px;
+    border-top: 1px solid var(--divider);
+  }
+  .feature-body p { font-size: 13.5px; color: rgba(44,44,44,0.65); line-height: 1.7; }
+  .feature-body-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 14px; font-size: 13px; font-weight: 600;
+    color: var(--primary); text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+  .feature-body-cta:hover { gap: 10px; }
+  .feature-body-cta svg { width: 14px; height: 14px; }
+
+  /* FEATURE UI PANEL */
+  .feature-ui-panel {
+    position: sticky;
+    top: 88px;
+  }
+  .feature-ui-card {
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(44,44,44,0.1);
+  }
+  .feature-ui-header {
+    background: var(--dark);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ui-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .ui-dot.red { background: #E7848E; }
+  .ui-dot.yellow { background: #EDC488; }
+  .ui-dot.green { background: #89F7E7; }
+  .ui-header-title { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); margin-left: 8px; }
+  .feature-ui-body { padding: 24px; }
+  .feature-ui-panel-content { display: none; }
+  .feature-ui-panel-content.active { display: block; }
+  .ui-metric-row { display: flex; gap: 12px; margin-bottom: 16px; }
+  .ui-metric {
+    flex: 1; padding: 16px;
+    background: var(--bg); border-radius: 10px;
+    border: 1px solid var(--divider);
+  }
+  .ui-metric-value { font-size: 24px; font-weight: 800; color: var(--dark); letter-spacing: -1px; }
+  .ui-metric-value .suffix { font-size: 14px; color: var(--primary); }
+  .ui-metric-label { font-size: 11px; color: rgba(44,44,44,0.5); margin-top: 2px; }
+  .ui-vendor-list { display: flex; flex-direction: column; gap: 8px; }
+  .ui-vendor-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: var(--bg);
+    border-radius: 8px; border: 1px solid var(--divider);
+    font-size: 13px; font-weight: 500;
+    transition: background 0.2s ease;
+  }
+  .ui-vendor-row:hover { background: rgba(218,119,86,0.06); }
+  .ui-status-badge {
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge-approved { background: rgba(137,247,231,0.2); color: #108C72; }
+  .badge-pending { background: rgba(237,196,136,0.2); color: #b07f1e; }
+  .badge-review { background: rgba(107,155,204,0.2); color: var(--info-blue); }
+  .badge-rejected { background: rgba(231,132,142,0.2); color: #c0424f; }
+  .ui-compliance-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ui-compliance-badge {
+    padding: 6px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 600;
+    background: rgba(121,140,94,0.12); color: var(--green);
+    border: 1px solid rgba(121,140,94,0.2);
+  }
+  .ui-compliance-badge.fail { background: rgba(231,132,142,0.12); color: #c0424f; border-color: rgba(231,132,142,0.2); }
+  .ui-approval-flow { display: flex; gap: 0; align-items: center; margin: 16px 0; }
+  .ui-approval-step {
+    flex: 1; text-align: center;
+    padding: 10px 8px;
+    background: rgba(137,247,231,0.12);
+    border: 1px solid rgba(137,247,231,0.25);
+    border-radius: 8px;
+    font-size: 11px; font-weight: 600; color: #108C72;
+  }
+  .ui-approval-step.pending { background: rgba(237,196,136,0.12); border-color: rgba(237,196,136,0.25); color: #b07f1e; }
+  .ui-approval-arrow { font-size: 16px; color: var(--divider); padding: 0 4px; flex-shrink: 0; }
+  .ui-score-bar-container { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .ui-score-row { display: flex; align-items: center; gap: 12px; }
+  .ui-score-label { font-size: 12px; font-weight: 500; color: rgba(44,44,44,0.65); width: 100px; flex-shrink: 0; }
+  .ui-score-track { flex: 1; height: 6px; background: var(--divider); border-radius: 4px; overflow: hidden; }
+  .ui-score-fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.8s ease; }
+  .ui-score-pct { font-size: 12px; font-weight: 700; color: var(--dark); width: 36px; text-align: right; }
+  .ui-portal-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ui-portal-tile {
+    padding: 14px; background: var(--bg);
+    border-radius: 10px; border: 1px solid var(--divider);
+    text-align: center;
+  }
+  .ui-portal-tile-icon { font-size: 22px; margin-bottom: 6px; }
+  .ui-portal-tile-label { font-size: 11.5px; font-weight: 600; color: var(--dark); }
+  .ui-portal-tile-value { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+
+  /* WALKTHROUGH */
+  .walkthrough-section { background: white; }
+  .walkthrough-tabs {
+    display: flex; gap: 0;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--divider);
+    margin: 48px 0 0;
+    padding-bottom: 0;
+    scrollbar-width: none;
+  }
+  .walkthrough-tabs::-webkit-scrollbar { display: none; }
+  .wt-tab {
+    padding: 12px 20px;
+    font-size: 13px; font-weight: 500;
+    color: rgba(44,44,44,0.5);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s ease;
+    background: none; border-top: none; border-left: none; border-right: none;
+    position: relative;
+    bottom: -1px;
+  }
+  .wt-tab:hover { color: var(--dark); }
+  .wt-tab.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--primary); }
+  .walkthrough-content { margin-top: 48px; }
+  .wt-panel { display: none; }
+  .wt-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .wt-panel-text {}
+  .wt-panel-step {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--primary); margin-bottom: 16px;
+  }
+  .wt-panel-step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--primary); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wt-panel h3 { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1.2; margin-bottom: 14px; }
+  .wt-panel p { font-size: 15px; color: rgba(44,44,44,0.6); line-height: 1.7; }
+  .wt-features-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  .wt-feature-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; font-weight: 500; color: var(--dark);
+  }
+  .wt-feature-item::before {
+    content: '';
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--primary); flex-shrink: 0;
+  }
+  .wt-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 28px; padding: 12px 24px; border-radius: 8px;
+    background: var(--primary); color: white;
+    font-size: 14px; font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(218,119,86,0.3);
+  }
+  .wt-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(218,119,86,0.4); }
+  .wt-ui-card {
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(44,44,44,0.1);
+    animation: slideInRight 0.4s ease both;
+  }
+  @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .wt-ui-header {
+    background: var(--bg); border-bottom: 1px solid var(--divider);
+    padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wt-ui-title { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .wt-ui-tag {
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(218,119,86,0.1); color: var(--primary);
+    font-size: 11px; font-weight: 600;
+  }
+  .wt-ui-body { padding: 20px; }
+  .wt-form-group { margin-bottom: 16px; }
+  .wt-form-label { font-size: 11px; font-weight: 700; color: rgba(44,44,44,0.5); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .wt-form-input {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid var(--divider); border-radius: 8px;
+    font-size: 13.5px; font-family: var(--font); color: var(--dark);
+    background: var(--bg);
+  }
+  .wt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .wt-form-submit {
+    width: 100%; padding: 12px;
+    background: var(--primary); color: white;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600;
+    font-family: var(--font); cursor: pointer;
+    margin-top: 4px;
+    transition: opacity 0.2s ease;
+  }
+  .wt-form-submit:hover { opacity: 0.9; }
+
+  /* TESTIMONIALS */
+  .testimonials-section { background: var(--bg); }
+  .testimonials-track-wrapper { overflow: hidden; margin-top: 52px; }
+  .testimonials-track {
+    display: flex; gap: 24px;
+    width: max-content;
+    animation: testimonialScroll 35s linear infinite;
+  }
+  .testimonials-section:hover .testimonials-track { animation-play-state: paused; }
+  @keyframes testimonialScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .testimonial-card {
+    width: 380px; flex-shrink: 0;
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(44,44,44,0.06);
+    transition: all 0.3s ease;
+  }
+  .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(44,44,44,0.12); }
+  .testimonial-stars { display: flex; gap: 3px; margin-bottom: 18px; }
+  .star { color: var(--warning); font-size: 14px; }
+  .testimonial-quote {
+    font-size: 15px; line-height: 1.7;
+    color: var(--dark); margin-bottom: 24px;
+    font-style: italic;
+  }
+  .testimonial-quote::before { content: '\201C'; font-size: 28px; color: var(--primary); line-height: 0; vertical-align: -8px; margin-right: 4px; }
+  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; color: white;
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .author-title { font-size: 12px; color: rgba(44,44,44,0.5); margin-top: 1px; }
+  .author-company { font-size: 12px; font-weight: 600; color: var(--primary); }
+
+  /* USE CASES - INDUSTRIES */
+  .industries-section { background: white; }
+  .industries-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 52px;
+  }
+  .industry-card {
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .industry-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .industry-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(44,44,44,0.08); }
+  .industry-card:hover::after { transform: scaleX(1); }
+  .industry-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: white; border: 1px solid var(--divider);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; box-shadow: 0 2px 8px rgba(44,44,44,0.06);
+  }
+  .industry-icon svg { color: var(--primary); }
+  .industry-name { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .industry-desc { font-size: 12.5px; color: rgba(44,44,44,0.55); line-height: 1.6; }
+  .industry-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 14px; font-size: 12px; font-weight: 600;
+    color: var(--primary);
+  }
+  .industry-link svg { width: 12px; height: 12px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(44,44,44,0.6);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: white; border-radius: 24px;
+    max-width: 680px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 40px 80px rgba(44,44,44,0.25);
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s ease;
+  }
+  .modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+  .modal-header {
+    padding: 32px 36px 24px;
+    border-bottom: 1px solid var(--divider);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+  }
+  .modal-close {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--divider);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s ease;
+  }
+  .modal-close:hover { background: var(--primary); border-color: var(--primary); }
+  .modal-close:hover svg { color: white; }
+  .modal-close svg { color: var(--dark); }
+  .modal-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: rgba(218,119,86,0.1);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+  }
+  .modal-icon svg { color: var(--primary); }
+  .modal-title { font-size: 24px; font-weight: 800; color: var(--dark); letter-spacing: -0.8px; line-height: 1.2; }
+  .modal-body { padding: 28px 36px 36px; }
+  .modal-pain { padding: 16px 20px; background: rgba(237,196,136,0.1); border-left: 3px solid var(--warning); border-radius: 8px; margin-bottom: 24px; }
+  .modal-pain-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #b07f1e; margin-bottom: 6px; }
+  .modal-pain p { font-size: 13.5px; color: var(--dark); line-height: 1.6; }
+  .modal-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(44,44,44,0.45); margin-bottom: 14px; margin-top: 24px; }
+  .modal-features { display: flex; flex-direction: column; gap: 8px; }
+  .modal-feature {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 16px; background: var(--bg); border-radius: 8px;
+    font-size: 13.5px; color: var(--dark); line-height: 1.5;
+  }
+  .modal-feature::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); margin-top: 7px; flex-shrink: 0;
+  }
+  .modal-outcome {
+    margin-top: 20px; padding: 20px;
+    background: rgba(121,140,94,0.08); border-radius: 12px;
+    border: 1px solid rgba(121,140,94,0.2);
+  }
+  .modal-outcome-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); margin-bottom: 8px; }
+  .modal-outcome p { font-size: 14px; color: var(--dark); font-weight: 500; line-height: 1.6; }
+
+  /* TEAM USE CASES */
+  .teams-section { background: var(--bg); }
+  .teams-layout { display: grid; grid-template-columns: 280px 1fr; gap: 40px; margin-top: 52px; align-items: start; }
+  .teams-tabs { display: flex; flex-direction: column; gap: 4px; }
+  .team-tab {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px; border-radius: 12px;
+    cursor: pointer; border: 1.5px solid transparent;
+    background: white; transition: all 0.2s ease;
+  }
+  .team-tab:hover { border-color: var(--card-border); }
+  .team-tab.active { border-color: var(--primary); background: rgba(218,119,86,0.05); }
+  .team-tab-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--bg); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; border: 1px solid var(--divider);
+  }
+  .team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
+  .team-tab.active .team-tab-icon svg { color: white; }
+  .team-tab-icon svg { color: rgba(44,44,44,0.5); }
+  .team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
+  .team-tab.active .team-tab-text { color: var(--dark); }
+  .teams-panel { display: none; }
+  .teams-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .team-panel-title { font-size: 24px; font-weight: 800; letter-spacing: -0.8px; color: var(--dark); margin-bottom: 10px; }
+  .team-panel-desc { font-size: 15px; color: rgba(44,44,44,0.6); line-height: 1.7; margin-bottom: 24px; }
+  .team-features-list { display: flex; flex-direction: column; gap: 10px; }
+  .team-feature {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; background: white; border-radius: 10px;
+    border: 1px solid var(--divider); font-size: 13.5px; font-weight: 500; color: var(--dark);
+    line-height: 1.5;
+  }
+  .team-feature-icon { flex-shrink: 0; }
+  .team-feature-icon svg { color: var(--primary); width: 16px; height: 16px; margin-top: 1px; }
+
+  /* END BANNER */
+  .cta-banner {
+    background: var(--dark);
+    padding: 100px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(218,119,86,0.15) 0%, transparent 70%);
+  }
+  .cta-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(121,140,94,0.1) 0%, transparent 70%);
+  }
+  .cta-banner h2 {
+    font-size: clamp(32px, 4vw, 56px); font-weight: 800;
+    color: white; letter-spacing: -1.5px; line-height: 1.1;
+    position: relative; z-index: 1;
+  }
+  .cta-banner h2 .accent { color: var(--primary); }
+  .cta-banner p {
+    font-size: 17px; color: rgba(255,255,255,0.55);
+    margin: 16px auto 40px; max-width: 500px; line-height: 1.65;
+    position: relative; z-index: 1;
+  }
+  .cta-banner-btns { display: flex; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+  .btn-banner-primary {
+    padding: 16px 40px; border-radius: 10px;
+    background: var(--primary); color: white;
+    font-size: 15px; font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(218,119,86,0.4);
+  }
+  .btn-banner-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(218,119,86,0.5); }
+  .btn-banner-secondary {
+    padding: 16px 40px; border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    color: white; font-size: 15px; font-weight: 600;
+    text-decoration: none; background: transparent;
+    transition: all 0.25s ease;
+  }
+  .btn-banner-secondary:hover { border-color: white; background: rgba(255,255,255,0.06); }
+
+  /* CONTACT */
+  .contact-section { background: white; }
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-info h3 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+  .contact-info p { font-size: 15px; color: rgba(44,44,44,0.6); line-height: 1.7; }
+  .contact-details { margin-top: 36px; display: flex; flex-direction: column; gap: 18px; }
+  .contact-detail { display: flex; align-items: flex-start; gap: 14px; }
+  .contact-detail-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(218,119,86,0.1); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .contact-detail-icon svg { color: var(--primary); }
+  .contact-detail-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(44,44,44,0.4); margin-bottom: 3px; }
+  .contact-detail-value { font-size: 14.5px; font-weight: 500; color: var(--dark); }
+  .contact-form-card {
+    background: var(--bg); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 36px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(44,44,44,0.5); display: block; margin-bottom: 8px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--divider); border-radius: 10px;
+    font-size: 14px; font-family: var(--font); color: var(--dark);
+    background: white; outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(218,119,86,0.08); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-submit {
+    width: 100%; padding: 14px;
+    background: var(--primary); color: white;
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700;
+    font-family: var(--font); cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(218,119,86,0.3);
+  }
+  .form-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(218,119,86,0.4); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 56px 48px 36px;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .footer-logo-mark {
+    width: 32px; height: 32px; background: var(--primary);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  }
+  .footer-logo-text { font-size: 16px; font-weight: 700; color: white; }
+  .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 280px; }
+  .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s ease; }
+  .footer-links a:hover { color: var(--primary); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 28px;
+    font-size: 12.5px; color: rgba(255,255,255,0.35);
+  }
+  .footer-bottom-links { display: flex; gap: 24px; }
+  .footer-bottom-links a { color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s ease; }
+  .footer-bottom-links a:hover { color: var(--primary); }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* COUNTER */
+  .count-up { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </div>
+    <div class="nav-logo-text">Vendor <span>Management</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#pain">Problems</a></li>
+    <li><a href="#walkthrough">Walkthrough</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#teams">Teams</a></li>
+    <li><a href="#industries">Use Cases</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-ctas">
+    <a href="#contact" class="btn-secondary">Contact Sales</a>
+    <a href="#contact" class="btn-primary">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bento-bg" id="bentoBg"></div>
+
+  <div class="hero-eyebrow">
+    <span class="hero-eyebrow-dot"></span>
+    India's Most Complete Vendor Management Platform
+  </div>
+
+  <h1>
+    Control Every Vendor.<br>
+    <span class="accent">Zero Chaos.</span><br>
+    <span class="accent-green">Full Compliance.</span>
+  </h1>
+
+  <p class="hero-sub">
+    From onboarding to assessment, GST validation to SAP sync. Lockated VMS replaces fragmented, manual vendor operations with one governed, auditable system your teams will actually use.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#contact" class="btn-hero-primary">Get Started Free</a>
+    <a href="#walkthrough" class="btn-hero-secondary">See How It Works</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-number"><span class="count-up" data-target="75">0</span><span class="unit">%</span></div>
+      <div class="hero-stat-label">Faster Vendor Onboarding</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-number"><span class="count-up" data-target="60">0</span><span class="unit">%</span></div>
+      <div class="hero-stat-label">Drop in Vendor Enquiry Calls</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-number"><span class="count-up" data-target="100">0</span><span class="unit">%</span></div>
+      <div class="hero-stat-label">Audit Trail Coverage</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PAIN POINTS -->
+<section class="pain-section" id="pain">
+  <div class="section-label">The Problem</div>
+  <div class="section-title">Your vendor operations<br>are holding you back</div>
+  <p class="section-sub">Most procurement teams manage hundreds of vendors with emails, spreadsheets, and phone calls. The cost of that chaos is measurable.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card reveal">
+      <div class="pain-num">01</div>
+      <div class="pain-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3>Manual Onboarding Chaos</h3>
+      <p>Vendors onboarded over email threads and spreadsheets, with missing GST docs, wrong bank details, and zero visibility into where each vendor stands in the process.</p>
+      <div class="pain-impact">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Avg 12-18 days per vendor
+      </div>
+    </div>
+
+    <div class="pain-card reveal reveal-delay-1">
+      <div class="pain-num">02</div>
+      <div class="pain-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Compliance Blind Spots</h3>
+      <p>GST defaulters, expired CDSCO licenses, invalid IFSC codes. No automated checks means your finance team discovers problems after payments have already gone through.</p>
+      <div class="pain-impact">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Regulatory recovery audits triggered
+      </div>
+    </div>
+
+    <div class="pain-card reveal reveal-delay-2">
+      <div class="pain-num">03</div>
+      <div class="pain-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <h3>Approval Bottlenecks</h3>
+      <p>Linear email approvals with no SLA tracking and zero visibility. HODs are chased on WhatsApp, decisions stall for weeks, and no one can tell you what stage a vendor is at.</p>
+      <div class="pain-impact">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        7-10 day approval cycle on average
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WALKTHROUGH -->
+<section class="walkthrough-section" id="walkthrough">
+  <div class="section-label">Product Walkthrough</div>
+  <div class="section-title">See the entire vendor<br>lifecycle in action</div>
+  <p class="section-sub">From first invite to SAP sync. Every step governed, tracked, and auditable.</p>
+
+  <div class="walkthrough-tabs" id="wtTabs">
+    <button class="wt-tab active" onclick="switchTab(this, 0)">Invite & Onboard</button>
+    <button class="wt-tab" onclick="switchTab(this, 1)">Vendor Portal</button>
+    <button class="wt-tab" onclick="switchTab(this, 2)">Pre-Qualification</button>
+    <button class="wt-tab" onclick="switchTab(this, 3)">GST & Compliance</button>
+    <button class="wt-tab" onclick="switchTab(this, 4)">Approval Workflow</button>
+    <button class="wt-tab" onclick="switchTab(this, 5)">Re-KYC</button>
+    <button class="wt-tab" onclick="switchTab(this, 6)">Assessment</button>
+    <button class="wt-tab" onclick="switchTab(this, 7)">Vendor Master</button>
+    <button class="wt-tab" onclick="switchTab(this, 8)">Lists & Search</button>
+    <button class="wt-tab" onclick="switchTab(this, 9)">Governance</button>
+    <button class="wt-tab" onclick="switchTab(this, 10)">Dashboard</button>
+  </div>
+
+  <div class="walkthrough-content">
+
+    <div class="wt-panel active" id="wt-0">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">1</div>Vendor Invitation & Onboarding</div>
+        <h3>Invite any vendor in 60 seconds. Onboard in 3-5 days.</h3>
+        <p>Select department, vendor type, and category. System validates GSTIN on entry, checks for duplicates, and auto-generates a secure tokenized onboarding link. Vendors self-fill org, statutory, and bank details, upload documents, and submit. Your team only reviews, never enters data.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Bulk invite with department and category filters</div>
+          <div class="wt-feature-item">Real-time duplicate GSTIN detection</div>
+          <div class="wt-feature-item">Save-as-draft for partial onboarding</div>
+          <div class="wt-feature-item">Pre-qualification auto-trigger on category match</div>
+        </div>
+        <a href="#contact" class="wt-cta">See Live Demo
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Vendor Onboarding Form</span>
+            <span class="wt-ui-tag">Self-Service</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="wt-form-row">
+              <div class="wt-form-group">
+                <div class="wt-form-label">Company Name</div>
+                <input class="wt-form-input" value="BuildRight Infrastructure" readonly>
+              </div>
+              <div class="wt-form-group">
+                <div class="wt-form-label">GSTIN</div>
+                <input class="wt-form-input" value="27AABCB1234F1Z5" readonly style="border-color:#108C72">
+              </div>
+            </div>
+            <div class="wt-form-row">
+              <div class="wt-form-group">
+                <div class="wt-form-label">PAN Number</div>
+                <input class="wt-form-input" value="AABCB1234F" readonly>
+              </div>
+              <div class="wt-form-group">
+                <div class="wt-form-label">IFSC Code</div>
+                <input class="wt-form-input" value="HDFC0001234" readonly style="border-color:#108C72">
+              </div>
+            </div>
+            <div class="wt-form-group">
+              <div class="wt-form-label">Vendor Type</div>
+              <input class="wt-form-input" value="Material Vendor - Construction" readonly>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <div style="flex:1;padding:8px 12px;background:var(--bg);border-radius:8px;border:1px solid var(--divider);font-size:12px;color:rgba(44,44,44,0.55)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-1px"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                3 docs uploaded
+              </div>
+              <button class="wt-form-submit" style="flex:1;margin-top:0">Submit for Review</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-1">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">2</div>Vendor Portal</div>
+        <h3>Give vendors one place for everything. Eliminate enquiry calls.</h3>
+        <p>Vendors see active POs, GRN status, invoices, work orders, and payment timeline from their personalized dashboard. Submit bids, complete re-KYC, and respond to alerts, all without calling your purchase team. Cut inbound calls by 60-70%.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">PO, GRN, WO, Invoice all in one place</div>
+          <div class="wt-feature-item">Live auction participation and bid tracking</div>
+          <div class="wt-feature-item">Re-KYC initiation from vendor side</div>
+          <div class="wt-feature-item">Real-time portal alerts for every action</div>
+        </div>
+        <a href="#contact" class="wt-cta">Explore Vendor Portal</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Vendor Home - BuildRight Infra</span>
+            <span class="wt-ui-tag">Vendor View</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-portal-tiles" style="margin-bottom:16px">
+              <div class="ui-portal-tile"><div class="ui-portal-tile-value">14</div><div class="ui-portal-tile-label">Active POs</div></div>
+              <div class="ui-portal-tile"><div class="ui-portal-tile-value" style="color:#108C72">8</div><div class="ui-portal-tile-label">Paid Invoices</div></div>
+              <div class="ui-portal-tile"><div class="ui-portal-tile-value" style="color:#b07f1e">3</div><div class="ui-portal-tile-label">Pending WOs</div></div>
+              <div class="ui-portal-tile"><div class="ui-portal-tile-value" style="color:var(--primary)">2</div><div class="ui-portal-tile-label">Open Auctions</div></div>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>PO-2024-0847</span><span class="ui-status-badge badge-approved">Delivered</span></div>
+              <div class="ui-vendor-row"><span>INV-2024-1203</span><span class="ui-status-badge badge-pending">Payment Scheduled</span></div>
+              <div class="ui-vendor-row"><span>RFQ-CEMENT-Q4</span><span class="ui-status-badge badge-review">Bid Open</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-2">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">3</div>Pre-Qualification</div>
+        <h3>Qualify vendors before they're activated. Automatically.</h3>
+        <p>Configure weighted question banks by department. Vendors complete self-assessment. Multi-level reviewers approve with rejection remarks at any stage. Score gates onboarding, so only qualified vendors make it through.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Department-wise question configuration</div>
+          <div class="wt-feature-item">Vendor self-assessment with document upload</div>
+          <div class="wt-feature-item">Multi-level approval: HOD, Finance, QA</div>
+          <div class="wt-feature-item">Rejection with re-invite capability</div>
+        </div>
+        <a href="#contact" class="wt-cta">Configure Pre-Qual</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Pre-Qualification Review</span>
+            <span class="wt-ui-tag">QA Module</span>
+          </div>
+          <div class="wt-ui-body">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:10px">BuildRight Infra - Construction Category</div>
+            <div class="ui-score-bar-container">
+              <div class="ui-score-row"><span class="ui-score-label">Financial</span><div class="ui-score-track"><div class="ui-score-fill" style="width:80%"></div></div><span class="ui-score-pct">80%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">Technical</span><div class="ui-score-track"><div class="ui-score-fill" style="width:92%"></div></div><span class="ui-score-pct">92%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">Compliance</span><div class="ui-score-track"><div class="ui-score-fill" style="width:76%"></div></div><span class="ui-score-pct">76%</span></div>
+            </div>
+            <div class="ui-approval-flow" style="margin-top:14px">
+              <div class="ui-approval-step">HOD</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step">Finance</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step pending">QA-QC</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-3">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">4</div>GST & Compliance</div>
+        <h3>Block GST defaulters before payments happen. Not after.</h3>
+        <p>Finance validates GSTIN and marks GST status. If a vendor is a defaulter, auto-rejection fires with documented reason. Statutory documents reviewed section-wise. Everything locked to vendor record once approved. Audit-ready at any point.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">GST defaulter auto-flag and rejection</div>
+          <div class="wt-feature-item">Section-wise statutory document review</div>
+          <div class="wt-feature-item">Indirect and direct tax approver flows</div>
+          <div class="wt-feature-item">Override with documented justification</div>
+        </div>
+        <a href="#contact" class="wt-cta">See Compliance Engine</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">GST Validation</span>
+            <span class="wt-ui-tag">Finance Module</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-compliance-row" style="margin-bottom:16px">
+              <span class="ui-compliance-badge">GSTIN Valid</span>
+              <span class="ui-compliance-badge">PAN Linked</span>
+              <span class="ui-compliance-badge fail">Defaulter Check</span>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">GST Clear</span></div>
+              <div class="ui-vendor-row"><span>Sunrise Logistics</span><span class="ui-status-badge badge-rejected">Defaulter - Rejected</span></div>
+              <div class="ui-vendor-row"><span>Kiran Suppliers</span><span class="ui-status-badge badge-pending">Under Review</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-4">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">5</div>Approval Workflow</div>
+        <h3>Your org structure. Your rules. Approvals that move.</h3>
+        <p>Configure routing by role, department, vendor type, and business rules. Section-wise approvals mean parallel action across finance, purchase, and QA. Maker-checker control with full audit log per action. SLA reminders fire automatically when approvers stall.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Dynamic routing: sequential, parallel, conditional</div>
+          <div class="wt-feature-item">Section-wise approval by role</div>
+          <div class="wt-feature-item">Maker-checker two-step validation</div>
+          <div class="wt-feature-item">Auto-reminders for overdue approvals</div>
+        </div>
+        <a href="#contact" class="wt-cta">Configure Your Workflow</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Approval Matrix</span>
+            <span class="wt-ui-tag">Admin Config</span>
+          </div>
+          <div class="wt-ui-body">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:10px">Material Vendor - Mumbai</div>
+            <div class="ui-approval-flow">
+              <div class="ui-approval-step" style="font-size:10px">Purchase Mgr</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step pending" style="font-size:10px">Finance + QA</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step pending" style="font-size:10px">SAP Push</div>
+            </div>
+            <div style="font-size:11px;color:rgba(44,44,44,0.5);margin:12px 0">Pending Approvals (3)</div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-pending">QA Review - Day 2</span></div>
+              <div class="ui-vendor-row"><span>Kiran Suppliers</span><span class="ui-status-badge badge-review">Finance - Day 1</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-5">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">6</div>Re-KYC</div>
+        <h3>Keep vendor records fresh. Without the manual effort.</h3>
+        <p>Initiate re-KYC for specific sections only. Vendors update from their portal without email chains. Expiry tracking, change logs, status buckets, and aging filters keep your re-KYC pipeline visible. Bank detail changes require separate finance approval.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Section-wise updates, no full-form resubmission</div>
+          <div class="wt-feature-item">Field-level change log with previous vs new values</div>
+          <div class="wt-feature-item">Expiry, aging, and status bucket tracking</div>
+          <div class="wt-feature-item">Bank detail change with dedicated approval step</div>
+        </div>
+        <a href="#contact" class="wt-cta">Explore Re-KYC Module</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Re-KYC Dashboard</span>
+            <span class="wt-ui-tag">Admin</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-metric-row">
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#b07f1e">24</div><div class="ui-metric-label">Pending</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#c0424f">7</div><div class="ui-metric-label">Expired</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#108C72">41</div><div class="ui-metric-label">Completed</div></div>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-pending">Aging: 18 days</span></div>
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-approved">Completed</span></div>
+              <div class="ui-vendor-row"><span>Sunrise Logistics</span><span class="ui-status-badge badge-rejected">Expired - Reissue</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-6">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">7</div>Vendor Assessment</div>
+        <h3>Score vendors objectively. Replace spreadsheets with data.</h3>
+        <p>Assign auditors to vendor categories with isolated responses. Auto-compute weighted scores across multiple dimensions. Grade by percentage with configurable thresholds. Dashboard shows underperformers before contract renewal, not after.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Configurable question banks by vendor type</div>
+          <div class="wt-feature-item">Multiple auditors with isolated scoring</div>
+          <div class="wt-feature-item">Auto-grading: percentage and letter grade</div>
+          <div class="wt-feature-item">Scheduled by frequency per category</div>
+        </div>
+        <a href="#contact" class="wt-cta">See Assessment Engine</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Q3 Assessment - Apex Materials</span>
+            <span class="wt-ui-tag">Grade: A</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-metric-row"><div class="ui-metric"><div class="ui-metric-value">82<span class="suffix">%</span></div><div class="ui-metric-label">Overall Score</div></div></div>
+            <div class="ui-score-bar-container">
+              <div class="ui-score-row"><span class="ui-score-label">Quality</span><div class="ui-score-track"><div class="ui-score-fill" style="width:88%"></div></div><span class="ui-score-pct">88%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">Delivery</span><div class="ui-score-track"><div class="ui-score-fill" style="width:74%"></div></div><span class="ui-score-pct">74%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">Compliance</span><div class="ui-score-track"><div class="ui-score-fill" style="width:92%"></div></div><span class="ui-score-pct">92%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-7">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">8</div>Vendor Master</div>
+        <h3>One complete vendor record. Every detail, every history.</h3>
+        <p>Tabbed vendor profile showing org data, statutory, banking, approval history, re-KYC history, assessment history, attachments, and audit logs. Role-based visibility. SAP push from detail page. Document bulk download and version history.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Full tabbed vendor profile with history</div>
+          <div class="wt-feature-item">Role-based section visibility</div>
+          <div class="wt-feature-item">SAP push trigger from vendor detail</div>
+          <div class="wt-feature-item">Document version history and bulk download</div>
+        </div>
+        <a href="#contact" class="wt-cta">See Vendor Master</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">BuildRight Infrastructure</span>
+            <span class="wt-ui-tag" style="background:rgba(137,247,231,0.2);color:#108C72">Active</span>
+          </div>
+          <div class="wt-ui-body">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+              <span style="padding:5px 10px;background:var(--primary);color:white;border-radius:6px;font-size:11px;font-weight:600">Org Data</span>
+              <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Statutory</span>
+              <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Banking</span>
+              <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Approvals</span>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>GSTIN</span><span style="font-size:12px;font-weight:600;color:var(--green)">27AABCB1234F1Z5</span></div>
+              <div class="ui-vendor-row"><span>SAP Code</span><span style="font-size:12px;font-weight:600">V-00124</span></div>
+              <div class="ui-vendor-row"><span>Category</span><span style="font-size:12px">Material - Construction</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-8">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">9</div>Lists & Search</div>
+        <h3>Find any vendor, any status, in seconds.</h3>
+        <p>Advanced search by name, GSTIN, category, department, and date range. Status cards show Total, Pending, Approved, Rejected counts that update as filters are applied. Aging filters on re-KYC list surface overdue items immediately.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Multi-field search with real-time results</div>
+          <div class="wt-feature-item">Dynamic status cards above vendor list</div>
+          <div class="wt-feature-item">Re-KYC aging filters: 0-7, 8-30, 60+ days</div>
+          <div class="wt-feature-item">Session-persistent filter state</div>
+        </div>
+        <a href="#contact" class="wt-cta">Explore Lists View</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Vendor List</span>
+            <span class="wt-ui-tag">312 records</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-metric-row">
+              <div class="ui-metric"><div class="ui-metric-value">312</div><div class="ui-metric-label">Total</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#108C72">241</div><div class="ui-metric-label">Approved</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#b07f1e">47</div><div class="ui-metric-label">Pending</div></div>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>Apex Materials Pvt Ltd</span><span class="ui-status-badge badge-approved">Active</span></div>
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-approved">Active</span></div>
+              <div class="ui-vendor-row"><span>Kiran Suppliers</span><span class="ui-status-badge badge-pending">Pending QA</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-9">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">10</div>Governance</div>
+        <h3>Full control. Full traceability. Zero blind spots.</h3>
+        <p>Role-based access control across Admin, Finance, Purchase, Tax Approver, QA-QC, and Vendor roles. Immutable audit logs covering every action, retained per your policy. GSTIN uniqueness, PAN format, and IFSC validation enforced system-wide.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">9 defined roles with granular permissions</div>
+          <div class="wt-feature-item">Immutable, exportable audit logs</div>
+          <div class="wt-feature-item">System-wide data validation rules</div>
+          <div class="wt-feature-item">Configurable retention policy</div>
+        </div>
+        <a href="#contact" class="wt-cta">Governance Overview</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Audit Log Export</span>
+            <span class="wt-ui-tag">Governance</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+                <div style="font-size:11px;color:rgba(44,44,44,0.45)">Today 09:14 AM &bull; Rahul Sharma (Finance)</div>
+                <div style="font-size:13px">Approved statutory section - BuildRight Infra</div>
+              </div>
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+                <div style="font-size:11px;color:rgba(44,44,44,0.45)">Today 10:32 AM &bull; Priya Nair (Admin)</div>
+                <div style="font-size:13px">Role changed: Ramesh Kumar upgraded to Finance</div>
+              </div>
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+                <div style="font-size:11px;color:rgba(44,44,44,0.45)">Today 02:11 PM &bull; System</div>
+                <div style="font-size:13px">SAP Push completed - Apex Materials V-00123</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wt-panel" id="wt-10">
+      <div class="wt-panel-text">
+        <div class="wt-panel-step"><div class="wt-panel-step-num">11</div>Dashboard</div>
+        <h3>See your entire vendor operation at a glance.</h3>
+        <p>Vendor commercial dashboard for finance teams. Assessment performance dashboard for QA. Payment outstanding tracking with vendor, department, and date filters. Clickable KPIs drill into the list below. Export to PDF or Excel with one click.</p>
+        <div class="wt-features-list">
+          <div class="wt-feature-item">Vendor spend visibility by category</div>
+          <div class="wt-feature-item">Assessment grade distribution and trends</div>
+          <div class="wt-feature-item">Payment outstanding per vendor</div>
+          <div class="wt-feature-item">PDF and Excel export from all dashboards</div>
+        </div>
+        <a href="#contact" class="wt-cta">See Dashboard Demo</a>
+      </div>
+      <div>
+        <div class="wt-ui-card">
+          <div class="wt-ui-header">
+            <span class="wt-ui-title">Vendor Commercial Dashboard</span>
+            <span class="wt-ui-tag">Finance View</span>
+          </div>
+          <div class="wt-ui-body">
+            <div class="ui-metric-row">
+              <div class="ui-metric"><div class="ui-metric-value">312</div><div class="ui-metric-label">Active Vendors</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#b07f1e">₹2.4Cr</div><div class="ui-metric-label">Outstanding</div></div>
+            </div>
+            <div class="ui-score-bar-container">
+              <div class="ui-score-row"><span class="ui-score-label">Construction</span><div class="ui-score-track"><div class="ui-score-fill" style="width:78%"></div></div><span class="ui-score-pct">78%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">Facilities</span><div class="ui-score-track"><div class="ui-score-fill" style="width:62%"></div></div><span class="ui-score-pct">62%</span></div>
+              <div class="ui-score-row"><span class="ui-score-label">IT Services</span><div class="ui-score-track"><div class="ui-score-fill" style="width:44%"></div></div><span class="ui-score-pct">44%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="section-label">Core Capabilities</div>
+  <div class="section-title">Purpose-built for<br>India-grade compliance</div>
+  <p class="section-sub">Every feature designed around how Indian procurement teams actually work. Not a generic tool forced to fit.</p>
+
+  <div class="features-layout">
+    <div class="feature-accordion">
+
+      <div class="feature-item active" data-feature="0">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span class="feature-name">GST & Compliance Engine</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>India's only VMS with real-time GST defaulter detection. Auto-block payments before they happen. PAN format, IFSC checksum, and account number validation built in. Finance teams get audit-ready statutory logs without lifting a finger.</p>
+            <a href="#contact" class="feature-body-cta">
+              See Compliance Features
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-item" data-feature="1">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <span class="feature-name">Configurable Approval Matrix</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>Route approvals by role, department, vendor type, and business rules. Sequential, parallel, and conditional flows supported. Section-wise approval means finance validates statutory data while purchase approves org details, simultaneously.</p>
+            <a href="#contact" class="feature-body-cta">
+              Configure Your Matrix
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-item" data-feature="2">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="feature-name">Vendor Self-Service Portal</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>Vendors self-onboard, complete re-KYC, view PO/GRN/WO/invoices, submit bids, and track payment status. All from one portal. Cuts inbound vendor enquiry calls by 60-70% within the first 30 days.</p>
+            <a href="#contact" class="feature-body-cta">
+              Explore Vendor Portal
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-item" data-feature="3">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <span class="feature-name">Weighted Vendor Assessment</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>Configurable question banks with weighted scoring. Multiple auditors with isolated responses until finalization. Auto-grading with percentage and letter grade. Schedule assessments by frequency per vendor category. No more spreadsheet scoring.</p>
+            <a href="#contact" class="feature-body-cta">
+              See Assessment Engine
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-item" data-feature="4">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <span class="feature-name">ERP Integration with Error Guard</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>Push approved vendor master to ERP with one click. ERP reference number stored in VMS. Push failures preserve your vendor's business state instead of corrupting it. Error log with retry, keeping IT and operations aligned without manual coordination.</p>
+            <a href="#contact" class="feature-body-cta">
+              ERP Integration Details
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-item" data-feature="5">
+        <div class="feature-trigger" onclick="toggleFeature(this)">
+          <div class="feature-trigger-left">
+            <div class="feature-icon-small">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+            </div>
+            <span class="feature-name">Immutable Audit Trail</span>
+          </div>
+          <div class="feature-add-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-body-inner">
+            <p>Every action across onboarding, re-KYC, approvals, and SAP push is logged with timestamp, user identity, and remarks. Immutable. Exportable. Covers field-level changes in re-KYC too. Walk into any audit fully prepared, every time.</p>
+            <a href="#contact" class="feature-body-cta">
+              Explore Governance Features
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- UI PANEL -->
+    <div class="feature-ui-panel">
+      <div class="feature-ui-card">
+        <div class="feature-ui-header">
+          <div class="ui-dot red"></div>
+          <div class="ui-dot yellow"></div>
+          <div class="ui-dot green"></div>
+          <span class="ui-header-title" id="uiPanelTitle">Compliance Dashboard</span>
+        </div>
+        <div class="feature-ui-body">
+
+          <!-- Panel 0: GST Compliance -->
+          <div class="feature-ui-panel-content active" id="panel-0">
+            <div style="margin-bottom:14px">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:10px">GST Validation Status</div>
+              <div class="ui-compliance-row">
+                <span class="ui-compliance-badge">GSTIN Verified</span>
+                <span class="ui-compliance-badge">PAN Matched</span>
+                <span class="ui-compliance-badge">IFSC Valid</span>
+                <span class="ui-compliance-badge fail">GST Defaulter</span>
+              </div>
+            </div>
+            <div class="ui-metric-row">
+              <div class="ui-metric">
+                <div class="ui-metric-value">312<span class="suffix"> Active</span></div>
+                <div class="ui-metric-label">Verified Vendors</div>
+              </div>
+              <div class="ui-metric">
+                <div class="ui-metric-value" style="color:#c0424f">7<span class="suffix"> Blocked</span></div>
+                <div class="ui-metric-label">GST Defaulters</div>
+              </div>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>Apex Materials Pvt Ltd</span><span class="ui-status-badge badge-approved">Verified</span></div>
+              <div class="ui-vendor-row"><span>Sunrise Logistics Co</span><span class="ui-status-badge badge-rejected">Defaulter</span></div>
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-approved">Verified</span></div>
+            </div>
+          </div>
+
+          <!-- Panel 1: Approval Matrix -->
+          <div class="feature-ui-panel-content" id="panel-1">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:12px">Approval Workflow - Material Vendor</div>
+            <div class="ui-approval-flow">
+              <div class="ui-approval-step">Purchase Mgr</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step">Finance</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step pending">QA-QC</div>
+              <span class="ui-approval-arrow">&#8594;</span>
+              <div class="ui-approval-step pending">SAP Push</div>
+            </div>
+            <div class="ui-vendor-list" style="margin-top:14px">
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-pending">QA Review</span></div>
+              <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">Approved</span></div>
+              <div class="ui-vendor-row"><span>Kiran Suppliers</span><span class="ui-status-badge badge-review">Finance</span></div>
+            </div>
+          </div>
+
+          <!-- Panel 2: Vendor Portal -->
+          <div class="feature-ui-panel-content" id="panel-2">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:12px">Vendor Dashboard - BuildRight Infra</div>
+            <div class="ui-portal-tiles">
+              <div class="ui-portal-tile">
+                <div class="ui-portal-tile-value">14</div>
+                <div class="ui-portal-tile-label">Active POs</div>
+              </div>
+              <div class="ui-portal-tile">
+                <div class="ui-portal-tile-value" style="color:#108C72">8</div>
+                <div class="ui-portal-tile-label">Invoices Paid</div>
+              </div>
+              <div class="ui-portal-tile">
+                <div class="ui-portal-tile-value" style="color:#b07f1e">3</div>
+                <div class="ui-portal-tile-label">Pending WOs</div>
+              </div>
+              <div class="ui-portal-tile">
+                <div class="ui-portal-tile-value" style="color:var(--primary)">2</div>
+                <div class="ui-portal-tile-label">Open Auctions</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Assessment -->
+          <div class="feature-ui-panel-content" id="panel-3">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:12px">Vendor Assessment Score</div>
+            <div class="ui-metric-row">
+              <div class="ui-metric">
+                <div class="ui-metric-value">82<span class="suffix">%</span></div>
+                <div class="ui-metric-label">Overall Score - Grade A</div>
+              </div>
+            </div>
+            <div class="ui-score-bar-container">
+              <div class="ui-score-row">
+                <span class="ui-score-label">Quality</span>
+                <div class="ui-score-track"><div class="ui-score-fill" style="width:88%"></div></div>
+                <span class="ui-score-pct">88%</span>
+              </div>
+              <div class="ui-score-row">
+                <span class="ui-score-label">Delivery</span>
+                <div class="ui-score-track"><div class="ui-score-fill" style="width:74%"></div></div>
+                <span class="ui-score-pct">74%</span>
+              </div>
+              <div class="ui-score-row">
+                <span class="ui-score-label">Compliance</span>
+                <div class="ui-score-track"><div class="ui-score-fill" style="width:92%"></div></div>
+                <span class="ui-score-pct">92%</span>
+              </div>
+              <div class="ui-score-row">
+                <span class="ui-score-label">Pricing</span>
+                <div class="ui-score-track"><div class="ui-score-fill" style="width:78%"></div></div>
+                <span class="ui-score-pct">78%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 4: SAP -->
+          <div class="feature-ui-panel-content" id="panel-4">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:12px">ERP Integration Log</div>
+            <div class="ui-metric-row">
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#108C72">48</div><div class="ui-metric-label">Synced Today</div></div>
+              <div class="ui-metric"><div class="ui-metric-value" style="color:#c0424f">2</div><div class="ui-metric-label">Push Errors</div></div>
+            </div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">SAP: V-00123</span></div>
+              <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-approved">SAP: V-00124</span></div>
+              <div class="ui-vendor-row"><span>Sunrise Logistics</span><span class="ui-status-badge badge-rejected">Push Failed</span></div>
+            </div>
+          </div>
+
+          <!-- Panel 5: Audit -->
+          <div class="feature-ui-panel-content" id="panel-5">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(44,44,44,0.4);margin-bottom:12px">Audit Log - Last 24 Hours</div>
+            <div class="ui-vendor-list">
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+                <div style="font-size:12px;color:rgba(44,44,44,0.45)">09:14 AM &bull; Rahul Sharma</div>
+                <div>Approved statutory section - BuildRight Infra</div>
+              </div>
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+                <div style="font-size:12px;color:rgba(44,44,44,0.45)">10:32 AM &bull; Finance Team</div>
+                <div>GST defaulter flag raised - Sunrise Logistics</div>
+              </div>
+              <div class="ui-vendor-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+                <div style="font-size:12px;color:rgba(44,44,44,0.45)">02:11 PM &bull; System</div>
+                <div>SAP Push completed - Apex Materials V-00123</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM USE CASES -->
+<section class="teams-section" id="teams">
+  <div class="section-label">Team Use Cases</div>
+  <div class="section-title">Every team works better<br>with Vendor Management</div>
+  <p class="section-sub">Different teams. Different workflows. One unified system that makes each of them faster.</p>
+
+  <div class="teams-layout">
+    <div class="teams-tabs">
+      <div class="team-tab active" onclick="switchTeam(this, 'purchase')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
+        <span class="team-tab-text">Purchase Team</span>
+      </div>
+      <div class="team-tab" onclick="switchTeam(this, 'finance')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <span class="team-tab-text">Finance Team</span>
+      </div>
+      <div class="team-tab" onclick="switchTeam(this, 'qa')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <span class="team-tab-text">QA / Architecture</span>
+      </div>
+      <div class="team-tab" onclick="switchTeam(this, 'governance')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <span class="team-tab-text">Governance / Admin</span>
+      </div>
+      <div class="team-tab" onclick="switchTeam(this, 'hr')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <span class="team-tab-text">HR / Facility Mgmt</span>
+      </div>
+      <div class="team-tab" onclick="switchTeam(this, 'it')">
+        <div class="team-tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+        <span class="team-tab-text">IT / ERP Team</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="teams-panel active" id="team-purchase">
+        <div>
+          <div class="team-panel-title">Purchase Team</div>
+          <p class="team-panel-desc">Day-to-day vendor invitations, onboarding monitoring, approval actions, and SAP push for approved vendors. Full pipeline visibility without chasing anyone.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Vendor Invitation with department and category routing</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Material Vendor Workflow with sequential approvals</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Approval Queue with one-click action</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>SAP Push from vendor detail page</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Status Cards: Total, Pending, Approved, Rejected counts</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">Purchase Dashboard</span>
+              <span class="wt-ui-tag">Today</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-metric-row">
+                <div class="ui-metric"><div class="ui-metric-value">12</div><div class="ui-metric-label">Pending Approvals</div></div>
+                <div class="ui-metric"><div class="ui-metric-value" style="color:#108C72">48</div><div class="ui-metric-label">Active Vendors</div></div>
+              </div>
+              <div class="ui-vendor-list">
+                <div class="ui-vendor-row"><span>BuildRight Infra</span><span class="ui-status-badge badge-pending">Awaiting QA</span></div>
+                <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">SAP Synced</span></div>
+                <div class="ui-vendor-row"><span>Kiran Suppliers</span><span class="ui-status-badge badge-review">Finance Review</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-panel" id="team-finance">
+        <div>
+          <div class="team-panel-title">Finance Team</div>
+          <p class="team-panel-desc">GST validation, statutory document review, bank detail verification, and payment outstanding monitoring. Compliance enforced before any payment goes out.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>GST Defaulter Flag and auto-rejection</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Indirect and direct tax approver sections</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Bank detail protection with separate approval</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Payment outstanding dashboard per vendor</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">Finance View</span>
+              <span class="wt-ui-tag">Compliance</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-compliance-row" style="margin-bottom:14px">
+                <span class="ui-compliance-badge">7 GST Clear</span>
+                <span class="ui-compliance-badge fail">2 Defaulters</span>
+              </div>
+              <div class="ui-metric-row">
+                <div class="ui-metric"><div class="ui-metric-value" style="color:#b07f1e">₹2.4Cr</div><div class="ui-metric-label">Outstanding</div></div>
+              </div>
+              <div class="ui-vendor-list">
+                <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">GST Clear</span></div>
+                <div class="ui-vendor-row"><span>Sunrise Logistics</span><span class="ui-status-badge badge-rejected">Defaulter</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-panel" id="team-qa">
+        <div>
+          <div class="team-panel-title">QA / Architecture</div>
+          <p class="team-panel-desc">Pre-qualification reviews, assessment scoring, and compliance sign-off for technical vendors. Objective scoring with full assessment history in one place.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Pre-Qualification with vendor self-assessment</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Assessment Types by vendor category</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Weighted scoring with grade auto-calculation</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>My Assessments dashboard with due dates</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">QA Assessment Panel</span>
+              <span class="wt-ui-tag">Q3 2024</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-score-bar-container">
+                <div class="ui-score-row"><span class="ui-score-label">Quality</span><div class="ui-score-track"><div class="ui-score-fill" style="width:88%"></div></div><span class="ui-score-pct">88%</span></div>
+                <div class="ui-score-row"><span class="ui-score-label">Technical</span><div class="ui-score-track"><div class="ui-score-fill" style="width:92%"></div></div><span class="ui-score-pct">92%</span></div>
+                <div class="ui-score-row"><span class="ui-score-label">Compliance</span><div class="ui-score-track"><div class="ui-score-fill" style="width:76%"></div></div><span class="ui-score-pct">76%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-panel" id="team-governance">
+        <div>
+          <div class="team-panel-title">Governance / Admin</div>
+          <p class="team-panel-desc">User role management, approval matrix configuration, audit log export, and system administration. Full traceability and instant audit readiness.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Role-based access control with 9 defined roles</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Configurable approval matrix per business rule</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Immutable audit trail with export</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>System-wide data validation enforcement</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">Admin Console</span>
+              <span class="wt-ui-tag">Governance</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-vendor-list">
+                <div class="ui-vendor-row"><span>Approval Matrix</span><span class="ui-status-badge badge-approved">Configured</span></div>
+                <div class="ui-vendor-row"><span>Audit Log Export</span><span class="ui-status-badge badge-approved">Ready</span></div>
+                <div class="ui-vendor-row"><span>Active User Roles</span><span class="ui-status-badge badge-review">24 Users</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-panel" id="team-hr">
+        <div>
+          <div class="team-panel-title">HR / Facility Management</div>
+          <p class="team-panel-desc">FM and contractor vendor onboarding, services assessment, and re-KYC for high-turnover service vendors. Compliance automated so HR doesn't manage spreadsheets.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Services / FM Vendor Workflow</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Re-KYC initiation and aging filter tracking</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Assessment dashboard for FM vendor performance</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Auto-reminders for re-KYC completion</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">FM Vendor Panel</span>
+              <span class="wt-ui-tag">HR View</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-metric-row">
+                <div class="ui-metric"><div class="ui-metric-value">34</div><div class="ui-metric-label">FM Vendors</div></div>
+                <div class="ui-metric"><div class="ui-metric-value" style="color:#b07f1e">8</div><div class="ui-metric-label">Re-KYC Due</div></div>
+              </div>
+              <div class="ui-vendor-list">
+                <div class="ui-vendor-row"><span>CleanPro Services</span><span class="ui-status-badge badge-approved">Grade A</span></div>
+                <div class="ui-vendor-row"><span>SecureGuard Ltd</span><span class="ui-status-badge badge-pending">Re-KYC Due</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-panel" id="team-it">
+        <div>
+          <div class="team-panel-title">IT / ERP Team</div>
+          <p class="team-panel-desc">SAP integration monitoring, error handling, DMS document sync, and user access provisioning. SAP data integrity maintained without manual coordination.</p>
+          <div class="team-features-list">
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>SAP Push with error guard and retry</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>DMS document sync with status tracking</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Role-based access provisioning</div>
+            <div class="team-feature"><div class="team-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>SAP error log dashboard with retry</div>
+          </div>
+        </div>
+        <div>
+          <div class="wt-ui-card">
+            <div class="wt-ui-header" style="background:var(--bg);border-bottom:1px solid var(--divider)">
+              <span class="wt-ui-title" style="color:var(--dark)">SAP Integration Monitor</span>
+              <span class="wt-ui-tag">IT Panel</span>
+            </div>
+            <div class="wt-ui-body">
+              <div class="ui-metric-row">
+                <div class="ui-metric"><div class="ui-metric-value" style="color:#108C72">48</div><div class="ui-metric-label">Synced Today</div></div>
+                <div class="ui-metric"><div class="ui-metric-value" style="color:#c0424f">2</div><div class="ui-metric-label">Push Errors</div></div>
+              </div>
+              <div class="ui-vendor-list">
+                <div class="ui-vendor-row"><span>Apex Materials</span><span class="ui-status-badge badge-approved">SAP: V-00123</span></div>
+                <div class="ui-vendor-row"><span>Sunrise Logistics</span><span class="ui-status-badge badge-rejected">Retry Required</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries-section" id="industries">
+  <div class="section-label">Industry Use Cases</div>
+  <div class="section-title">Built for the sectors<br>that run on vendors</div>
+  <p class="section-sub">From manufacturing floors to hospital supply chains. VMS adapts to the compliance requirements of your industry.</p>
+
+  <div class="industries-grid">
+    <div class="industry-card" onclick="openIndustryModal('manufacturing')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="industry-name">Manufacturing</div>
+      <div class="industry-desc">Material vendor onboarding, QA pre-qualification, SAP sync. Handle 200-800 vendors with zero duplicate codes.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('realestate')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="industry-name">Real Estate</div>
+      <div class="industry-desc">RERA-compliant FM vendor trails, payment tracking, annual re-KYC. Built for India's urban infra boom.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('infra')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="industry-name">Infrastructure & EPC</div>
+      <div class="industry-desc">Multi-tier subcontractor compliance, labour statutory docs, and category-based approval routing for complex project structures.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('retail')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </div>
+      <div class="industry-name">Retail & E-commerce</div>
+      <div class="industry-desc">Scale supplier onboarding to hundreds with bulk invite. Block GST defaulters before payment. FSSAI and product compliance managed automatically.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('logistics')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div class="industry-name">Logistics & Supply Chain</div>
+      <div class="industry-desc">Re-KYC aging filters surface overdue vendor updates before they cause payment rejections. Bank data stays current, always.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('healthcare')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="industry-name">Healthcare & Pharma</div>
+      <div class="industry-desc">CDSCO and FDA compliance tracked through periodic assessment. License renewal alerts. Full audit log for regulatory submissions.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('bfsi')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      </div>
+      <div class="industry-name">BFSI</div>
+      <div class="industry-desc">RBI outsourcing norms met with complete vendor risk trail, re-KYC, and audit log export for regulatory submission.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <div class="industry-card" onclick="openIndustryModal('it')">
+      <div class="industry-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="industry-name">IT & Technology</div>
+      <div class="industry-desc">Self-onboarding portal, digital bid submission for RFQs, and clean SAP data. No duplicate vendor codes in your ERP ever again.</div>
+      <div class="industry-link">View Use Case <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRY MODAL -->
+<div class="modal-overlay" id="industryModal" onclick="closeModalOnBg(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-icon" id="modalIcon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="modal-title" id="modalTitle">Manufacturing</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-pain">
+        <div class="modal-pain-label">Core Pain Point</div>
+        <p id="modalPain">Onboarding 200-500 material vendors manually causes duplicate vendor codes, missing GST docs, and SAP data errors.</p>
+      </div>
+      <div class="modal-section-title">VMS Features Used</div>
+      <div class="modal-features" id="modalFeatures"></div>
+      <div class="modal-outcome">
+        <div class="modal-outcome-label">Business Outcome</div>
+        <p id="modalOutcome">Vendor onboarding from 15 days to 4 days; zero duplicate vendor codes; SAP master accuracy improved.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END BANNER -->
+<div class="cta-banner">
+  <h2>Stop managing vendors.<br>Start <span class="accent">governing</span> them.</h2>
+  <p>Join procurement teams across India who replaced spreadsheet chaos with Vendor Management. Go live in weeks, not months.</p>
+  <div class="cta-banner-btns">
+    <a href="#contact" class="btn-banner-primary">Get Started Today</a>
+    <a href="#contact" class="btn-banner-secondary">Book a Demo</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-layout">
+    <div class="contact-info reveal">
+      <div class="section-label">Get In Touch</div>
+      <h3>Let's talk about your vendor operations</h3>
+      <p>Our team will understand your vendor complexity, walk you through a live demo tailored to your industry, and give you a clear implementation timeline.</p>
+
+      <div class="contact-details">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Our Office</div>
+            <div class="contact-detail-value">Mumbai, Maharashtra, India</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Email Us</div>
+            <div class="contact-detail-value">sales@lockated.com</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.5 15.5 19.79 19.79 0 0 1 1.15 6.87 2 2 0 0 1 3.12 5h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 12.5a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 18.92"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Call Us</div>
+            <div class="contact-detail-value">+91 22 4890 6600</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-card reveal reveal-delay-1">
+      <div style="font-size:18px;font-weight:700;color:var(--dark);margin-bottom:4px">Book a Free Demo</div>
+      <div style="font-size:13px;color:rgba(44,44,44,0.5);margin-bottom:24px">We respond within 1 business hour.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" placeholder="Rajesh">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" placeholder="Mehta">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Work Email</label>
+        <input class="form-input" type="email" placeholder="rajesh@company.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company Name</label>
+        <input class="form-input" type="text" placeholder="BuildRight Infrastructure">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Industry</label>
+          <select class="form-select">
+            <option>Manufacturing</option>
+            <option>Real Estate</option>
+            <option>Infrastructure & EPC</option>
+            <option>Retail & E-commerce</option>
+            <option>Logistics</option>
+            <option>Healthcare & Pharma</option>
+            <option>BFSI</option>
+            <option>IT & Technology</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Active Vendors</label>
+          <select class="form-select">
+            <option>Under 100</option>
+            <option>100-300</option>
+            <option>300-500</option>
+            <option>500-1000</option>
+            <option>1000+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">What's your biggest challenge?</label>
+        <textarea class="form-textarea" placeholder="Tell us about your vendor management pain points..."></textarea>
+      </div>
+      <button class="form-submit">Request Demo</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">
+        <div class="footer-logo-mark">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="footer-logo-text">Vendor Management</div>
+      </div>
+      <p class="footer-brand-desc">India's most complete vendor lifecycle management platform. Built for India's compliance complexity. Trusted by procurement leaders across manufacturing, real estate, healthcare, and more.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#walkthrough">Walkthrough</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#teams">Team Use Cases</a></li>
+        <li><a href="#contact">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Lockated</a></li>
+        <li><a href="#">GoPhygital.work</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Data Security</a></li>
+        <li><a href="#">Compliance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2024 Lockated / GoPhygital.work. All rights reserved. Made in India.</div>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Security</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// BENTO GRID BG
+const bentoBg = document.getElementById('bentoBg');
+for (let i = 0; i < 48; i++) {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  cell.style.animationDelay = (Math.random() * 3) + 's';
+  bentoBg.appendChild(cell);
+}
+
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// COUNT UP
+function countUp(el, target, duration = 1800) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { el.textContent = target; clearInterval(timer); }
+    else el.textContent = Math.floor(start);
+  }, 16);
+}
+
+const counters = document.querySelectorAll('.count-up');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !e.target.dataset.counted) {
+      e.target.dataset.counted = true;
+      countUp(e.target, parseInt(e.target.dataset.target));
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+// REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+reveals.forEach(r => revealObserver.observe(r));
+
+// FEATURE ACCORDION
+const panelTitles = [
+  'Compliance Dashboard', 'Approval Matrix', 'Vendor Portal',
+  'Assessment Engine', 'ERP Integration', 'Audit Trail'
+];
+
+function toggleFeature(trigger) {
+  const item = trigger.closest('.feature-item');
+  const isActive = item.classList.contains('active');
+  document.querySelectorAll('.feature-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.feature-ui-panel-content').forEach(p => p.classList.remove('active'));
+  if (!isActive) {
+    item.classList.add('active');
+    const idx = item.dataset.feature;
+    document.getElementById('panel-' + idx).classList.add('active');
+    document.getElementById('uiPanelTitle').textContent = panelTitles[idx];
+  } else {
+    document.querySelectorAll('.feature-item')[0].classList.add('active');
+    document.getElementById('panel-0').classList.add('active');
+    document.getElementById('uiPanelTitle').textContent = panelTitles[0];
+  }
+}
+
+// WALKTHROUGH TABS
+function switchTab(btn, idx) {
+  document.querySelectorAll('.wt-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.wt-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('wt-' + idx);
+  if (panel) panel.classList.add('active');
+}
+
+// TEAM TABS
+function switchTeam(tab, teamId) {
+  document.querySelectorAll('.team-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.teams-panel').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  const panel = document.getElementById('team-' + teamId);
+  if (panel) panel.classList.add('active');
+}
+
+// INDUSTRY MODAL DATA
+const industryData = {
+  manufacturing: {
+    title: 'Manufacturing',
+    pain: 'Onboarding 200-500 material vendors manually causes duplicate vendor codes, missing GST docs, and SAP data errors.',
+    features: ['Material Vendor Workflow with QA routing', 'Duplicate GST Detection on GSTIN entry', 'Pre-Qualification trigger with weighted scoring', 'Vendor self-assessment for technical criteria', 'SAP Push on final approval with error guard'],
+    outcome: 'Vendor onboarding reduced from 15 days to 4. Zero duplicate vendor codes. SAP master accuracy improved significantly.'
+  },
+  realestate: {
+    title: 'Real Estate & Construction',
+    pain: 'Services and FM vendors managed over email, leading to delayed approvals and compliance gaps for RERA audits.',
+    features: ['Services / FM Vendor Workflow with billing approval', 'Section-wise approvals for statutory sections', 'Annual re-KYC with expiry and aging tracking', 'Payment tracking dashboard per vendor', 'Full audit log exportable for RERA submissions'],
+    outcome: 'Full RERA-compliant vendor trail. Annual re-KYC reduces stale data. Payment visibility reduces disputes by over 50%.'
+  },
+  infra: {
+    title: 'Infrastructure & EPC',
+    pain: 'Multi-tier subcontractor compliance impossible without centralized records. Labour compliance and statutory docs scattered across departments.',
+    features: ['Configurable approval matrix by vendor category', 'Multi-level approval with QA and architecture', 'Attachment management for compliance documents', 'Immutable audit trail per subcontractor', 'Periodic performance assessments by type'],
+    outcome: 'Subcontractor compliance centralized. Statutory docs retrievable in seconds for audit. Assessment drives vendor retention decisions.'
+  },
+  retail: {
+    title: 'Retail & E-commerce',
+    pain: 'Onboarding hundreds of suppliers across categories with product compliance, FSSAI, and GST validation handled manually.',
+    features: ['Bulk invite dispatched to entire supplier groups', 'Duplicate GST Detection and field validations', 'Self-onboarding by supplier category', 'Status Cards tracking approval progress', 'Annual assessment dashboard per supplier'],
+    outcome: 'Supplier onboarding scaled to hundreds without headcount increase. GST defaulters blocked before payment. Full FSSAI compliance tracked.'
+  },
+  logistics: {
+    title: 'Logistics & Supply Chain',
+    pain: 'Fleet and service vendor re-KYC not triggered on time. Bank data and GST updates missed, causing payment rejections.',
+    features: ['Aging Filters for overdue re-KYC identification', 'Section-wise re-KYC initiation by admin', 'Bank detail protection with finance approval step', 'Change Log tracking all field-level updates', 'Automated reminders until re-KYC completion'],
+    outcome: 'Payment rejections from stale bank data eliminated. Re-KYC completion rate improved from 40% to 90%.'
+  },
+  healthcare: {
+    title: 'Healthcare & Pharma',
+    pain: 'Medical device and pharma suppliers require CDSCO and FDA compliance verification before activation. Manual process misses renewals.',
+    features: ['GST Defaulter Handling for statutory vendors', 'Attachment management for CDSCO/FDA licenses', 'Multi-level approval with QA pre-qualification', 'Assessment frequency for license renewal tracking', 'Export reports for regulatory submission'],
+    outcome: 'Zero compliance lapses with certified suppliers. Assessment tracks license renewal dates. Export supports regulatory submissions.'
+  },
+  bfsi: {
+    title: 'BFSI',
+    pain: 'IT and service vendor risk management mandated by RBI outsourcing guidelines. No centralized vendor risk trail.',
+    features: ['RBI-specific configurable approval chain', 'Risk assessment configured per RBI criteria', 'Annual re-KYC refreshing all vendor data', 'Audit log maintained per RBI record-keeping', 'Compliance report exported for RBI submission'],
+    outcome: 'RBI audit-ready vendor records maintained. Vendor risk assessment scored and documented. Re-KYC trail satisfies outsourcing norms.'
+  },
+  it: {
+    title: 'IT & Technology',
+    pain: 'Global and local software vendors onboarded slowly. No vendor portal for bid comparison. Duplicate vendor codes in SAP.',
+    features: ['Self-Onboarding Portal with tokenized secure link', 'Duplicate GST Detection on vendor entry', 'Auction participation: view, submit, and track bids', 'SAP Push Trigger with reference number storage', 'Event-based notifications for all actions'],
+    outcome: 'RFQ process fully digital. Vendor onboarding completed without internal user involvement. SAP data clean and accurate.'
+  }
+};
+
+function openIndustryModal(key) {
+  const data = industryData[key];
+  if (!data) return;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalPain').textContent = data.pain;
+  document.getElementById('modalOutcome').textContent = data.outcome;
+  const featuresEl = document.getElementById('modalFeatures');
+  featuresEl.innerHTML = data.features.map(f => `<div class="modal-feature">${f}</div>`).join('');
+  document.getElementById('industryModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('industryModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOnBg(e) {
+  if (e.target.classList.contains('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
