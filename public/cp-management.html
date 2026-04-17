@@ -73,7 +73,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--txt);over
 .wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
 .tag{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-08);border:1px solid var(--accent-15);border-radius:99px;padding:5px 14px;}
 .accent{color:var(--accent);}
-.reveal{opacity:1;transform:none;transition:opacity .75s var(--ease),transform .75s var(--ease);filter:none;}
+.reveal{opacity:1;transform:none;transition:opacity .75s var(--ease),transform .75s var(--ease);}
 .reveal.pre{opacity:0;transform:translateY(30px);}
 .reveal.pre.on{opacity:1;transform:none;}
 .reveal-d1{transition-delay:.08s;} .reveal-d2{transition-delay:.16s;} .reveal-d3{transition-delay:.24s;}
@@ -144,6 +144,8 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--txt);over
 .pill-l{font-size:11.5px;color:var(--txt-3);font-weight:500;line-height:1.4;}
 @keyframes fu{to{opacity:1;transform:none;}}
 
+
+
 /* ── SECTION CHROME ── */
 section{padding:108px 0;}
 .sec-hd{text-align:center;}
@@ -151,7 +153,302 @@ section{padding:108px 0;}
 .sec-hd h2{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.038em;line-height:1.06;margin-bottom:14px;color:var(--dark);}
 .sec-hd p{font-size:16px;color:var(--txt-2);max-width:530px;margin:0 auto 56px;line-height:1.76;}
 
-/* (rest of CSS unchanged from your input) */
+/* ── PAIN ── */
+#pain{background:var(--dark);padding:108px 0;position:relative;overflow:hidden;}
+#pain::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(246,244,238,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(246,244,238,.025) 1px,transparent 1px);
+  background-size:56px 56px;pointer-events:none;}
+.pain-glow{position:absolute;top:-200px;right:-100px;width:700px;height:700px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(218,119,86,.1) 0%,transparent 65%);}
+.pain-glow2{position:absolute;bottom:-180px;left:-80px;width:500px;height:500px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(83,74,183,.08) 0%,transparent 65%);}
+#pain .sec-hd h2{color:#fff;}
+#pain .sec-hd p{color:rgba(255,255,255,.48);}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.bc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r2);padding:36px 30px;position:relative;overflow:hidden;transition:all .45s var(--ease);}
+.bc:hover{background:rgba(255,255,255,.07);border-color:rgba(218,119,86,.35);transform:translateY(-5px);box-shadow:0 20px 64px rgba(0,0,0,.35);}
+.bc::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top left,rgba(218,119,86,.09),transparent 55%);
+  opacity:0;transition:opacity .45s var(--ease);}
+.bc:hover::after{opacity:1;}
+.bc-ico{width:46px;height:46px;border-radius:12px;background:rgba(218,119,86,.14);border:1px solid rgba(218,119,86,.26);display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
+.bc-ico i{color:var(--accent);font-size:18px;}
+.bc h3{font-size:19px;font-weight:700;color:#fff;margin-bottom:12px;letter-spacing:-.025em;line-height:1.25;position:relative;z-index:1;}
+.bc p{font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.78;position:relative;z-index:1;}
+.bc-stat{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.04em;position:relative;z-index:1;}
+.bc-stat span{font-size:11px;font-weight:400;color:rgba(255,255,255,.36);display:block;margin-top:4px;letter-spacing:0;}
+
+/* ── SOLUTIONS ── */
+#solutions{background:var(--bg);}
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.sol-sticky{position:sticky;top:110px;}
+.usp-list{display:flex;flex-direction:column;}
+.ui{border-bottom:1px solid var(--t3);overflow:hidden;cursor:pointer;}
+.ui:first-child{border-top:1px solid var(--t3);}
+.ui.on{border-color:transparent;border-radius:var(--r);background:var(--white);box-shadow:var(--sh-md);border:1px solid var(--border);margin:7px 0;}
+.ui-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;gap:14px;}
+.ui-hl{display:flex;align-items:center;gap:14px;}
+.ui-n{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;background:var(--accent-08);color:var(--accent);transition:all .3s;}
+.ui.on .ui-n{background:var(--accent);color:#fff;}
+.ui-hd h4{font-size:14.5px;font-weight:600;color:var(--txt-2);letter-spacing:-.01em;transition:color .3s;}
+.ui.on .ui-hd h4{color:var(--dark);}
+.ui-tog{width:26px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--t3);transition:all .3s;}
+.ui.on .ui-tog{background:var(--accent);border-color:var(--accent);}
+.ui-tog i{font-size:10px;color:var(--txt-3);transition:all .3s;}
+.ui.on .ui-tog i{color:#fff;transform:rotate(45deg);}
+.ui-bd{max-height:0;overflow:hidden;padding:0 22px;transition:max-height .5s var(--ease),padding .3s;}
+.ui.on .ui-bd{max-height:240px;padding:0 22px 22px;}
+.ui-bd p{font-size:13.5px;color:var(--txt-2);line-height:1.82;}
+.sol-cta{margin-top:38px;}
+
+/* Dashboard preview */
+.dash{border-radius:var(--r3);overflow:hidden;background:var(--dark-d);border:1px solid rgba(255,255,255,.08);box-shadow:var(--sh-lg);}
+.dash-bar{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px;}
+.db{width:10px;height:10px;border-radius:50%;}
+.db-r{background:#FF5F57;}.db-y{background:#FFBD2E;}.db-g{background:#28C840;}
+.dash-bar-lbl{font-size:11px;color:rgba(255,255,255,.28);margin-left:8px;font-weight:500;}
+.dash-body{padding:22px;display:flex;flex-direction:column;gap:11px;}
+.dr{display:flex;gap:10px;}
+.dc{flex:1;background:rgba(255,255,255,.05);border-radius:11px;border:1px solid rgba(255,255,255,.07);padding:14px;}
+.dc-lbl{font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.12em;margin-bottom:7px;}
+.dc-val{font-size:23px;font-weight:800;color:#fff;letter-spacing:-.04em;}
+.dc-val.a{color:var(--accent);}
+.dc-val.v{color:var(--lav);}
+.dc-sub{font-size:10px;margin-top:4px;}
+.dc-sub.up{color:var(--success);}.dc-sub.warn{color:var(--warning);}
+.dc-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:10px;overflow:hidden;}
+.dc-fill{height:100%;background:linear-gradient(90deg,var(--accent),#e4926a);border-radius:2px;width:72%;}
+.dc-meta{display:flex;justify-content:space-between;margin-top:5px;}
+.dc-meta span{font-size:9px;color:rgba(255,255,255,.32);}
+.dc-meta .as{color:var(--accent);font-weight:700;}
+.dc-list{display:flex;flex-direction:column;gap:6px;}
+.dc-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border-radius:8px;padding:9px 11px;border:1px solid rgba(255,255,255,.05);}
+.dc-row span{font-size:11px;color:rgba(255,255,255,.6);}
+.badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;}
+.bg-ok{background:rgba(164,244,231,.12);color:#A4F4E7;border:1px solid rgba(164,244,231,.2);}
+.bg-w{background:rgba(244,199,144,.12);color:#F4C790;border:1px solid rgba(244,199,144,.2);}
+.bg-e{background:rgba(228,98,111,.12);color:#E4626F;border:1px solid rgba(228,98,111,.2);}
+.dc-tiers{display:flex;gap:8px;}
+.dc-tier{flex:1;border-radius:9px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.07);}
+.dc-tier i{font-size:14px;display:block;margin-bottom:5px;}
+.t-bronze{background:rgba(196,184,157,.1);} .t-bronze i{color:var(--border);}
+.t-silver{background:rgba(170,185,197,.1);} .t-silver i{color:var(--exception);}
+.t-gold{background:rgba(218,119,86,.12);border-color:rgba(218,119,86,.26);} .t-gold i{color:var(--accent);}
+.dc-tier span{font-size:9.5px;color:rgba(255,255,255,.42);font-weight:600;}
+
+/* ── TESTIMONIALS ── */
+#testi{background:var(--white);}
+.testi-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.stack{position:relative;height:380px;}
+.tc{position:absolute;width:100%;background:var(--bg);border-radius:var(--r2);padding:32px;border:1px solid var(--border);box-shadow:var(--sh-md);transition:all .6s var(--ease);}
+.tc.c0{top:0;left:0;z-index:4;transform:rotate(0);}
+.tc.c1{top:14px;left:10px;z-index:3;transform:rotate(1.5deg) scale(.97);opacity:.78;}
+.tc.c2{top:26px;left:20px;z-index:2;transform:rotate(2.8deg) scale(.94);opacity:.52;}
+.tc.c3{top:38px;left:28px;z-index:1;transform:rotate(4deg) scale(.91);opacity:.28;}
+.tc-val{font-size:38px;font-weight:800;color:var(--accent);letter-spacing:-.046em;line-height:1;margin-bottom:13px;}
+.tc-val span{font-size:12.5px;color:var(--txt-3);font-weight:400;display:block;margin-top:5px;letter-spacing:0;}
+.tc-q{font-size:13.5px;line-height:1.82;color:var(--txt-2);margin-bottom:22px;font-style:italic;}
+.tc-q::before{content:'\201C';font-size:22px;color:var(--accent);line-height:0;vertical-align:-7px;margin-right:3px;}
+.tc-who{display:flex;align-items:center;gap:11px;}
+.tc-av{width:38px;height:38px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0;}
+.tc-av.ind{background:var(--indigo);}
+.tc-nm{font-size:13px;font-weight:700;color:var(--dark);}
+.tc-rl{font-size:11.5px;color:var(--txt-3);}
+.tctl{display:flex;gap:9px;margin-top:20px;}
+.tbt{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--t3);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;color:var(--txt-3);font-size:12px;}
+.tbt:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.testi-r .sec-hd{text-align:left;}
+.testi-r .sec-hd p{text-align:left;margin:0 0 24px;max-width:100%;}
+.trow{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:10px;}
+.ti{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--txt-2);font-weight:500;}
+.ti i{color:var(--green);font-size:12px;}
+
+/* ── WALKTHROUGH ── */
+#walk{background:var(--bg);}
+.wtabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;}
+.wtab{display:flex;align-items:center;gap:7px;padding:10px 20px;border-radius:11px;border:1.5px solid var(--t3);background:var(--white);font-size:13px;font-weight:600;color:var(--txt-2);cursor:pointer;transition:all .25s;font-family:'Poppins',sans-serif;}
+.wtab:hover{border-color:var(--accent);color:var(--accent);}
+.wtab.on{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 4px 20px rgba(218,119,86,.32);}
+.wpanel{display:none;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.wpanel.on{display:grid;}
+.wscr{border-radius:var(--r3);overflow:hidden;background:var(--dark-d);border:1px solid rgba(255,255,255,.08);box-shadow:var(--sh-lg);}
+.wscr-hd{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px;}
+.wscr-body{padding:22px;}
+.winfo h3{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:13px;line-height:1.18;color:var(--dark);}
+.winfo p{font-size:14.5px;color:var(--txt-2);line-height:1.8;margin-bottom:28px;}
+.wf{display:flex;flex-direction:column;gap:12px;margin-bottom:30px;}
+.wfi{display:flex;align-items:flex-start;gap:12px;}
+.wfi-ico{width:28px;height:28px;border-radius:8px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wfi-ico i{font-size:11px;color:var(--accent);}
+.wfi-t{font-size:13.5px;color:var(--txt-2);padding-top:5px;line-height:1.65;}
+.wfi-t b{color:var(--dark);font-weight:600;}
+
+/* walk screen internals */
+.ws-steps{display:flex;flex-direction:column;gap:9px;}
+.ws-s{display:flex;align-items:center;gap:11px;padding:11px 13px;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.06);}
+.ws-s.done{border-color:rgba(164,244,231,.2);background:rgba(164,244,231,.05);}
+.ws-s.act{border-color:rgba(218,119,86,.3);background:rgba(218,119,86,.07);}
+.ws-sn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);}
+.ws-s.done .ws-sn{background:rgba(164,244,231,.18);color:#A4F4E7;}
+.ws-s.act .ws-sn{background:var(--accent);color:#fff;}
+.ws-st{font-size:11.5px;color:rgba(255,255,255,.48);}
+.ws-s.done .ws-st{color:rgba(255,255,255,.7);}
+.ws-s.act .ws-st{color:rgba(255,255,255,.88);font-weight:500;}
+.ws-note{margin-top:13px;padding:12px;background:rgba(164,244,231,.07);border-radius:10px;border:1px solid rgba(164,244,231,.16);}
+.ws-ntl{font-size:9px;color:#A4F4E7;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;}
+.ws-note p{font-size:11px;color:rgba(255,255,255,.48);}
+.inv{background:rgba(255,255,255,.04);border-radius:11px;padding:16px;border:1px solid rgba(255,255,255,.08);}
+.inv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;}
+.inv-top span{font-size:9px;color:rgba(255,255,255,.36);text-transform:uppercase;letter-spacing:.12em;}
+.inv-id{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.03em;}
+.inv-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.inv-row span{font-size:11px;color:rgba(255,255,255,.44);}
+.inv-row b{font-size:11.5px;color:rgba(255,255,255,.78);font-weight:600;}
+.inv-tot{margin-top:12px;padding-top:12px;border-top:1px solid rgba(218,119,86,.28);display:flex;justify-content:space-between;align-items:center;}
+.inv-tot span{font-size:11px;color:rgba(255,255,255,.48);}
+.inv-tot b{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-.04em;}
+.loy{display:flex;flex-direction:column;gap:12px;}
+.loy-card{background:rgba(255,255,255,.04);border-radius:11px;padding:14px;border:1px solid rgba(255,255,255,.08);}
+.loy-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;}
+.loy-top span{font-size:9px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.12em;}
+.loy-tier{font-size:13px;font-weight:800;color:var(--accent);}
+.prog{height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:6px;}
+.prog-f{height:100%;background:linear-gradient(90deg,var(--accent),#e8946a);border-radius:4px;width:72%;animation:grow .8s var(--ease);}
+@keyframes grow{from{width:0;}}
+.prog-l{display:flex;justify-content:space-between;}
+.prog-l span{font-size:9px;color:rgba(255,255,255,.36);}
+.wals{display:flex;gap:8px;}
+.wal{flex:1;background:rgba(255,255,255,.04);border-radius:9px;padding:12px;border:1px solid rgba(255,255,255,.07);text-align:center;}
+.wal-l{font-size:9px;color:rgba(255,255,255,.36);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+.wal-v{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.04em;}
+.red-r{display:flex;gap:7px;}
+.red-i{flex:1;background:rgba(255,255,255,.04);border-radius:9px;padding:10px 6px;border:1px solid rgba(255,255,255,.07);text-align:center;font-size:10px;color:rgba(255,255,255,.42);}
+.red-i i{display:block;font-size:14px;color:var(--accent);margin-bottom:4px;}
+.red-i.on{background:rgba(218,119,86,.1);border-color:rgba(218,119,86,.28);color:rgba(255,255,255,.7);}
+.col{display:flex;flex-direction:column;gap:11px;}
+.col-card{background:rgba(255,255,255,.04);border-radius:11px;overflow:hidden;border:1px solid rgba(255,255,255,.07);}
+.col-img{height:74px;background:linear-gradient(135deg,rgba(218,119,86,.18),rgba(218,119,86,.04));display:flex;align-items:center;justify-content:center;}
+.col-img i{font-size:28px;color:rgba(218,119,86,.36);}
+.col-ft{padding:9px 12px;display:flex;justify-content:space-between;align-items:center;}
+.col-ft span{font-size:11px;color:rgba(255,255,255,.54);font-weight:500;}
+.col-share{font-size:10px;color:var(--accent);font-weight:700;}
+.col-attr{padding:11px 12px;background:rgba(164,244,231,.06);border-radius:10px;border:1px solid rgba(164,244,231,.15);}
+.col-attr-t{font-size:9px;color:#A4F4E7;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;}
+.col-attr p{font-size:11px;color:rgba(255,255,255,.48);}
+
+/* ── USE CASES ── */
+#uc{background:var(--bg);}
+.uc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.ucc{border-radius:var(--r2);overflow:hidden;background:var(--white);border:1px solid var(--border);cursor:pointer;transition:all .45s var(--ease);position:relative;}
+.ucc:nth-child(1){grid-row:1/3;}
+.ucc:nth-child(4){grid-column:2/4;}
+.ucc:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--accent);}
+.ucc-in{padding:32px;height:100%;display:flex;flex-direction:column;}
+.ucc-ico{width:48px;height:48px;border-radius:13px;margin-bottom:18px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;}
+.ucc-ico i{font-size:20px;color:var(--accent);}
+.ucc h4{font-size:18px;font-weight:700;letter-spacing:-.025em;margin-bottom:9px;line-height:1.25;color:var(--dark);}
+.ucc p{font-size:13px;color:var(--txt-2);line-height:1.76;flex:1;}
+.ucc-tags{margin-top:22px;padding-top:18px;border-top:1px solid var(--t3);display:flex;flex-wrap:wrap;gap:7px;}
+.ut{font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;background:var(--accent-08);color:var(--accent);border:1px solid var(--accent-15);}
+.ucc-arr{position:absolute;bottom:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--t3);display:flex;align-items:center;justify-content:center;color:var(--txt-3);font-size:11px;transition:all .3s;}
+.ucc:hover .ucc-arr{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+/* ── MODAL ── */
+.mb{display:none;position:fixed;inset:0;z-index:1100;background:rgba(44,44,42,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:24px;}
+.mb.on{display:flex;}
+.modal{background:var(--white);border-radius:var(--r3);max-width:700px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 40px 120px rgba(44,44,42,.22);animation:mIn .4s var(--ease);border:1px solid var(--border);}
+@keyframes mIn{from{opacity:0;transform:scale(.92) translateY(18px);}}
+.m-hd{padding:32px 36px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.m-ico-wrap{width:52px;height:52px;border-radius:14px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;}
+.m-ico-wrap i{font-size:22px;color:var(--accent);}
+.m-ttl-g{display:flex;align-items:center;gap:14px;}
+.modal h3{font-size:24px;font-weight:800;letter-spacing:-.028em;color:var(--dark);}
+.m-sub{font-size:13px;color:var(--txt-3);margin-top:2px;}
+.m-cls{width:34px;height:34px;border-radius:9px;background:var(--bg);border:1px solid var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt-3);transition:all .25s;font-size:13px;}
+.m-cls:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.m-body{padding:24px 36px 36px;}
+.m-impacts{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;}
+.m-ic{flex:1;min-width:110px;background:var(--bg);border-radius:13px;padding:16px;border:1px solid var(--border);}
+.m-ic .v{font-size:22px;font-weight:800;color:var(--accent);letter-spacing:-.04em;}
+.m-ic .l{font-size:11px;color:var(--txt-3);margin-top:4px;}
+.m-cnt h5{font-size:13.5px;font-weight:700;margin:18px 0 7px;color:var(--dark);}
+.m-cnt p{font-size:13.5px;color:var(--txt-2);line-height:1.8;margin-bottom:10px;}
+.m-cnt ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.m-cnt ul li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--txt-2);}
+.m-cnt ul li::before{content:'→';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── END BANNER ── */
+#cta{background:var(--dark);padding:120px 0;position:relative;overflow:hidden;}
+.cta-g1{position:absolute;top:-200px;right:-100px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(218,119,86,.14),transparent 65%);pointer-events:none;}
+.cta-g2{position:absolute;bottom:-200px;left:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(83,74,183,.09),transparent 65%);pointer-events:none;}
+.cta-in{position:relative;z-index:2;text-align:center;}
+#cta .tag{background:rgba(218,119,86,.14);border-color:rgba(218,119,86,.3);color:#e89070;margin-bottom:28px;}
+#cta h2{color:#fff;font-size:clamp(32px,5.5vw,58px);margin-bottom:17px;letter-spacing:-.038em;line-height:1.08;}
+#cta p{color:rgba(255,255,255,.5);font-size:17px;max-width:500px;margin:0 auto 46px;line-height:1.76;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.cta-btns .btn{padding:15px 36px;font-size:15px;}
+.cta-stats{display:flex;justify-content:center;gap:60px;margin-top:66px;flex-wrap:wrap;}
+.cs{text-align:center;}
+.cs-n{font-size:36px;font-weight:800;color:#fff;letter-spacing:-.04em;}
+.cs-l{font-size:10.5px;color:rgba(255,255,255,.36);text-transform:uppercase;letter-spacing:.12em;margin-top:4px;}
+
+/* ── CONTACT ── */
+#contact{background:var(--white);}
+.ct-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+.ct-form{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:46px;box-shadow:var(--sh-md);}
+.ct-form h3{font-size:22px;font-weight:800;margin-bottom:5px;letter-spacing:-.025em;color:var(--dark);}
+.ct-form-sub{font-size:13.5px;color:var(--txt-3);margin-bottom:28px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.fg label{font-size:12.5px;font-weight:600;color:var(--txt-2);}
+.fg input,.fg select,.fg textarea{padding:12px 15px;border:1.5px solid var(--t3);border-radius:11px;font-size:13.5px;font-family:'Poppins',sans-serif;color:var(--txt);background:var(--white);outline:none;transition:all .25s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(218,119,86,.1);}
+.fg textarea{resize:vertical;min-height:96px;}
+.f-sub{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;justify-content:center;}
+.ct-info .sec-hd{text-align:left;}
+.ct-info .sec-hd p{text-align:left;margin:0 0 38px;max-width:100%;}
+.ct-ds{display:flex;flex-direction:column;gap:18px;margin-bottom:38px;}
+.ct-d{display:flex;align-items:flex-start;gap:14px;}
+.ct-d-ico{width:40px;height:40px;border-radius:11px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ct-d-ico i{color:var(--accent);font-size:15px;}
+.ct-d-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:2px;}
+.ct-d-val{font-size:14px;font-weight:500;color:var(--dark);}
+.soc{display:flex;gap:9px;}
+.sb{width:40px;height:40px;border-radius:11px;background:var(--bg);border:1.5px solid var(--t3);display:flex;align-items:center;justify-content:center;color:var(--txt-3);font-size:15px;transition:all .25s;text-decoration:none;}
+.sb:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translateY(-2px);}
+
+/* ── FOOTER ── */
+footer{background:var(--dark-d);padding:64px 0 32px;}
+.ft-g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.ft-b .logo{color:#fff;margin-bottom:14px;}
+.ft-b p{font-size:13px;line-height:1.76;color:rgba(255,255,255,.4);max-width:250px;}
+.ft-c h5{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.13em;margin-bottom:14px;}
+.ft-c ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.ft-c ul li a{font-size:13px;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;}
+.ft-c ul li a:hover{color:rgba(255,255,255,.78);}
+.ft-bot{border-top:1px solid rgba(255,255,255,.08);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.ft-bot p{font-size:12.5px;color:rgba(255,255,255,.36);}
+.ft-lnks{display:flex;gap:20px;}
+.ft-lnks a{font-size:12.5px;color:rgba(255,255,255,.36);text-decoration:none;transition:color .2s;}
+.ft-lnks a:hover{color:rgba(255,255,255,.7);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .bento,.sol-grid,.testi-g,.wpanel,.ct-g{grid-template-columns:1fr;gap:36px;}
+  .sol-sticky{position:relative;top:0;}
+  .uc-g{grid-template-columns:1fr 1fr;}
+  .ucc:nth-child(1){grid-row:auto;} .ucc:nth-child(4){grid-column:auto;}
+  .ft-g{grid-template-columns:1fr 1fr;}
+  .cta-stats{gap:40px;}
+}
+@media(max-width:640px){
+  .nav-links{display:none;}
+  .bento,.uc-g{grid-template-columns:1fr;}
+  .fr{grid-template-columns:1fr;}
+  .hero-pills{flex-direction:column;}
+  .ft-g{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -205,13 +502,542 @@ section{padding:108px 0;}
   </div>
 </section>
 
-<!-- NOTE -->
-<!-- Paste the remaining sections (pain/solutions/testi/walk/uc/modal/cta/contact/footer) here to match your full HTML. -->
 
-<script>
+
+<!-- PAIN POINTS -->
+<section id="pain">
+  <div class="pain-glow"></div>
+  <div class="pain-glow2"></div>
+  <div class="wrap">
+    <div class="sec-hd reveal">
+      <div class="tag" style="background:rgba(218,119,86,.14);border-color:rgba(218,119,86,.3);color:#e89070;">
+        <i class="fa-solid fa-triangle-exclamation"></i> The Real Problem
+      </div>
+      <h2>Your CP channel is leaking<br>revenue — right now</h2>
+      <p>Every disconnected spreadsheet, every delayed invoice, every unanswered WhatsApp — your best brokers are already moving inventory to your competitor.</p>
+    </div>
+    <div class="bento reveal reveal-d1">
+      <div class="bc">
+        <div class="bc-ico"><i class="fa-solid fa-file-circle-xmark"></i></div>
+        <h3>Your CPs don't know where their invoice is</h3>
+        <p>Brokerage tracking lives across spreadsheets, email threads, and WhatsApp messages. CPs wait weeks with zero visibility. Your best brokers default to the developer who pays them fastest — not you.</p>
+        <div class="bc-stat">18–35 days <span>average invoice processing time without a structured system</span></div>
+      </div>
+      <div class="bc">
+        <div class="bc-ico"><i class="fa-solid fa-users-slash"></i></div>
+        <h3>Your top CPs are splitting inventory — silently</h3>
+        <p>60–70% of registered CPs go dormant at any given time. No gamification, no ladder visibility, no loyalty structure. The broker who closed 12 deals last quarter is now prioritising a competitor with a better scheme.</p>
+        <div class="bc-stat">60–70% <span>of registered CPs inactive at developers without structured engagement</span></div>
+      </div>
+      <div class="bc">
+        <div class="bc-ico"><i class="fa-solid fa-photo-film"></i></div>
+        <h3>Your marketing collateral is dead on arrival</h3>
+        <p>Premium brochures shared as blurry WhatsApp screenshots. No personalisation, no attribution, no way to know which collateral drives site visits. Your marketing spend is effectively unaccountable.</p>
+        <div class="bc-stat">12–20% <span>of monthly brokerage payouts result in disputes or correction requests</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions">
+  <div class="wrap">
+    <div class="sec-hd reveal">
+      <div class="tag"><i class="fa-solid fa-bolt"></i> The Solution</div>
+      <h2>One platform. Every<br><span class="accent">CP touchpoint.</span></h2>
+      <p>From the moment a broker discovers your scheme to the day they redeem their Gold-tier reward — CP Management owns the entire journey.</p>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-sticky reveal">
+        <div class="usp-list" id="uspList">
+          <div class="ui on">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">01</div><h4>Self-Service DIY Onboarding</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>CPs register themselves — temporary or permanent — with document upload and real-time RERA verification. No developer team intervention. Walk-in CPs submit leads within minutes, not weeks. Onboarding TAT drops from 21 days to under 48 hours. Every week saved is a week your CP isn't sending inventory to a competitor.</p></div>
+          </div>
+          <div class="ui">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">02</div><h4>Real-Time Financial Visibility</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>Direct SAP integration gives CPs live status on every invoice — submitted, verified, in processing, paid. No calls, no WhatsApp chasing, no month-end surprises. Cash flow certainty is a loyalty engine in itself. This is the primary reason top CPs choose to prioritise one developer over another.</p></div>
+          </div>
+          <div class="ui">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">03</div><h4>Gamified Ladder Schemes</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>Rule-based Bronze, Silver, and Gold tier progression with animated milestone tracking. CPs see exactly where they stand and precisely what they need to close to unlock the next level. CPs on active gamified ladders close 18–25% more deals in the quarter the scheme goes live.</p></div>
+          </div>
+          <div class="ui">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">04</div><h4>One-Click Collateral Distribution</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>Personalised, branded collateral shared at scale via WhatsApp and email — with full lead attribution back to the CP. For the first time, you will know which collateral drives leads and which shares convert. CP marketing reach grows from 30 contacts to 120+ per month.</p></div>
+          </div>
+          <div class="ui">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">05</div><h4>SAP &amp; Salesforce Native Integration</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>Production-grade, bidirectional integration with the two dominant enterprise systems in Indian real estate. Invoice push to SAP without manual data entry. SFDC sync ensures CP records, bookings, and cases stay accurate in real time. No middleware, no reconciliation sprints.</p></div>
+          </div>
+          <div class="ui">
+            <div class="ui-hd"><div class="ui-hl"><div class="ui-n">06</div><h4>End-to-End CP Loyalty Engine</h4></div><div class="ui-tog"><i class="fa-solid fa-plus"></i></div></div>
+            <div class="ui-bd"><p>Wallet, redemption store, and tier management in one platform — vouchers, travel, lounge access, experiences, merchandise, and encashment. Developers with structured loyalty programs retain 30–40% more active CPs year-on-year. It transforms the CP relationship from transactional to structural.</p></div>
+          </div>
+        </div>
+        <div class="sol-cta"><a href="#contact" class="btn btn-fill"><i class="fa-solid fa-rocket"></i> Get Started Today</a></div>
+      </div>
+      <div class="sol-sticky reveal reveal-d2">
+        <div class="dash">
+          <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">CP Management Dashboard</span></div>
+          <div class="dash-body">
+            <div class="dr">
+              <div class="dc"><div class="dc-lbl">Active Bookings</div><div class="dc-val">42</div><div class="dc-sub up">↑ +8 this month</div></div>
+              <div class="dc"><div class="dc-lbl">Brokerage Due</div><div class="dc-val a">₹18.4L</div><div class="dc-sub warn">3 invoices pending</div></div>
+            </div>
+            <div class="dc">
+              <div class="dc-lbl">Ladder Progress — Gold Tier</div>
+              <div class="dc-bar"><div class="dc-fill"></div></div>
+              <div class="dc-meta"><span>14 / 20 bookings</span><span class="as">6 more to Gold</span></div>
+            </div>
+            <div class="dc">
+              <div class="dc-lbl" style="margin-bottom:10px">Recent Invoices</div>
+              <div class="dc-list">
+                <div class="dc-row"><span>INV-2024-089</span><div class="badge bg-ok">Paid</div></div>
+                <div class="dc-row"><span>INV-2024-091</span><div class="badge bg-w">In SAP</div></div>
+                <div class="dc-row"><span>INV-2024-094</span><div class="badge bg-e">Pending</div></div>
+              </div>
+            </div>
+            <div class="dc">
+              <div class="dc-lbl" style="margin-bottom:9px">Loyalty Tier Status</div>
+              <div class="dc-tiers">
+                <div class="dc-tier t-bronze"><i class="fa-solid fa-shield"></i><span>Bronze</span></div>
+                <div class="dc-tier t-silver"><i class="fa-solid fa-shield-halved"></i><span>Silver ✓</span></div>
+                <div class="dc-tier t-gold"><i class="fa-solid fa-crown"></i><span>Gold →</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testi">
+  <div class="wrap">
+    <div class="testi-g">
+      <div class="reveal">
+        <div class="stack">
+          <div class="tc c0">
+            <div class="tc-val">−75% <span>brokerage dispute rate after go-live</span></div>
+            <p class="tc-q">Before CP Management, our finance team spent the last week of every month reconciling brokerage discrepancies manually. Disputes dropped from 18% to under 4% of monthly payouts. The SAP integration alone saves 3 full working days per month.</p>
+            <div class="tc-who"><div class="tc-av">VR</div><div><div class="tc-nm">Vikram Rathod</div><div class="tc-rl">VP Channel Sales, Rustomjee Group</div></div></div>
+          </div>
+          <div class="tc c1">
+            <div class="tc-val">48 hrs <span>CP onboarding, down from 3 weeks</span></div>
+            <p class="tc-q">Walk-in CPs used to cost us leads. A broker would visit site and by the time registration completed, they'd moved the deal elsewhere. Temporary registration changed that — we stopped losing pipeline during the onboarding window.</p>
+            <div class="tc-who"><div class="tc-av ind">PS</div><div><div class="tc-nm">Priya Sharma</div><div class="tc-rl">Head of CP Operations, Runwal Enterprises</div></div></div>
+          </div>
+          <div class="tc c2">
+            <div class="tc-val">+60% <span>CP activation rate within 90 days</span></div>
+            <p class="tc-q">Our CPs were dormant because they had no reason to log in. The gamified ladder changed that in the first quarter — CPs started checking progress daily, and that translated directly into 60% more active CPs submitting leads.</p>
+            <div class="tc-who"><div class="tc-av">AK</div><div><div class="tc-nm">Ankit Kapoor</div><div class="tc-rl">General Manager Sales, Tier A Developer, Pune</div></div></div>
+          </div>
+          <div class="tc c3">
+            <div class="tc-val">3× <span>collateral reach per CP per month</span></div>
+            <p class="tc-q">Our CPs were sharing 2-year-old PDFs on WhatsApp, sometimes with wrong pricing. With CP Management, every asset is current, personalised, and trackable. We finally know which campaigns drive leads versus noise.</p>
+            <div class="tc-who"><div class="tc-av ind">RS</div><div><div class="tc-nm">Rahul Srivastava</div><div class="tc-rl">Marketing Head, Premium Developer, Mumbai</div></div></div>
+          </div>
+        </div>
+        <div class="tctl">
+          <button class="tbt" id="prevBtn"><i class="fa-solid fa-arrow-left"></i></button>
+          <button class="tbt" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+      <div class="testi-r reveal reveal-d2">
+        <div class="sec-hd" style="margin-bottom:0">
+          <div class="tag" style="margin-bottom:16px"><i class="fa-solid fa-star"></i> Client Results</div>
+          <h2 style="font-size:clamp(26px,3.8vw,40px)">Results that speak — not promises.</h2>
+          <p>Every metric is from a live deployment. Our clients don't talk in percentages — they talk in fewer disputes, faster payments, and CPs who stop calling to ask where their money is.</p>
+        </div>
+        <div class="trow"><div class="ti"><i class="fa-solid fa-circle-check"></i> Live at Tier A developers</div><div class="ti"><i class="fa-solid fa-circle-check"></i> Verified outcomes</div></div>
+        <div class="trow"><div class="ti"><i class="fa-solid fa-circle-check"></i> SAP &amp; Salesforce live</div><div class="ti"><i class="fa-solid fa-circle-check"></i> India-ready platform</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WALKTHROUGH -->
+<section id="walk">
+  <div class="wrap">
+    <div class="sec-hd reveal">
+      <div class="tag"><i class="fa-solid fa-play-circle"></i> Platform Walkthrough</div>
+      <h2>Every feature, built for<br>real estate <span class="accent">at scale</span></h2>
+      <p>See exactly how each module works. Purpose-built for the developer-CP relationship — not repurposed from generic SaaS.</p>
+    </div>
+    <div class="wtabs reveal">
+      <button class="wtab on" data-p="0"><i class="fa-solid fa-user-plus"></i> Onboarding</button>
+      <button class="wtab" data-p="1"><i class="fa-solid fa-file-invoice-dollar"></i> Invoices</button>
+      <button class="wtab" data-p="2"><i class="fa-solid fa-trophy"></i> Loyalty</button>
+      <button class="wtab" data-p="3"><i class="fa-solid fa-share-nodes"></i> Collateral</button>
+    </div>
+
+    <!-- Panel 0: Onboarding -->
+    <div class="wpanel on" data-p="0">
+      <div class="wscr reveal">
+        <div class="wscr-hd"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px;">CP Registration Flow</span></div>
+        <div class="wscr-body">
+          <div class="ws-steps">
+            <div class="ws-s done"><div class="ws-sn"><i class="fa-solid fa-check" style="font-size:8px"></i></div><div class="ws-st">Basic Details Submitted</div></div>
+            <div class="ws-s done"><div class="ws-sn"><i class="fa-solid fa-check" style="font-size:8px"></i></div><div class="ws-st">RERA Certificate Uploaded &amp; Verified</div></div>
+            <div class="ws-s act"><div class="ws-sn">3</div><div class="ws-st">Salesforce Sync in Progress…</div></div>
+            <div class="ws-s"><div class="ws-sn">4</div><div class="ws-st">Account Activated</div></div>
+          </div>
+          <div class="ws-note"><div class="ws-ntl">Temporary Access Active</div><p>Submit leads immediately while permanent registration completes. No leads lost during onboarding.</p></div>
+        </div>
+      </div>
+      <div class="winfo reveal reveal-d2">
+        <div class="tag" style="margin-bottom:18px"><i class="fa-solid fa-user-plus"></i> Self-Service Onboarding</div>
+        <h3>CPs activate themselves. Your team focuses on deals.</h3>
+        <p>A fully DIY registration flow with RERA upload, real-time verification, and instant Salesforce sync. Walk-in CPs submit leads in minutes. Permanent registration completes in 48 hours, not 3 weeks.</p>
+        <div class="wf">
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-id-card"></i></div><div class="wfi-t"><b>Temporary Registration</b> — Walk-in CPs submit leads immediately while RERA verification is pending. Zero lead loss during the registration window.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-sitemap"></i></div><div class="wfi-t"><b>Sub-CP Hierarchy</b> — IPC firms manage associate networks under one master CP profile with consolidated performance visibility.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-rotate"></i></div><div class="wfi-t"><b>Real-Time SFDC Sync</b> — Every registration instantly creates a verified CP record in Salesforce. No manual data entry.</div></div>
+        </div>
+        <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-arrow-right"></i> See It Live</a>
+      </div>
+    </div>
+
+    <!-- Panel 1: Invoices -->
+    <div class="wpanel" data-p="1">
+      <div class="wscr reveal">
+        <div class="wscr-hd"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px;">Invoice Centre</span></div>
+        <div class="wscr-body">
+          <div class="inv">
+            <div class="inv-top"><span>Invoice</span><div style="font-size:9px;padding:2px 9px;border-radius:99px;background:rgba(164,244,231,.1);color:#A4F4E7;border:1px solid rgba(164,244,231,.2);font-weight:700">In SAP ✓</div></div>
+            <div class="inv-id">INV-2024-091</div>
+            <div style="height:1px;background:rgba(255,255,255,.06);margin:11px 0"></div>
+            <div class="inv-row"><span>Booking ID</span><b>BK-TRN-4892</b></div>
+            <div class="inv-row"><span>Project</span><b>Urbania Tower 3</b></div>
+            <div class="inv-row"><span>Customer</span><b>Rajesh Mehta</b></div>
+            <div class="inv-row"><span>Brokerage %</span><b>2.5%</b></div>
+            <div class="inv-row"><span>Agreement Value</span><b>₹1,80,00,000</b></div>
+            <div class="inv-tot"><span>Brokerage Amount</span><b>₹4,50,000</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="winfo reveal reveal-d2">
+        <div class="tag" style="margin-bottom:18px"><i class="fa-solid fa-file-invoice-dollar"></i> Invoice Management</div>
+        <h3>One click. Invoice generated. Pushed to SAP.</h3>
+        <p>CPs generate invoices directly from their Booking ID. Digital upload, direct SAP push, and real-time status tracking. Your finance team receives verified invoices automatically. Month-end closes on time, every time.</p>
+        <div class="wf">
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-bolt"></i></div><div class="wfi-t"><b>One-Click Generation</b> — Invoice auto-populated from Booking ID. CP reviews, signs digitally, submits in under 3 minutes.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-plug"></i></div><div class="wfi-t"><b>Direct SAP Push</b> — Approved invoices transfer to SAP automatically. No email chains, no manual data entry, no reconciliation sprints.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-eye"></i></div><div class="wfi-t"><b>Live Status Tracking</b> — CP sees invoice status in real time: submitted, verified, in SAP, processing, paid. Zero inbound calls to finance.</div></div>
+        </div>
+        <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-arrow-right"></i> See It Live</a>
+      </div>
+    </div>
+
+    <!-- Panel 2: Loyalty -->
+    <div class="wpanel" data-p="2">
+      <div class="wscr reveal">
+        <div class="wscr-hd"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px;">Loyalty &amp; Rewards</span></div>
+        <div class="wscr-body">
+          <div class="loy">
+            <div class="loy-card">
+              <div class="loy-top"><span>Ladder Progress</span><span class="loy-tier">Silver → Gold</span></div>
+              <div class="prog"><div class="prog-f"></div></div>
+              <div class="prog-l"><span>14 bookings done</span><span>6 more for Gold</span></div>
+            </div>
+            <div class="wals">
+              <div class="wal"><div class="wal-l">Active Wallet</div><div class="wal-v">8,420 pts</div></div>
+              <div class="wal"><div class="wal-l">Cold Wallet</div><div class="wal-v">22,100 pts</div></div>
+              <div class="wal"><div class="wal-l">Cash Value</div><div class="wal-v" style="color:var(--accent)">₹15,260</div></div>
+            </div>
+            <div class="red-r">
+              <div class="red-i"><i class="fa-solid fa-plane"></i>Travel</div>
+              <div class="red-i on"><i class="fa-solid fa-door-open"></i>Lounge</div>
+              <div class="red-i"><i class="fa-solid fa-spa"></i>Experiences</div>
+              <div class="red-i"><i class="fa-solid fa-money-bill-wave"></i>Encash</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="winfo reveal reveal-d2">
+        <div class="tag" style="margin-bottom:18px"><i class="fa-solid fa-trophy"></i> Loyalty Engine</div>
+        <h3>Turn commission into loyalty. Loyalty into retention.</h3>
+        <p>Bronze, Silver, Gold tier management with milestone-based rewards, cold wallet accumulation, and a full redemption store. Developers with structured loyalty programs retain 30–40% more active CPs year-on-year.</p>
+        <div class="wf">
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-ranking-star"></i></div><div class="wfi-t"><b>Gamified Ladder</b> — CPs see their exact tier position, what they need to advance, and peer comparison. Daily motivation, structurally embedded.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-wallet"></i></div><div class="wfi-t"><b>Cold Wallet</b> — Long-term point storage prevents impulsive redemption and encourages sustained engagement over quarters.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-store"></i></div><div class="wfi-t"><b>Redemption Store</b> — Airport lounges, international travel, spa, merchandise, and cash encashment. A loyalty program CPs actually want.</div></div>
+        </div>
+        <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-arrow-right"></i> See It Live</a>
+      </div>
+    </div>
+
+    <!-- Panel 3: Collateral -->
+    <div class="wpanel" data-p="3">
+      <div class="wscr reveal">
+        <div class="wscr-hd"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px;">Collateral Studio</span></div>
+        <div class="wscr-body">
+          <div class="col">
+            <div style="font-size:9px;color:rgba(255,255,255,.36);text-transform:uppercase;letter-spacing:.12em;margin-bottom:9px;">Available Collateral</div>
+            <div class="col-card"><div class="col-img"><i class="fa-solid fa-building-columns"></i></div><div class="col-ft"><span>Urbania — Project Brochure</span><span class="col-share"><i class="fa-solid fa-share-nodes"></i> Share</span></div></div>
+            <div class="col-card"><div class="col-img"><i class="fa-solid fa-chart-bar"></i></div><div class="col-ft"><span>Q1 2025 Scheme Card</span><span class="col-share"><i class="fa-solid fa-share-nodes"></i> Share</span></div></div>
+            <div class="col-attr"><div class="col-attr-t">Attribution Active</div><p>Last share → 3 link opens → 1 site visit request</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="winfo reveal reveal-d2">
+        <div class="tag" style="margin-bottom:18px"><i class="fa-solid fa-share-nodes"></i> Collateral Distribution</div>
+        <h3>Your brand, in every CP's hands — trackable.</h3>
+        <p>CPs personalise developer collateral in one tap, then share via WhatsApp and email with full lead attribution. CP reach grows from 30 contacts to 120+ per month.</p>
+        <div class="wf">
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-paintbrush"></i></div><div class="wfi-t"><b>One-Tap Personalisation</b> — CP uploads their branding once. Developer collateral auto-generates with CP credentials on every asset at scale.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-brands fa-whatsapp"></i></div><div class="wfi-t"><b>Multi-Channel Sharing</b> — Direct WhatsApp and email share from the mobile app. Every share tagged to CP ID for attribution.</div></div>
+          <div class="wfi"><div class="wfi-ico"><i class="fa-solid fa-magnifying-glass-chart"></i></div><div class="wfi-t"><b>Lead Attribution</b> — Track which shares generate leads, which become site visits, which convert to bookings.</div></div>
+        </div>
+        <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-arrow-right"></i> See It Live</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="uc">
+  <div class="wrap">
+    <div class="sec-hd reveal">
+      <div class="tag"><i class="fa-solid fa-buildings"></i> Use Cases</div>
+      <h2>Built for every segment<br>of real estate development</h2>
+      <p>From Tier A luxury developers to affordable housing at scale — CP Management adapts to your network's complexity.</p>
+    </div>
+    <div class="uc-g reveal">
+      <div class="ucc" onclick="openM('residential')">
+        <div class="ucc-in">
+          <div class="ucc-ico"><i class="fa-solid fa-city"></i></div>
+          <h4>Residential Real Estate Development</h4>
+          <p>The primary use case. CP teams use Setup, Activity, and Invoices daily. Finance uses SAP integration. Marketing tracks collateral attribution. Leadership monitors the CP channel on one dashboard.</p>
+          <div class="ucc-tags"><span class="ut">+55% lead conversion</span><span class="ut">−80% onboarding time</span><span class="ut">−75% disputes</span></div>
+        </div>
+        <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
+      </div>
+      <div class="ucc" onclick="openM('commercial')">
+        <div class="ucc-in">
+          <div class="ucc-ico"><i class="fa-solid fa-building"></i></div>
+          <h4>Commercial Real Estate</h4>
+          <p>High deal values, fewer CPs — brokerage errors are disproportionately costly. Precise brokerage tracking on lease and sale transactions with a live SAP audit trail.</p>
+          <div class="ucc-tags"><span class="ut">High deal-value precision</span><span class="ut">Full SAP audit trail</span></div>
+        </div>
+        <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
+      </div>
+      <div class="ucc" onclick="openM('luxury')">
+        <div class="ucc-in">
+          <div class="ucc-ico"><i class="fa-solid fa-gem"></i></div>
+          <h4>Luxury &amp; Ultra-Luxury</h4>
+          <p>VIP reward programs for top CPs — airport lounge access, international experiences, curated travel. Brand-consistent, personalised collateral at the premium end of the market.</p>
+          <div class="ucc-tags"><span class="ut">Gold-tier lounge</span><span class="ut">Exclusive experiences</span></div>
+        </div>
+        <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
+      </div>
+      <div class="ucc" onclick="openM('affordable')">
+        <div class="ucc-in">
+          <div class="ucc-ico"><i class="fa-solid fa-house"></i></div>
+          <h4>Affordable Housing at Scale</h4>
+          <p>Rapid CP activation at high volume. Temporary registration eliminates lead loss. Ladder schemes incentivise volume-based brokers. Invoice automation handles high-throughput brokerage.</p>
+          <div class="ucc-tags"><span class="ut">5,000+ CP networks</span><span class="ut">Volume automation</span></div>
+        </div>
+        <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
+      </div>
+      <div class="ucc" onclick="openM('gcc')">
+        <div class="ucc-in">
+          <div class="ucc-ico"><i class="fa-solid fa-globe"></i></div>
+          <h4>GCC Expansion — UAE &amp; Saudi Arabia</h4>
+          <p>International CP networks across time zones and currencies. NRI brokerage with different rates. Arabic UI and AED/SAR wallet ready. UAE RERA compliance framework included.</p>
+          <div class="ucc-tags"><span class="ut">Arabic UI</span><span class="ut">Multi-currency</span><span class="ut">UAE RERA ready</span></div>
+        </div>
+        <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="mb" id="mbd" onclick="closeM(event)">
+  <div class="modal">
+    <div class="m-hd">
+      <div class="m-ttl-g">
+        <div class="m-ico-wrap" id="mIco"><i class="fa-solid fa-city"></i></div>
+        <div><h3 id="mTtl">–</h3><div class="m-sub" id="mSub">–</div></div>
+      </div>
+      <div class="m-cls" onclick="closeMd()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="m-body">
+      <div class="m-impacts" id="mImps"></div>
+      <div class="m-cnt" id="mBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- END BANNER / CTA -->
+<section id="cta">
+  <div class="cta-g1"></div><div class="cta-g2"></div>
+  <div class="wrap">
+    <div class="cta-in reveal">
+      <div class="tag" style="background:rgba(218,119,86,.14);border-color:rgba(218,119,86,.3);color:#e89070;margin-bottom:28px;">
+        <i class="fa-solid fa-fire"></i> Limited Onboarding Slots — Q2 2025
+      </div>
+      <h2>The CP channel is your largest<br>variable sales cost. Own it.</h2>
+      <p>Every week without CP Management is a week your top brokers operate blind — and choose competitors who give them the clarity you can't. That stops today.</p>
+      <div class="cta-btns">
+        <a href="#contact" class="btn btn-fill"><i class="fa-solid fa-rocket"></i> Request a Demo</a>
+        <a href="#contact" class="btn btn-ghost-dark"><i class="fa-solid fa-phone"></i> Talk to Sales</a>
+      </div>
+      <div class="cta-stats">
+        <div class="cs"><div class="cs-n">5,000+</div><div class="cs-l">Channel Partners managed</div></div>
+        <div class="cs"><div class="cs-n">Tier A</div><div class="cs-l">Live deployments</div></div>
+        <div class="cs"><div class="cs-n">100%</div><div class="cs-l">SAP + Salesforce native</div></div>
+        <div class="cs"><div class="cs-n">India</div><div class="cs-l">Current active market</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-hd reveal">
+      <div class="tag"><i class="fa-solid fa-envelope"></i> Contact</div>
+      <h2>Ready to transform your CP channel?</h2>
+      <p>Book a 30-minute live demo. See your CP data the way your best brokers deserve to see it.</p>
+    </div>
+    <div class="ct-g reveal">
+      <div class="ct-form">
+        <h3>Book a Live Demo</h3>
+        <p class="ct-form-sub">We'll call you within 2 hours on business days.</p>
+        <div class="fr">
+          <div class="fg"><label>First Name</label><input type="text" placeholder="Arjun"></div>
+          <div class="fg"><label>Last Name</label><input type="text" placeholder="Sharma"></div>
+        </div>
+        <div class="fg"><label>Work Email</label><input type="email" placeholder="arjun@developer.com"></div>
+        <div class="fr">
+          <div class="fg"><label>Company</label><input type="text" placeholder="Developer Name"></div>
+          <div class="fg"><label>CP Network Size</label>
+            <select><option>Select…</option><option>Under 100 CPs</option><option>100–500 CPs</option><option>500–2,000 CPs</option><option>2,000+ CPs</option></select>
+          </div>
+        </div>
+        <div class="fg"><label>What is your biggest CP challenge?</label><textarea placeholder="e.g. Invoice processing delays, CP disengagement, collateral tracking…"></textarea></div>
+        <button class="btn btn-fill f-sub"><i class="fa-solid fa-calendar-check"></i> Book My Demo</button>
+      </div>
+      <div class="ct-info">
+        <div class="sec-hd" style="margin-bottom:0">
+          <div class="tag" style="margin-bottom:16px"><i class="fa-solid fa-map-pin"></i> Get in Touch</div>
+          <h2 style="font-size:clamp(24px,3.6vw,36px)">Let's talk about your CP network</h2>
+          <p>Whether you're managing 100 CPs or 5,000 — we'll show you exactly how CP Management fits your workflow.</p>
+        </div>
+        <div class="ct-ds">
+          <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ct-d-lbl">Email</div><div class="ct-d-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9deefcf1f8eeddfeedf0fcf3fcfaf8f0f8f3e9b3f4f2">[email&#160;protected]</a></div></div></div>
+          <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-phone"></i></div><div><div class="ct-d-lbl">Phone</div><div class="ct-d-val">+91 98200 00000</div></div></div>
+          <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ct-d-lbl">Offices</div><div class="ct-d-val">Mumbai, India &amp; Dubai, UAE</div></div></div>
+        </div>
+        <p style="font-size:11px;font-weight:700;color:var(--txt-3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.12em">Follow Us</p>
+        <div class="soc">
+          <a href="#" class="sb"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="sb"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" class="sb"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="sb"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="ft-g">
+      <div class="ft-b">
+        <a href="#" class="logo" style="color:#fff;margin-bottom:14px;display:flex;">
+          <div class="logo-badge"><i class="fa-solid fa-layer-group"></i></div> CP Management
+        </a>
+        <p>The complete channel partner management platform for real estate developers. Onboarding to loyalty — in one product. Built for India.</p>
+      </div>
+      <div class="ft-c"><h5>Product</h5><ul><li><a href="#solutions">Features</a></li><li><a href="#walk">Walkthrough</a></li><li><a href="#contact">Pricing</a></li><li><a href="#">Integrations</a></li><li><a href="#">Roadmap</a></li></ul></div>
+      <div class="ft-c"><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Press</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div class="ft-c"><h5>Resources</h5><ul><li><a href="#">Documentation</a></li><li><a href="#">Case Studies</a></li><li><a href="#">API Reference</a></li><li><a href="#">Security</a></li><li><a href="#">Status</a></li></ul></div>
+    </div>
+    <div class="ft-bot">
+      <p>© 2025 CP Management by Lockated. All rights reserved.</p>
+      <div class="ft-lnks"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // NAV shadow on scroll
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sd',scrollY>20));
-</script>
-</body>
-</html>
 
+// Counter animation
+function animN(el){
+  const t=+el.dataset.t,s=el.dataset.s||'';let c=0;
+  const step=t/55,tmr=setInterval(()=>{c=Math.min(c+step,t);el.textContent=Math.round(c)+s;if(c>=t)clearInterval(tmr);},16);
+}
+const pillObs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.pill-n').forEach(animN);pillObs.unobserve(e.target);}});},{threshold:.5});
+document.querySelectorAll('.hero-pills').forEach(el=>pillObs.observe(el));
+
+// Scroll reveal — mark elements hidden first, then animate in
+document.querySelectorAll('.reveal').forEach(el=>el.classList.add('pre'));
+const rv=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){requestAnimationFrame(()=>e.target.classList.add('on'));rv.unobserve(e.target);}});},{threshold:.06,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>rv.observe(el));
+
+// USP accordion
+document.querySelectorAll('.ui').forEach(item=>{
+  item.querySelector('.ui-hd').addEventListener('click',()=>{
+    const was=item.classList.contains('on');
+    document.querySelectorAll('.ui').forEach(i=>i.classList.remove('on'));
+    if(!was)item.classList.add('on');
+  });
+});
+
+// Testimonial card stack
+let co=[0,1,2,3];
+const cards=document.querySelectorAll('.tc');
+function updCards(){cards.forEach((c,i)=>c.className=`tc c${co.indexOf(i)}`);}
+document.getElementById('nextBtn').addEventListener('click',()=>{co=[co[3],...co.slice(0,3)];updCards();});
+document.getElementById('prevBtn').addEventListener('click',()=>{co=[...co.slice(1),co[0]];updCards();});
+setInterval(()=>{co=[co[3],...co.slice(0,3)];updCards();},5200);
+
+// Walkthrough tabs
+document.querySelectorAll('.wtab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const p=tab.dataset.p;
+    document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('on'));
+    document.querySelectorAll('.wpanel').forEach(p=>p.classList.remove('on'));
+    tab.classList.add('on');
+    document.querySelector(`.wpanel[data-p="${p}"]`).classList.add('on');
+  });
+});
+
+// Modal data
+const MD={
+  residential:{ico:'fa-city',ttl:'Residential Real Estate',sub:'All modules applicable — the primary use case',
+    imps:[{v:'+55%',l:'Lead-to-booking conversion'},{v:'−80%',l:'Onboarding time'},{v:'−75%',l:'Brokerage disputes'}],
+    body:`<h5>How developers use CP Management daily</h5><p>CP ops reviews new registrations and monitors walk-in activity. Finance receives digitally submitted invoices that push to SAP automatically. Marketing tracks which collateral drives site visits. Leadership monitors channel health on one dashboard.</p><h5>Key outcomes</h5><ul><li>CP activation rate rises from 30–40% to 52–65% within 90 days</li><li>Invoice processing TAT drops from 18–35 days to 5–10 days</li><li>Collateral reach per CP grows from 30 contacts/month to 60–120</li><li>Brokerage disputes fall from 12–20% to under 5% of monthly payouts</li><li>CP 12-month retention improves 20–35% with the loyalty engine</li></ul><h5>Who buys it</h5><p>VP Channel Sales or Head of CP Operations at Tier A or Tier B developers. Measured on CP activation rate, bookings from CP channel, and brokerage payable TAT.</p>`},
+  commercial:{ico:'fa-building',ttl:'Commercial Real Estate',sub:'High deal-value precision — errors are disproportionately costly',
+    imps:[{v:'INR 5Cr+',l:'Deal sizes tracked'},{v:'100%',l:'Audit trail in SAP'},{v:'−65%',l:'Invoice processing time'}],
+    body:`<h5>How commercial developers use CP Management</h5><p>Commercial developers manage fewer CPs but with significantly larger deal sizes. A single brokerage error on an INR 5Cr+ transaction is a financial and legal liability. CP Management gives full booking-level visibility, precise brokerage calculation, and a direct audit trail into SAP.</p><h5>Key use cases</h5><ul><li>Track high-value lease and sale transactions with CP-level brokerage breakdown</li><li>Manage NRI/OS transaction brokerage with different rate structures accurately</li><li>Provide brokers real-time invoice status on long-duration commercial deals</li><li>Generate analytics on CP performance by asset class and geography</li></ul><h5>Profile</h5><p>Mid to large commercial developer or REIT with 50–500 CPs. Deal values INR 5Cr+ per transaction. India metros and GCC.</p>`},
+  luxury:{ico:'fa-gem',ttl:'Luxury & Ultra-Luxury Residential',sub:'Premium CP relationships demand premium recognition',
+    imps:[{v:'Gold',l:'Airport lounge access'},{v:'20–150',l:'Curated CP network'},{v:'+35%',l:'Top CP retention'}],
+    body:`<h5>Why luxury developers need CP Management</h5><p>Luxury developers lose top CPs to competitors offering structured recognition programs. A broker generating crore-level commissions with no formal reward structure feels undervalued — and acts accordingly. CP Management changes that dynamic.</p><h5>Key use cases</h5><ul><li>Gold-tier CPs unlock airport lounge access, international experiences, and curated travel</li><li>Personalised collateral ensures brand consistency — no blurry WhatsApp screenshots of premium properties</li><li>Analytics enable CP segmentation by buyer profile — NRI, HNI, investor — for targeted outreach</li><li>Tier-based reward structure formally recognises the top 20% driving 80% of revenue</li></ul><h5>Profile</h5><p>Ultra-luxury developer with ASPs above INR 5Cr per unit. 20–150 active CPs. Mumbai, Delhi NCR, Dubai, Abu Dhabi.</p>`},
+  affordable:{ico:'fa-house',ttl:'Affordable Housing at Scale',sub:'High volume, fast activation, zero lead loss',
+    imps:[{v:'5,000+',l:'CP network capacity'},{v:'2 hrs',l:'Temp reg to first lead'},{v:'3×',l:'Invoice throughput vs manual'}],
+    body:`<h5>How affordable housing developers use CP Management</h5><p>Affordable housing requires rapid CP activation at scale. With 500–5,000 CPs across Tier 1 and Tier 2 cities, manual onboarding is impossible to sustain. Temporary registration eliminates lead loss during the registration lag.</p><h5>Key use cases</h5><ul><li>Temporary registration lets walk-in CPs capture leads before RERA verification completes</li><li>Ladder schemes incentivise volume-based brokers — more bookings, higher tier, better rewards</li><li>Invoice automation handles high transaction throughput without increasing finance headcount</li><li>Broadcast notifications push new scheme updates to the entire CP network instantly</li></ul><h5>Profile</h5><p>Government-backed or private affordable developer. 5,000–50,000 units per year. 500–5,000 CPs. Tier 1 and Tier 2 Indian cities.</p>`},
+  gcc:{ico:'fa-globe',ttl:'GCC Expansion — UAE & Saudi Arabia',sub:'Built and ready for GCC deployment — coming soon',
+    imps:[{v:'AED/SAR',l:'Multi-currency wallet'},{v:'Arabic',l:'Full UI localisation'},{v:'UAE RERA',l:'Compliance framework'}],
+    body:`<h5>Why GCC is the highest-value market</h5><p>GCC developers manage large international CP networks across time zones, currencies, and regulatory frameworks with no structured tooling. Deal sizes are larger than India, NRI brokerage has different rates, and event management for roadshows has zero structured infrastructure today.</p><h5>Key use cases</h5><ul><li>Arabic-language interface for CP-facing app and admin dashboard</li><li>Multi-currency wallet and redemption in AED, SAR, QAR — no INR conversion</li><li>NRI/OS brokerage tracking with correct rate application and full audit trail</li><li>Event RSVP management for international developer roadshows and launch events</li><li>UAE RERA broker verification and PDPL-compliant data residency</li></ul><h5>Profile</h5><p>Developers with AED 500M–5B+ annual sales. UAE, Saudi Arabia, Qatar. High proportion of international and NRI buyers. USD 50,000–120,000 ACV at enterprise tier.</p>`}
+};
+
+function openM(k){
+  const d=MD[k];
+  document.getElementById('mIco').innerHTML=`<i class="fa-solid ${d.ico}"></i>`;
+  document.getElementById('mTtl').textContent=d.ttl;
+  document.getElementById('mSub').textContent=d.sub;
+  document.getElementById('mImps').innerHTML=d.imps.map(i=>`<div class="m-ic"><div class="v">${i.v}</div><div class="l">${i.l}</div></div>`).join('');
+  document.getElementById('mBody').innerHTML=d.body;
+  document.getElementById('mbd').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeM(e){if(e.target===document.getElemen
