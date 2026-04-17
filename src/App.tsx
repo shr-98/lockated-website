@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 function App() {
   const [openMenu, setOpenMenu] = useState<
-    null | 'clientTypes' | 'propertyType' | 'solutionType' | 'productsType'
+    null | 'clientTypes' | 'propertyType' | 'solutionType'
   >(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
@@ -59,41 +59,6 @@ function App() {
                       'Hotels',
                       'Residential Communities',
                       'Real Estate Developer',
-                    ].map((t) => (
-                      <a
-                        key={t}
-                        href="#"
-                        className="block rounded-lg px-3 py-2 hover:bg-slate-50"
-                      >
-                        {t}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="relative">
-                <button
-                  type="button"
-                  className="flex items-center gap-1 font-medium hover:text-slate-900"
-                  onClick={() =>
-                    setOpenMenu((v) =>
-                      v === 'productsType' ? null : 'productsType',
-                    )
-                  }
-                >
-                  By Products <span className="text-slate-400">▾</span>
-                </button>
-                {openMenu === 'productsType' && (
-                  <div
-                    className="absolute left-0 mt-3 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg"
-                  >
-                    {[
-                      'Visitor Management',
-                      'Community Management',
-                      'Workplace Management',
-                      'Access Control',
-                      'Helpdesk Management',
                     ].map((t) => (
                       <a
                         key={t}
@@ -281,30 +246,6 @@ function App() {
                     'Brokers Management',
                     'Snagging & QC Management',
                     'Handover Management',
-                  ].map((t) => (
-                    <a
-                      key={t}
-                      href="#"
-                      className="block rounded-lg px-2 py-2 hover:bg-slate-50"
-                      onClick={() => setMobileNavOpen(false)}
-                    >
-                      {t}
-                    </a>
-                  ))}
-                </div>
-              </details>
-
-              <details className="rounded-xl border border-slate-200 bg-white p-3">
-                <summary className="cursor-pointer select-none text-sm font-semibold text-slate-900">
-                  By Products
-                </summary>
-                <div className="mt-2 space-y-1 text-sm text-slate-700">
-                  {[
-                    'Visitor Management',
-                    'Community Management',
-                    'Workplace Management',
-                    'Access Control',
-                    'Helpdesk Management',
                   ].map((t) => (
                     <a
                       key={t}

@@ -17,6 +17,7 @@ import PATMLandingPage from './pages/PATMLandingPage'
 import SurveyLandingPage from './pages/SurveyLandingPage'
 import VendorManagementLandingPage from './pages/VendorManagementLandingPage'
 import PostSalesLandingPage from './pages/PostSalesLandingPage'
+import ClubManagementLandingPage from './pages/ClubManagementLandingPage'
 import SlugPage from './pages/SlugPage'
 
 export default function Router() {
@@ -34,6 +35,7 @@ export default function Router() {
       <Route path="survey" element={<SurveyLandingPage />} />
       <Route path="vendor-management" element={<VendorManagementLandingPage />} />
       <Route path="post-sales" element={<PostSalesLandingPage />} />
+      <Route path="club-management" element={<ClubManagementLandingPage />} />
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />

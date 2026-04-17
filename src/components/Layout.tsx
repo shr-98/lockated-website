@@ -25,11 +25,7 @@ const PRODUCTS_TYPES = [
   'PATM',
   'Vendor Management',
   'Post Sales',
-  'Visitor Management',
-  'Community Management',
-  'Workplace Management',
-  'Access Control',
-  'Helpdesk Management',
+  'Club Management',
 ] as const
 
 const CLIENT_TYPE_LINKS: Record<(typeof CLIENT_TYPES)[number], string> = {
@@ -56,11 +52,7 @@ const PRODUCTS_TYPE_LINKS: Record<(typeof PRODUCTS_TYPES)[number], string> = {
   PATM: '/patm',
   'Vendor Management': '/vendor-management',
   'Post Sales': '/post-sales',
-  'Visitor Management': `/category/products-type/${slugify('Visitor Management')}`,
-  'Community Management': `/category/products-type/${slugify('Community Management')}`,
-  'Workplace Management': `/category/products-type/${slugify('Workplace Management')}`,
-  'Access Control': `/category/products-type/${slugify('Access Control')}`,
-  'Helpdesk Management': `/category/products-type/${slugify('Helpdesk Management')}`,
+  'Club Management': '/club-management',
 }
 
 const SOLUTION_TYPES = [
