@@ -1,5 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 
+/**
+ * `public/snag-360.html` expects its own reveal animations and section layout.
+ * The app has global styles that can unintentionally affect these landing pages
+ * (e.g. global reveal blur/filter rules). We isolate Snag360 markup to keep the
+ * HTML rendering identical to the standalone reference file.
+ */
+const SNAG360_ISOLATION_CSS = `
+.snag360-root .reveal,
+.snag360-root .reveal.in-view {
+  filter: none !important;
+  will-change: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .snag360-root .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+`
+
 export default function Snag360LandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -16,7 +37,9 @@ export default function Snag360LandingPage() {
 
         const text = await res.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
-        const style = doc.querySelector('style')?.textContent ?? ''
+        const style = Array.from(doc.querySelectorAll('style'))
+          .map((s) => s.textContent ?? '')
+          .join('\n')
         const body = doc.body?.innerHTML ?? ''
 
         if (!style.trim() || !body.trim()) {
@@ -24,7 +47,7 @@ export default function Snag360LandingPage() {
         }
 
         if (cancelled) return
-        setCssText(style)
+        setCssText(`${style}\n${SNAG360_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -266,7 +289,7 @@ export default function Snag360LandingPage() {
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="snag360-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link

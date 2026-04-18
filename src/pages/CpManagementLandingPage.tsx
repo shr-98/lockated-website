@@ -1,5 +1,52 @@
 import { useEffect, useRef, useState } from 'react'
 
+/**
+ * `public/cp-management.html` uses `.reveal` animations. The app `index.css` adds a
+ * global blur reveal — scope overrides + shell styling (same approach as FM Matrix).
+ */
+const CP_MANAGEMENT_ISOLATION_CSS = `
+.cp-management-root .reveal,
+.cp-management-root .reveal.pre {
+  filter: none !important;
+  will-change: auto !important;
+}
+.cp-management-root .reveal.pre {
+  opacity: 0 !important;
+  transform: translateY(30px) !important;
+  transition: opacity 0.75s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)), transform 0.75s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) !important;
+}
+.cp-management-root .reveal.pre.on {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.cp-management-root h1,
+.cp-management-root h2,
+.cp-management-root h3,
+.cp-management-root h4,
+.cp-management-root h5,
+.cp-management-root h6 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-management-root .reveal.pre,
+  .cp-management-root .reveal.pre.on {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.cp-management-root #contact {
+  background-color: var(--bg) !important;
+}
+.cp-management-root footer {
+  background-color: var(--bg) !important;
+}
+.cp-management-root .btn-fill,
+.cp-management-root .f-sub {
+  color: var(--on-primary, #F6F4EE) !important;
+}
+`
+
 type ModalDatum = {
   ico: string
   ttl: string
@@ -34,7 +81,7 @@ export default function CpManagementLandingPage() {
         }
 
         if (cancelled) return
-        setCssText(styles)
+        setCssText(`${styles}\n${CP_MANAGEMENT_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -113,29 +160,6 @@ export default function CpManagementLandingPage() {
         if (!was) item.classList.add('on')
       })
     })
-
-    // Testimonial card stack
-    let co = [0, 1, 2, 3]
-    const cards = Array.from(root.querySelectorAll<HTMLElement>('.tc'))
-    const updCards = () => {
-      cards.forEach((c, i) => {
-        const idx = co.indexOf(i)
-        c.className = `tc c${idx}`
-      })
-    }
-    const nextBtn = root.querySelector<HTMLElement>('#nextBtn')
-    const prevBtn = root.querySelector<HTMLElement>('#prevBtn')
-    const onNext = () => {
-      co = [co[3]!, ...co.slice(0, 3)]
-      updCards()
-    }
-    const onPrev = () => {
-      co = [...co.slice(1), co[0]!]
-      updCards()
-    }
-    nextBtn?.addEventListener('click', onNext)
-    prevBtn?.addEventListener('click', onPrev)
-    const testiTimer = window.setInterval(onNext, 5200)
 
     // Walkthrough tabs
     root.querySelectorAll<HTMLElement>('.wtab').forEach((tab) => {
@@ -260,12 +284,11 @@ export default function CpManagementLandingPage() {
       document.removeEventListener('keydown', onKeyDown)
       pillObs.disconnect()
       rv.disconnect()
-      window.clearInterval(testiTimer)
     }
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="cp-management-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link
@@ -274,7 +297,7 @@ export default function CpManagementLandingPage() {
       />
       <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
       />
 
       <style dangerouslySetInnerHTML={{ __html: cssText }} />

@@ -1899,9 +1899,464 @@
         width: fit-content;
       }
 
-      /* ── FOOTER / CONTACT / BANNER — plus remaining CSS from your original HTML ── */
-      /* NOTE: The rest of your original HTML/CSS is preserved below in markup sections.
-         This file is intentionally large; it is loaded by React and made interactive in `Snag360LandingPage.tsx`. */
+      /* ── END BANNER ── */
+      .end-banner {
+        margin: 0 80px 80px;
+        border-radius: 28px;
+        background: var(--dark);
+        position: relative;
+        overflow: hidden;
+        padding: 100px 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 60px;
+      }
+      .banner-bg {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .banner-blob {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.08;
+        animation: blobFloat 8s ease-in-out infinite;
+      }
+      .banner-blob.b1 {
+        width: 500px;
+        height: 500px;
+        background: var(--primary);
+        top: -200px;
+        left: -100px;
+      }
+      .banner-blob.b2 {
+        width: 400px;
+        height: 400px;
+        background: var(--olive);
+        bottom: -150px;
+        right: -80px;
+        animation-delay: 3s;
+      }
+      .banner-blob.b3 {
+        width: 250px;
+        height: 250px;
+        background: var(--sage);
+        top: 50px;
+        right: 300px;
+        animation-delay: 1.5s;
+      }
+      @keyframes blobFloat {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(20px, -20px) scale(1.05);
+        }
+        66% {
+          transform: translate(-15px, 15px) scale(0.97);
+        }
+      }
+      .banner-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+      }
+      .banner-content {
+        position: relative;
+        z-index: 1;
+        max-width: 560px;
+      }
+      .banner-eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .banner-eyebrow::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 1px;
+      }
+      .banner-title {
+        font-size: clamp(32px, 3.5vw, 52px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.08;
+        color: #fff;
+        margin-bottom: 16px;
+      }
+      .banner-title .accent {
+        color: var(--primary);
+      }
+      .banner-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.65;
+      }
+      .banner-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        align-items: flex-end;
+      }
+      .btn-banner-primary {
+        font-family: var(--font);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--dark);
+        background: #fff;
+        border: none;
+        cursor: pointer;
+        padding: 16px 36px;
+        border-radius: 12px;
+        transition: all 0.25s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+      }
+      .btn-banner-primary:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(218, 119, 86, 0.4);
+      }
+      .btn-banner-ghost {
+        font-family: var(--font);
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.65);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        cursor: pointer;
+        padding: 12px 28px;
+        border-radius: 10px;
+        transition: all 0.25s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+      .btn-banner-ghost:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+      .banner-proof {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 4px;
+      }
+      .banner-proof-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--sage);
+        flex-shrink: 0;
+        animation: blink 2s ease-in-out infinite;
+      }
+
+      /* ── CONTACT ── */
+      .contact-section {
+        padding: 100px 80px;
+        background: #fff;
+      }
+      .contact-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: start;
+      }
+      .contact-form-wrap {
+        background: var(--cream);
+        border-radius: 24px;
+        padding: 48px;
+        border: 1px solid rgba(196, 184, 157, 0.35);
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        font-family: var(--font);
+        font-size: 14px;
+        color: var(--dark);
+        background: #fff;
+        border: 1.5px solid rgba(196, 184, 157, 0.5);
+        border-radius: 10px;
+        padding: 12px 16px;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        outline: none;
+        resize: none;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(218, 119, 86, 0.1);
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(44, 44, 44, 0.35);
+      }
+      .btn-submit {
+        font-family: var(--font);
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--dark);
+        border: none;
+        cursor: pointer;
+        padding: 14px 32px;
+        border-radius: 10px;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        justify-content: center;
+      }
+      .btn-submit::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      .btn-submit:hover::before {
+        opacity: 1;
+      }
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(218, 119, 86, 0.35);
+      }
+      .btn-submit > * {
+        position: relative;
+        z-index: 1;
+      }
+      .office-card {
+        background: var(--cream);
+        border-radius: 20px;
+        padding: 32px;
+        border: 1px solid rgba(196, 184, 157, 0.35);
+        margin-top: 32px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .office-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--primary-8);
+        border: 1px solid rgba(218, 119, 86, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .office-icon svg {
+        width: 22px;
+        height: 22px;
+        color: var(--primary);
+      }
+      .office-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(44, 44, 44, 0.4);
+        margin-bottom: 6px;
+      }
+      .office-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 4px;
+      }
+      .office-address {
+        font-size: 13.5px;
+        color: rgba(44, 44, 44, 0.55);
+        line-height: 1.6;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--dark);
+        padding: 60px 80px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(218, 119, 86, 0.5), transparent);
+      }
+      .footer-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .footer-top {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 56px;
+      }
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        text-decoration: none;
+      }
+      .footer-logo-mark {
+        width: 32px;
+        height: 32px;
+        background: var(--primary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .footer-logo-text {
+        font-size: 17px;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.3px;
+      }
+      .footer-brand-desc {
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.42);
+        line-height: 1.7;
+        max-width: 260px;
+        margin-bottom: 24px;
+      }
+      .footer-socials {
+        display: flex;
+        gap: 10px;
+      }
+      .social-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .social-btn svg {
+        width: 16px;
+        height: 16px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .social-btn:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+      .social-btn:hover svg {
+        color: #fff;
+      }
+      .footer-col-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.35);
+        margin-bottom: 20px;
+      }
+      .footer-col-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .footer-col-links a {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-col-links a:hover {
+        color: var(--primary);
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-copyright {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .footer-copyright span {
+        color: var(--primary);
+      }
+      .footer-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .footer-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--sage);
+        animation: blink 2s infinite;
+      }
 
       /* ── SCROLL REVEAL ── */
       .reveal {
@@ -1978,6 +2433,13 @@
         .testimonials-layout {
           grid-template-columns: 1fr;
         }
+        .contact-inner {
+          grid-template-columns: 1fr;
+        }
+        .footer-top {
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+        }
         .team-content.active {
           grid-template-columns: 1fr;
         }
@@ -2006,6 +2468,33 @@
           grid-template-columns: 1fr;
         }
         .usecases-grid {
+          grid-template-columns: 1fr;
+        }
+        .usps-section,
+        .walkthrough-section,
+        .testimonials-section,
+        .usecases-section,
+        .teams-section,
+        .contact-section {
+          padding: 60px 24px;
+        }
+        .end-banner {
+          margin: 0 24px 60px;
+          padding: 60px 32px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .banner-actions {
+          align-items: flex-start;
+        }
+        footer {
+          padding: 48px 24px 24px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .form-row {
           grid-template-columns: 1fr;
         }
       }
@@ -2600,6 +3089,49 @@
             </svg>
             Checklists
           </button>
+          <button class="feature-tab" onclick="switchTab(3)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 13L3 4L8 2L13 4L13 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M3 13H13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            Photos
+          </button>
+          <button class="feature-tab" onclick="switchTab(4)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M2 10C2 7 4.7 4.5 8 4.5C11.3 4.5 14 7 14 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path d="M5 9L7 11L11 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            Workflow
+          </button>
+          <button class="feature-tab" onclick="switchTab(5)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4" />
+              <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4" />
+              <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4" />
+              <path d="M9 11.5H14M11.5 9V14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            Dashboard
+          </button>
+          <button class="feature-tab" onclick="switchTab(6)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M8 2L3 5V11C3 13.2 5.2 14.8 8 15C10.8 14.8 13 13.2 13 11V5L8 2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            Compliance
+          </button>
+          <button class="feature-tab" onclick="switchTab(7)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 12V8L8 4L13 8V12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path d="M6 12H10V8H6V12Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            Handover
+          </button>
+          <button class="feature-tab" onclick="switchTab(8)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.4" />
+              <path d="M8 2V3M8 13V14M2 8H3M13 8H14M4.2 4.2L4.9 4.9M11.1 11.1L11.8 11.8M4.2 11.8L4.9 11.1M11.1 4.9L11.8 4.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            Automation
+          </button>
         </div>
 
         <div class="feature-content">
@@ -2703,6 +3235,137 @@
                 <div style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6;">
                   Demo screen placeholder.
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-3">
+            <div class="feature-info">
+              <div class="feature-tag">Photo Documentation</div>
+              <div class="feature-name">A Picture That Leaves No Room for Doubt.</div>
+              <div class="feature-desc">Take a photo. Annotate on the spot with arrows, circles, labels. The repair team knows exactly what to fix. GPS-tagged, timestamped, and linked to the snag record permanently.</div>
+              <ul class="feature-bullets"><li>In-app annotation: arrows, text, circles, dimension markers</li><li>Before and after photos linked to each snag</li><li>GPS-tagged, timestamped, user-stamped evidence</li><li>Exportable as PDF for RERA or client submission</li></ul>
+              <a href="#" class="feature-cta-link">See annotation demo <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Snag #247 — Photo Evidence</span></div>
+              <div class="feature-screen-body">
+                <div style="border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);height:150px;background:rgba(255,255,255,0.04);position:relative;display:flex;align-items:center;justify-content:center;">
+                  <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(218,119,86,0.15) 0%,rgba(121,140,94,0.1) 100%);position:relative;display:flex;align-items:center;justify-content:center;">
+                    <div style="position:absolute;top:35%;left:32%;width:38px;height:38px;border:2.5px solid #EDC488;border-radius:50%;"></div>
+                    <svg style="position:absolute;top:42%;left:42%;" width="44" height="26" viewBox="0 0 44 26" fill="none"><path d="M4 22L32 4M26 4H32V10" stroke="#E7848E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div style="position:absolute;top:22%;left:52%;background:#E7848E;color:#fff;font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;">Crack visible</div>
+                    <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);">Wall — Unit 402</span>
+                  </div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <div style="flex:1;padding:6px 9px;background:rgba(218,119,86,0.15);border-radius:6px;border:1px solid rgba(218,119,86,0.25);font-size:10px;font-weight:700;color:#f8b99a;cursor:default;">Arrow</div>
+                  <div style="flex:1;padding:6px 9px;background:rgba(255,255,255,0.05);border-radius:6px;border:1px solid rgba(255,255,255,0.08);font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);cursor:default;">Circle</div>
+                  <div style="flex:1;padding:6px 9px;background:rgba(255,255,255,0.05);border-radius:6px;border:1px solid rgba(255,255,255,0.08);font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);cursor:default;">Label</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(158,200,186,0.08);border-radius:8px;border:1px solid rgba(158,200,186,0.2);"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L4 8L9 3" stroke="#9EC8BA" stroke-width="1.5" stroke-linecap="round"/></svg><span style="font-size:10.5px;color:rgba(255,255,255,0.4);">Saved to Snag #247 &nbsp;&#183;&nbsp; Arjun P. &nbsp;&#183;&nbsp; 14:22 IST</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-4">
+            <div class="feature-info">
+              <div class="feature-tag">Dynamic Workflow Engine</div>
+              <div class="feature-name">No Stage Can Be Skipped. Ever.</div>
+              <div class="feature-desc">The engine validates completion before any stage proceeds. Open snags or quality scores below threshold keep the gate closed. No exceptions without an audit log.</div>
+              <ul class="feature-bullets"><li>Stage gates enforce sequential quality progression</li><li>Configurable quality score thresholds per stage</li><li>Forced overrides require mandatory comments</li><li>Every gate event logged with approver ID and timestamp</li></ul>
+              <a href="#" class="feature-cta-link">See workflow demo <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Stage Gate Status</span></div>
+              <div class="feature-screen-body">
+                <div class="wt-snag-header"><div class="wt-snag-title">Finishing Stage — Gate Validation</div><div class="wt-snag-count" style="background:rgba(231,132,142,0.2);color:#f8b3b8;">Blocked</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">All mandatory checkpoints cleared</div><div class="wt-tag closed">Pass</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">Quality score 87.4 vs threshold 80.0</div><div class="wt-tag closed">Pass</div></div>
+                <div class="wt-row" style="background:rgba(231,132,142,0.07);border-color:rgba(231,132,142,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 3L10 10M10 3L3 10" stroke="#E7848E" stroke-width="1.5" stroke-linecap="round"/></svg><div class="wt-text">2 open snags must be closed first</div><div class="wt-tag open">Blocked</div></div>
+                <div style="padding:10px 13px;background:rgba(231,132,142,0.06);border-radius:9px;border:1px solid rgba(231,132,142,0.12);font-size:11px;color:rgba(255,255,255,0.5);line-height:1.6;">Gate blocked. Close Snag #247 and Snag #249 before proceeding.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-5">
+            <div class="feature-info">
+              <div class="feature-tag">Dashboard and Tracking</div>
+              <div class="feature-name">Your Entire Project Quality in One View.</div>
+              <div class="feature-desc">Live KPI tiles, heat maps by tower and floor, inspector performance metrics. Auto-generated daily reports. No manual status calls. No surprises at customer walkthrough.</div>
+              <ul class="feature-bullets"><li>Real-time open snag count, overdue items, closure velocity</li><li>Quality score heat maps by unit, floor, and tower</li><li>Inspector activity and performance tracking</li><li>DPR auto-generated and emailed daily at 6 PM</li></ul>
+              <a href="#" class="feature-cta-link">See live dashboard <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Live Dashboard</span></div>
+              <div class="feature-screen-body">
+                <div class="wt-kpi-row">
+                  <div class="wt-kpi"><div class="wt-kpi-label">Open Snags</div><div class="wt-kpi-val" style="color:#f8b3b8;">24</div><div class="wt-kpi-sub" style="color:#f8b3b8;">6 overdue</div></div>
+                  <div class="wt-kpi"><div class="wt-kpi-label">Closed Today</div><div class="wt-kpi-val" style="color:#b4e4d9;">18</div><div class="wt-kpi-sub" style="color:#b4e4d9;">+4 vs yesterday</div></div>
+                  <div class="wt-kpi"><div class="wt-kpi-label">Quality Score</div><div class="wt-kpi-val">87.4</div><div class="wt-kpi-sub" style="color:#b4e4d9;">Threshold met</div></div>
+                  <div class="wt-kpi"><div class="wt-kpi-label">Stage Progress</div><div class="wt-kpi-val" style="color:#f8b99a;">74%</div><div class="wt-kpi-sub" style="color:rgba(255,255,255,0.3);">Finishing</div></div>
+                </div>
+                <div class="wt-bar-area"><div class="wt-bar-label">Snags Closed — Last 7 Days</div><div class="wt-bars"><div class="wt-bar" style="background:rgba(218,119,86,0.15);height:35%;"></div><div class="wt-bar" style="background:rgba(218,119,86,0.22);height:50%;"></div><div class="wt-bar" style="background:rgba(218,119,86,0.28);height:45%;"></div><div class="wt-bar" style="background:rgba(218,119,86,0.36);height:70%;"></div><div class="wt-bar" style="background:rgba(218,119,86,0.44);height:80%;"></div><div class="wt-bar" style="background:rgba(218,119,86,0.55);height:65%;"></div><div class="wt-bar" style="background:var(--primary);height:90%;"></div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-6">
+            <div class="feature-info">
+              <div class="feature-tag">Quality and Compliance</div>
+              <div class="feature-name">Built-in Compliance. Zero Extra Effort.</div>
+              <div class="feature-desc">Safety checkpoints, quality scores, and activity tracking run alongside every inspection. RERA, government audits, and third-party reviews backed by a complete digital evidence trail.</div>
+              <ul class="feature-bullets"><li>Safety compliance tracked alongside quality checkpoints</li><li>Activity logs: who did what, when, and where on site</li><li>Quality scores aggregated across units, floors, and towers</li><li>Exportable compliance reports for RERA and client audits</li></ul>
+              <a href="#" class="feature-cta-link">Explore compliance features <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Compliance View</span></div>
+              <div class="feature-screen-body">
+                <div class="wt-snag-header"><div class="wt-snag-title">Safety Compliance — This Week</div><div class="wt-snag-count" style="background:rgba(158,200,186,0.2);color:#b4e4d9;">94% Compliant</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">PPE compliance checks — all clear</div><div class="wt-tag closed">Pass</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">Scaffolding safety audit — completed</div><div class="wt-tag closed">Pass</div></div>
+                <div class="wt-row" style="background:rgba(231,132,142,0.07);border-color:rgba(231,132,142,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V6.5M6.5 9h.01" stroke="#E7848E" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="6.5" r="5" stroke="#E7848E" stroke-width="1.2"/></svg><div class="wt-text">Fire exit obstruction — Zone C (Critical)</div><div class="wt-tag open">Safety Flag</div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06);"><span style="font-size:10.5px;color:rgba(255,255,255,0.4);">247 actions logged today</span><span style="font-size:10px;font-weight:700;color:var(--primary);">Export PDF</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-7">
+            <div class="feature-info">
+              <div class="feature-tag">Handover Management</div>
+              <div class="feature-name">Zero Defects at the Door. Every Time.</div>
+              <div class="feature-desc">The pre-handover stage ensures no unit is delivered with open snags. FM teams receive a complete digital asset record. Customers get a handover backed by evidence.</div>
+              <ul class="feature-bullets"><li>Dedicated pre-handover checklist and snag list</li><li>Clearance only after all snags are closed</li><li>FM handover package with full inspection history per unit</li><li>HOTO module for structured unit transfer documentation</li></ul>
+              <a href="#" class="feature-cta-link">See handover flow <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Handover Clearance</span></div>
+              <div class="feature-screen-body">
+                <div class="wt-snag-header"><div class="wt-snag-title">Unit 402 — Pre-Handover Status</div><div class="wt-snag-count" style="background:rgba(158,200,186,0.2);color:#b4e4d9;">Ready</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">All 26 checklist items cleared</div><div class="wt-tag closed">Done</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">0 open snags remaining</div><div class="wt-tag closed">Clear</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">Quality score: 92.1 — above threshold</div><div class="wt-tag closed">Pass</div></div>
+                <div style="padding:10px 13px;background:rgba(158,200,186,0.1);border-radius:9px;border:1px solid rgba(158,200,186,0.25);display:flex;align-items:center;gap:10px;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L3 5V9C3 11.8 5.4 13.8 8 14C10.6 13.8 13 11.8 13 9V5L8 2Z" stroke="#9EC8BA" stroke-width="1.5" stroke-linecap="round"/><path d="M5.5 8L7 9.5L10.5 6" stroke="#9EC8BA" stroke-width="1.5" stroke-linecap="round"/></svg><div><div style="font-size:11.5px;font-weight:700;color:#b4e4d9;">Handover Clearance Granted</div><div style="font-size:10px;color:rgba(255,255,255,0.3);">Approved: Supervisor R. Shah &nbsp;&#183;&nbsp; 15 Apr 2025, 11:42</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-panel" id="panel-8">
+            <div class="feature-info">
+              <div class="feature-tag">Productivity Tools</div>
+              <div class="feature-name">3 to 5 Hours Back. Every Day. Per Project.</div>
+              <div class="feature-desc">DPRs write themselves. Snags route automatically. Stage gates validate on submission. Overdue alerts go out without anyone pressing send.</div>
+              <ul class="feature-bullets"><li>DPR auto-generated daily and emailed to configured recipients</li><li>Snag routing assigned automatically by unit ownership map</li><li>Overdue snag alerts at configurable intervals</li><li>Stage gate validation runs automatically on inspector submission</li></ul>
+              <a href="#" class="feature-cta-link">See automation in action <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="feature-screen">
+              <div class="feature-screen-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Automation Log</span></div>
+              <div class="feature-screen-body">
+                <div class="wt-snag-header"><div class="wt-snag-title">Today's Automated Actions</div><div class="wt-snag-count" style="background:rgba(158,200,186,0.2);color:#b4e4d9;">11 Actions</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.07);border-color:rgba(158,200,186,0.15);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">DPR generated and sent — 18:01</div><div class="wt-tag closed">Auto</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.07);border-color:rgba(158,200,186,0.15);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text">8 snags auto-routed to reviewers</div><div class="wt-tag closed">Auto</div></div>
+                <div class="wt-row" style="background:rgba(237,196,136,0.07);border-color:rgba(237,196,136,0.18);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V6.5M6.5 9h.01" stroke="#EDC488" stroke-width="1.4" stroke-linecap="round"/><circle cx="6.5" cy="6.5" r="5" stroke="#EDC488" stroke-width="1.2"/></svg><div class="wt-text">6 overdue alerts dispatched</div><div class="wt-tag progress">Alert</div></div>
+                <div style="padding:9px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:10.5px;color:rgba(255,255,255,0.4);">Time saved vs. manual today:</span><span style="font-size:13px;font-weight:800;color:var(--primary);">3h 52min</span></div>
               </div>
             </div>
           </div>
@@ -2934,6 +3597,9 @@
           <button class="team-tab active" onclick="switchTeam(0)">QC Team</button>
           <button class="team-tab" onclick="switchTeam(1)">Site Engineers</button>
           <button class="team-tab" onclick="switchTeam(2)">PMO</button>
+          <button class="team-tab" onclick="switchTeam(3)">FM Team</button>
+          <button class="team-tab" onclick="switchTeam(4)">Top Management</button>
+          <button class="team-tab" onclick="switchTeam(5)">IT Team</button>
         </div>
 
         <div class="team-content active" id="team-0">
@@ -2983,8 +3649,227 @@
             <div style="margin-top:12px;color:rgba(44,44,44,0.6);">Demo visual placeholder.</div>
           </div>
         </div>
+
+        <div class="team-content" id="team-3">
+          <div class="team-info">
+            <div class="team-badge">Facility Management Team</div>
+            <div class="team-headline">Complete digital asset history from handover day one.</div>
+            <div class="team-desc">FM teams use HOTO and FM Handover Support to receive and document asset condition at project handover. Post-handover warranty snags are logged and tracked back to the developer for resolution.</div>
+            <ul class="team-features"><li>HOTO walkthrough documents condition of all units at takeover</li><li>Post-handover defects raised as warranty snags assigned to developer</li><li>Full snag history per unit available from day one of FM operations</li><li>FM Matrix links construction snags to ongoing maintenance records</li></ul>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--primary-8);border:1px solid rgba(218,119,86,0.2);border-radius:9px;font-size:13px;font-weight:600;color:var(--primary);">FM onboarding 50% faster with complete digital records</div>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(44,44,44,0.4);margin-left:8px;">FM Team — HOTO View</span></div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat"><div class="tvs-label">Units handed over</div><div class="tvs-val green">148</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">Open warranty snags</div><div class="tvs-val orange">12</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">Asset records available</div><div class="tvs-val">100%</div></div>
+              <div class="productivity-pill"><div><div class="pval">50%</div><div class="ptxt">faster FM onboarding vs. paper HOTO</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-content" id="team-4">
+          <div class="team-info">
+            <div class="team-badge">Top Management / CXO</div>
+            <div class="team-headline">No surprises at customer walkthroughs. Ever.</div>
+            <div class="team-desc">Management reviews executive dashboards for portfolio quality score, handover readiness, and RERA risk. No operational intervention needed. Board-level quality reporting is available on demand.</div>
+            <ul class="team-features"><li>Portfolio quality score and handover readiness at a glance</li><li>RERA compliance risk quantified and managed proactively</li><li>Board-level quality reports available without chasing teams</li><li>Zero surprise defect escalations from customer walkthroughs</li></ul>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--primary-8);border:1px solid rgba(218,119,86,0.2);border-radius:9px;font-size:13px;font-weight:600;color:var(--primary);">Zero surprise defect escalations at customer walkthrough</div>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(44,44,44,0.4);margin-left:8px;">Executive Dashboard</span></div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat"><div class="tvs-label">Portfolio quality score</div><div class="tvs-val green">84.2 avg</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">Units handover-ready</div><div class="tvs-val orange">148 / 200</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">RERA risk units</div><div class="tvs-val">0</div></div>
+              <div class="productivity-pill"><div><div class="pval">On demand</div><div class="ptxt">board-level quality reports</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-content" id="team-5">
+          <div class="team-info">
+            <div class="team-badge">IT / Technology Team</div>
+            <div class="team-headline">Data on your servers. Compliance without compromise.</div>
+            <div class="team-desc">IT teams deploy Snag 360 on client-owned infrastructure, manage user access, integrate with SAP and Salesforce, and configure SSO for enterprise users. Data sovereignty is the architecture, not an option.</div>
+            <ul class="team-features"><li>On-premise deployment on your own server infrastructure</li><li>SAP ERP and Salesforce CRM integration available</li><li>SSO configuration for enterprise identity management</li><li>Zero client data on Lockated servers at any point</li></ul>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--primary-8);border:1px solid rgba(218,119,86,0.2);border-radius:9px;font-size:13px;font-weight:600;color:var(--primary);">IT audit passed with zero data residency concerns</div>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-header"><div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div><span style="font-size:11px;color:rgba(44,44,44,0.4);margin-left:8px;">IT Admin — Deployment View</span></div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat"><div class="tvs-label">Data storage location</div><div class="tvs-val green">Your servers</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">Integrations active</div><div class="tvs-val orange">SAP, SFDC</div></div>
+              <div class="team-visual-stat"><div class="tvs-label">SSO configured</div><div class="tvs-val green">Active</div></div>
+              <div class="productivity-pill"><div><div class="pval">Zero</div><div class="ptxt">data on Lockated infrastructure</div></div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- END BANNER -->
+    <div class="end-banner">
+      <div class="banner-bg">
+        <div class="banner-grid"></div>
+        <div class="banner-blob b1"></div>
+        <div class="banner-blob b2"></div>
+        <div class="banner-blob b3"></div>
+      </div>
+      <div class="banner-content">
+        <div class="banner-eyebrow">Start Today</div>
+        <div class="banner-title">Stop managing quality<br />with <span class="accent">WhatsApp.</span></div>
+        <div class="banner-sub">
+          Your next project handover can be zero-defect. Your team needs the right tool. Snag 360 is
+          live, proven, and ready to deploy on your servers today.
+        </div>
+      </div>
+      <div class="banner-actions">
+        <a href="#get-started" class="btn-banner-primary"
+          ><span>Start Free Trial</span
+          ><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8H13M8 3L13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></a
+        >
+        <a href="#contact" class="btn-banner-ghost"
+          ><svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 2H12V10H7L4 12V10H2V2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Talk to Sales</span></a
+        >
+        <div class="banner-proof"><div class="banner-proof-dot"></div>No credit card required &nbsp;&#183;&nbsp; Your data, your servers</div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <section class="contact-section" id="contact">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <div class="section-eyebrow reveal">Get in Touch</div>
+          <h2 class="section-title reveal reveal-delay-1">
+            Let's talk about<br /><span class="accent">your next project.</span>
+          </h2>
+          <p class="section-sub reveal reveal-delay-2" style="margin-bottom: 0;">
+            Whether you want a live demo, a pilot project, or need to talk enterprise integrations, our
+            team is ready. No sales scripts. Just a real conversation.
+          </p>
+          <div class="office-card reveal reveal-delay-3">
+            <div class="office-icon">
+              <svg viewBox="0 0 22 22" fill="none">
+                <path d="M11 2C7.1 2 4 5.1 4 9C4 14.2 11 20 11 20C11 20 18 14.2 18 9C18 5.1 14.9 2 11 2Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="11" cy="9" r="2.5" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </div>
+            <div>
+              <div class="office-label">India Office</div>
+              <div class="office-name">Mumbai, Maharashtra</div>
+              <div class="office-address">
+                Lockated / GoPhygital.work<br />Mumbai, Maharashtra, India<br /><a
+                  href="mailto:hello@lockated.com"
+                  style="color: var(--primary); text-decoration: none; font-weight: 600;"
+                  >hello@lockated.com</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-wrap reveal reveal-delay-1">
+          <h3 style="font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 28px; letter-spacing: -0.4px;">Book a Demo</h3>
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" placeholder="Rajesh" /></div>
+            <div class="form-group"><label>Last Name</label><input type="text" placeholder="Kumar" /></div>
+          </div>
+          <div class="form-group"><label>Work Email</label><input type="email" placeholder="you@company.com" /></div>
+          <div class="form-group"><label>Company</label><input type="text" placeholder="Your company name" /></div>
+          <div class="form-group">
+            <label>Industry</label>
+            <select>
+              <option value="">Select your industry</option>
+              <option>Residential Real Estate</option>
+              <option>EPC / Infrastructure</option>
+              <option>Commercial Real Estate</option>
+              <option>Industrial / Warehousing</option>
+              <option>Facility Management</option>
+              <option>Government / Public Works</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Tell us about your project (optional)</label><textarea rows="3" placeholder="How many projects, team size, current pain points..."></textarea></div>
+          <button class="btn-submit" type="submit">
+            <span>Request a Demo</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M8 3L13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+          <div style="text-align: center; margin-top: 16px; font-size: 12px; color: rgba(44, 44, 44, 0.4);">We respond within 24 hours &nbsp;&#183;&nbsp; No spam, ever</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="#" class="footer-logo"
+              ><div class="footer-logo-mark">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M9 2L3 6.5V16H7V11H11V16H15V6.5L9 2Z" fill="white" fill-opacity="0.9" />
+                </svg>
+              </div>
+              <span class="footer-logo-text">Snag360</span></a
+            >
+            <div class="footer-brand-desc">Mobile-first quality inspection and snagging platform for real estate and construction. Your data, always on your servers.</div>
+            <div class="footer-socials">
+              <a href="#" class="social-btn"
+                ><svg viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M14 2L9 7M14 2H10M14 2V6"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7 3H3C2.4 3 2 3.4 2 4V13C2 13.6 2.4 14 3 14H12C12.6 14 13 13.6 13 13V9"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                  />
+                </svg></a
+              >
+              <a href="#" class="social-btn"
+                ><svg viewBox="0 0 16 16" fill="none">
+                  <rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.4" />
+                  <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3" />
+                  <circle cx="11.5" cy="4.5" r="0.7" fill="currentColor" />
+                </svg></a
+              >
+              <a href="#" class="social-btn"
+                ><svg viewBox="0 0 16 16" fill="none">
+                  <path d="M2 4H14M2 8H14M2 12H10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg></a
+              >
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-title">Product</div>
+            <div class="footer-col-links"><a href="#">Features</a><a href="#">Walkthrough</a><a href="#">Pricing</a><a href="#">Integrations</a><a href="#">Mobile App</a></div>
+          </div>
+          <div>
+            <div class="footer-col-title">Use Cases</div>
+            <div class="footer-col-links"><a href="#">Residential Real Estate</a><a href="#">EPC and Infrastructure</a><a href="#">Commercial Real Estate</a><a href="#">Facility Management</a><a href="#">Government Projects</a></div>
+          </div>
+          <div>
+            <div class="footer-col-title">Company</div>
+            <div class="footer-col-links"><a href="#">About Lockated</a><a href="#">GoPhygital.work</a><a href="#">Data Sovereignty</a><a href="#">Privacy Policy</a><a href="#">Contact Us</a></div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="footer-copyright">&#169; 2025 <span>Lockated / GoPhygital.work</span>. All rights reserved.</div>
+          <div class="footer-badge"><div class="footer-badge-dot"></div>Data stored exclusively on your servers</div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
 
