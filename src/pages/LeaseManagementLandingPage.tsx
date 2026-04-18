@@ -1,5 +1,48 @@
 import { useEffect, useRef, useState } from 'react'
 
+/** Scoped overrides: global `index.css` `.reveal` uses blur; this page uses `.visible`. */
+const LEASE_ISOLATION_CSS = `
+.lease-management-root .reveal {
+  opacity: 0 !important;
+  transform: translateY(28px) !important;
+  filter: none !important;
+  will-change: auto !important;
+  transition: opacity 0.65s ease, transform 0.65s ease !important;
+}
+.lease-management-root .reveal.visible,
+.lease-management-root .reveal.reveal--in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lease-management-root .reveal,
+  .lease-management-root .reveal.visible,
+  .lease-management-root .reveal.reveal--in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.lease-management-root .pain-section,
+.lease-management-root .usps-section,
+.lease-management-root .usecase-section,
+.lease-management-root .contact-section {
+  background-color: var(--cream) !important;
+}
+.lease-management-root .walkthrough-section,
+.lease-management-root .teams-section,
+.lease-management-root .banner-section {
+  background-color: var(--band) !important;
+}
+.lease-management-root .form-group input,
+.lease-management-root .form-group select,
+.lease-management-root .form-group textarea {
+  background-color: #fff !important;
+  color: var(--dark) !important;
+}
+`
+
 export default function LeaseManagementLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -24,7 +67,7 @@ export default function LeaseManagementLandingPage() {
         }
 
         if (cancelled) return
-        setCssText(style)
+        setCssText(`${style}\n${LEASE_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -51,8 +94,6 @@ export default function LeaseManagementLandingPage() {
     onScroll()
 
     // Reveal on scroll
-    // Note: global app CSS uses `.reveal { filter: blur(...) }` and removes it with `.reveal--in`.
-    // This landing page HTML uses `.visible`, so we add both to keep it crisp.
     const revealObserver = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
@@ -93,15 +134,15 @@ export default function LeaseManagementLandingPage() {
     )
     if (countdown) counterObserver.observe(countdown)
 
-    // Use-case modals (required because the HTML uses inline onclick="openUCModal('...')").
-    ;(window as any).openUCModal = (id: string) => {
+    // Use-case modals (HTML uses onclick="openUCModal('...')".)
+    ;(window as unknown as { openUCModal: (id: string) => void }).openUCModal = (id: string) => {
       const modal = root.querySelector<HTMLElement>('#modal-' + id)
       if (modal) {
         modal.classList.add('open')
         document.body.style.overflow = 'hidden'
       }
     }
-    ;(window as any).closeUCModal = (id: string) => {
+    ;(window as unknown as { closeUCModal: (id: string) => void }).closeUCModal = (id: string) => {
       const modal = root.querySelector<HTMLElement>('#modal-' + id)
       if (modal) {
         modal.classList.remove('open')
@@ -185,94 +226,34 @@ export default function LeaseManagementLandingPage() {
       cleanups.push(() => tab.removeEventListener('click', handler))
     })
 
-    // Testimonials carousel (matches inline script in reference HTML)
-    const testiData = [
-      {
-        quote:
-          "Month-end rent reconciliation used to take my Finance team four days. With Lockated it's a half-day. The GST-compliant invoices alone save us three working hours per property per month. The data sovereignty was non-negotiable for our board — and Lockated was the only platform that didn't store our data on their cloud.",
-        name: 'Ananya Mehta',
-        role: 'VP Corporate Real Estate, FMCG Enterprise',
-        initials: 'AM',
-        sector: 'Corporate',
-      },
-      {
-        quote:
-          'The compliance module alone was worth it. We had three documents expire before Lockated. In the 14 months since, zero. Our internal audit team actually congratulated us.',
-        name: 'Priya Kulkarni',
-        role: 'Head of Real Estate, Pharmacy Chain',
-        initials: 'PK',
-        sector: 'Retail',
-      },
-      {
-        quote:
-          'We were tracking 150 branch leases on five Excel files. Lockated gave us one dashboard and our Head of RE finally stopped getting called at 11pm about expiry dates.',
-        name: 'Rajesh Sharma',
-        role: 'CFO, Mid-size NBFC',
-        initials: 'RS',
-        sector: 'BFSI',
-      },
-      {
-        quote:
-          'Before Lockated, our AMC contracts lived in a shared drive nobody updated. In the first quarter we identified three expired contracts we were still paying for. The vendor performance scores completely changed how we select and retain service partners across our facilities.',
-        name: 'Vikram Nair',
-        role: 'Head of Facilities, IT/ITeS Company',
-        initials: 'VN',
-        sector: 'IT/ITeS',
-      },
-    ]
-
-    const stack = root.querySelector<HTMLElement>('#testiStack')
-    const btnNext = root.querySelector<HTMLElement>('#testiBtnNext')
-    const btnPrev = root.querySelector<HTMLElement>('#testiBtnPrev')
-    const testiDots = root.querySelectorAll<HTMLElement>('.testi-dot')
-
-    let testiIdx = 0
-    const setTesti = (idx: number) => {
-      if (!stack) return
-      testiIdx = (idx + testiData.length) % testiData.length
-      const d = testiData[testiIdx]
-      const front = stack.querySelector<HTMLElement>('.testi-card:last-child')
-      if (!front) return
-      front.innerHTML = `
-    <div class="testi-quote-mark">"</div>
-    <p class="testi-text">${d.quote.replace(/</g, '&lt;')}</p>
-    <div class="testi-author">
-      <div class="testi-avatar">${d.initials}</div>
-      <div><div class="testi-name">${d.name.replace(/</g, '&lt;')}</div><div class="testi-role">${d.role.replace(/</g, '&lt;')}</div></div>
-      <span class="testi-company-badge">${d.sector.replace(/</g, '&lt;')}</span>
-    </div>`
-      testiDots.forEach((dot, i) => dot.classList.toggle('active', i === testiIdx))
-    }
-
-    const onNext = () => setTesti(testiIdx + 1)
-    const onPrev = () => setTesti(testiIdx - 1)
-    btnNext?.addEventListener('click', onNext)
-    btnPrev?.addEventListener('click', onPrev)
-    if (btnNext) cleanups.push(() => btnNext.removeEventListener('click', onNext))
-    if (btnPrev) cleanups.push(() => btnPrev.removeEventListener('click', onPrev))
-
-    testiDots.forEach((dot, i) => {
-      const h = () => setTesti(i)
-      dot.addEventListener('click', h)
-      cleanups.push(() => dot.removeEventListener('click', h))
+    // In-page anchor links (smooth scroll within app shell)
+    const anchorAbort = new AbortController()
+    root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
+      const onClick = (e: MouseEvent) => {
+        const href = a.getAttribute('href')
+        if (!href || href === '#') return
+        const target = root.querySelector<HTMLElement>(href)
+        if (!target) return
+        e.preventDefault()
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+      a.addEventListener('click', onClick, { signal: anchorAbort.signal })
     })
 
-    const testiInterval = window.setInterval(() => setTesti(testiIdx + 1), 5000)
-
     return () => {
-      window.clearInterval(testiInterval)
       cleanups.forEach((fn) => fn())
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('keydown', onKeyDown)
       revealObserver.disconnect()
       counterObserver.disconnect()
+      anchorAbort.abort()
       delete (window as unknown as { openUCModal?: unknown }).openUCModal
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
     }
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="lease-management-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
@@ -291,4 +272,3 @@ export default function LeaseManagementLandingPage() {
     </div>
   )
 }
-

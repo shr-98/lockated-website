@@ -26,6 +26,8 @@
   --info: #6B9BCC;
   --success: #89F7E7;
   --font: 'Poppins', sans-serif;
+  --band: #E8E2D6;
+  --surface: #F0EAE1;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -90,16 +92,6 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .countdown-label{font-size:11px;font-weight:500;color:rgba(44,44,44,0.45);letter-spacing:0.5px;text-transform:uppercase;display:block;margin-top:4px;}
 .countdown-sep{font-size:28px;font-weight:300;color:var(--border);margin-bottom:12px;}
 
-/* ── CLIENTS ── */
-.clients-section{padding:28px 0;background:rgba(255,255,255,0.4);border-top:1px solid rgba(196,184,157,0.3);border-bottom:1px solid rgba(196,184,157,0.3);overflow:hidden;}
-.clients-label{text-align:center;font-size:11.5px;font-weight:500;color:rgba(44,44,44,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;}
-.clients-track{display:flex;gap:0;width:max-content;animation:scrollClients 28s linear infinite;}
-.clients-track:hover{animation-play-state:paused;}
-.client-item{display:flex;align-items:center;gap:8px;padding:0 36px;white-space:nowrap;font-size:14px;font-weight:600;color:rgba(44,44,44,0.35);letter-spacing:0.3px;transition:color 0.2s;}
-.client-item:hover{color:rgba(44,44,44,0.7);}
-.client-dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
-@keyframes scrollClients{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-
 /* ── SECTION BASE ── */
 .section{padding:96px 48px;}
 .section-inner{max-width:1200px;margin:0 auto;}
@@ -118,23 +110,23 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .reveal-delay-4{transition-delay:0.4s;}
 
 /* ── PAIN POINTS ── */
-.pain-section{padding:96px 48px;background:var(--dark);position:relative;overflow:hidden;}
-.pain-section::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(218,119,86,0.12) 0%,transparent 70%);pointer-events:none;}
+.pain-section{padding:96px 48px;background:var(--cream);position:relative;overflow:hidden;}
+.pain-section::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(218,119,86,0.08) 0%,transparent 70%);pointer-events:none;}
 .pain-inner{max-width:1200px;margin:0 auto;}
 .pain-section .section-eyebrow{color:var(--primary);}
-.pain-section .section-title{color:#F6F4EE;}
-.pain-section .section-sub{color:rgba(246,244,238,0.55);}
-.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:56px;border-radius:20px;overflow:hidden;border:1px solid rgba(246,244,238,0.08);}
-.pain-card{background:rgba(246,244,238,0.04);padding:44px 36px;position:relative;transition:background 0.3s;}
-.pain-card:hover{background:rgba(246,244,238,0.07);}
-.pain-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:transparent;transition:background 0.3s;}
+.pain-section .section-title{color:var(--dark);}
+.pain-section .section-sub{color:rgba(44,44,44,0.6);}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:56px;}
+.pain-card{background:var(--surface);padding:44px 36px;position:relative;transition:all 0.3s;border-radius:16px;border:1px solid rgba(196,184,157,0.4);}
+.pain-card:hover{background:#fff;box-shadow:0 10px 32px rgba(44,44,44,0.06);}
+.pain-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:transparent;transition:background 0.3s;border-radius:16px 16px 0 0;}
 .pain-card:hover::after{background:var(--primary);}
 .pain-icon{width:48px;height:48px;background:rgba(218,119,86,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;border:1px solid rgba(218,119,86,0.2);}
 .pain-icon svg{width:22px;height:22px;stroke:var(--primary);}
-.pain-card-title{font-size:18px;font-weight:700;color:#F6F4EE;margin-bottom:12px;letter-spacing:-0.4px;line-height:1.3;}
-.pain-card-body{font-size:14px;color:rgba(246,244,238,0.5);line-height:1.7;}
+.pain-card-title{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:12px;letter-spacing:-0.4px;line-height:1.3;}
+.pain-card-body{font-size:14px;color:rgba(44,44,44,0.58);line-height:1.7;}
 .pain-stat{font-size:40px;font-weight:900;color:var(--primary);letter-spacing:-2px;line-height:1;margin-bottom:6px;margin-top:24px;}
-.pain-stat-label{font-size:12px;color:rgba(246,244,238,0.4);letter-spacing:0.3px;}
+.pain-stat-label{font-size:12px;color:rgba(44,44,44,0.48);letter-spacing:0.3px;}
 
 /* ── ROLE SWITCH ── */
 .role-switch{display:flex;gap:5px;margin-top:40px;background:rgba(44,44,44,0.04);border-radius:14px;padding:5px;width:fit-content;border:1px solid rgba(196,184,157,0.4);}
@@ -143,7 +135,7 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .role-btn.active{background:#fff;color:var(--dark);box-shadow:0 2px 10px rgba(44,44,44,0.1);border:1px solid rgba(196,184,157,0.35);}
 
 /* ── USP FEATURES ── */
-.usps-section{padding:96px 48px;position:relative;}
+.usps-section{padding:96px 48px;position:relative;background:var(--cream);}
 .usps-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 60%, rgba(121,140,94,0.06) 0%,transparent 70%);pointer-events:none;}
 .usps-inner{max-width:1200px;margin:0 auto;}
 .usps-layout{display:grid;grid-template-columns:420px 1fr;gap:64px;align-items:start;margin-top:56px;}
@@ -198,98 +190,57 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .usp-star{position:absolute;top:12px;right:12px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:3px 8px;border-radius:100px;}
 
 /* ── WALKTHROUGH ── */
-.walkthrough-section{padding:96px 48px;background:var(--dark);position:relative;overflow:hidden;}
-.walkthrough-section::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent);}
+.walkthrough-section{padding:96px 48px;background:var(--band);position:relative;overflow:hidden;}
+.walkthrough-section::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(218,119,86,0.45),transparent);}
 .walkthrough-inner{max-width:1200px;margin:0 auto;}
 .walkthrough-section .section-eyebrow{color:var(--primary);}
-.walkthrough-section .section-title{color:#F6F4EE;}
-.walkthrough-section .section-sub{color:rgba(246,244,238,0.5);}
+.walkthrough-section .section-title{color:var(--dark);}
+.walkthrough-section .section-sub{color:rgba(44,44,44,0.6);}
 .wt-layout{display:flex;flex-direction:column;gap:40px;margin-top:56px;}
-.wt-tabs{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;padding-bottom:12px;border-bottom:1px solid rgba(246,244,238,0.12);}
+.wt-tabs{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;padding-bottom:12px;border-bottom:1px solid rgba(196,184,157,0.45);}
 .wt-tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
-.wt-tab:hover{background:rgba(246,244,238,0.08);}
-.wt-tab.active{background:rgba(218,119,86,0.15);border-color:rgba(218,119,86,0.25);}
-.wt-tab-num{font-size:11px;font-weight:700;color:rgba(246,244,238,0.25);flex-shrink:0;}
+.wt-tab:hover{background:rgba(44,44,44,0.04);}
+.wt-tab.active{background:rgba(218,119,86,0.12);border-color:rgba(218,119,86,0.28);}
+.wt-tab-num{font-size:11px;font-weight:700;color:rgba(44,44,44,0.35);flex-shrink:0;}
 .wt-tab.active .wt-tab-num{color:var(--primary);}
-.wt-tab-name{font-size:13px;font-weight:500;color:rgba(246,244,238,0.5);transition:color 0.2s;}
-.wt-tab.active .wt-tab-name{color:#F6F4EE;font-weight:600;}
+.wt-tab-name{font-size:13px;font-weight:500;color:rgba(44,44,44,0.48);transition:color 0.2s;}
+.wt-tab.active .wt-tab-name{color:var(--dark);font-weight:600;}
 .wt-tab-icon{display:none;}
 .wt-panel{display:none;animation:panelIn 0.35s ease;}
 .wt-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
 .wt-panel-info{padding:8px 0;}
 .wt-panel-eyebrow{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--primary);margin-bottom:14px;}
-.wt-panel-title{font-size:24px;font-weight:700;color:#F6F4EE;line-height:1.2;letter-spacing:-0.5px;margin-bottom:14px;}
-.wt-panel-body{font-size:14px;color:rgba(246,244,238,0.55);line-height:1.7;margin-bottom:24px;}
+.wt-panel-title{font-size:24px;font-weight:700;color:var(--dark);line-height:1.2;letter-spacing:-0.5px;margin-bottom:14px;}
+.wt-panel-body{font-size:14px;color:rgba(44,44,44,0.58);line-height:1.7;margin-bottom:24px;}
 .wt-panel-features{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
 .wt-feature-item{display:flex;align-items:flex-start;gap:10px;}
 .wt-feature-item svg{width:14px;height:14px;stroke:var(--primary);flex-shrink:0;margin-top:2px;}
-.wt-feature-text{font-size:13px;color:rgba(246,244,238,0.65);line-height:1.5;}
+.wt-feature-text{font-size:13px;color:rgba(44,44,44,0.65);line-height:1.5;}
 .wt-panel-cta{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;transition:gap 0.2s;}
 .wt-panel-cta:hover{gap:12px;}
-.wt-screen{background:rgba(246,244,238,0.05);border-radius:18px;padding:20px;border:1px solid rgba(246,244,238,0.08);position:relative;overflow:hidden;min-height:320px;}
-.wt-screen::before{content:attr(data-label);position:absolute;top:12px;right:14px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(246,244,238,0.2);}
-
-/* ── TESTIMONIALS ── */
-.testi-section{padding:96px 48px;position:relative;overflow:hidden;}
-.testi-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 20% 50%,rgba(206,203,246,0.12) 0%,transparent 70%);pointer-events:none;}
-.testi-inner{max-width:1200px;margin:0 auto;}
-.testi-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;margin-top:56px;}
-
-/* Card Stack */
-.testi-stack{position:relative;height:340px;}
-.testi-card{position:absolute;inset:0;background:#fff;border-radius:24px;padding:36px;border:1px solid rgba(196,184,157,0.5);box-shadow:0 20px 60px rgba(44,44,44,0.1);transform-origin:center top;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer;}
-.testi-card:nth-child(3){transform:translateY(14px) scale(0.95);z-index:1;background:#dedad0;}
-.testi-card:nth-child(2){transform:translateY(7px) scale(0.975);z-index:2;background:#eae7de;}
-.testi-card:nth-child(1){transform:translateY(0) scale(1);z-index:3;}
-.testi-card.animating-out{animation:cardOut 0.4s ease forwards;}
-.testi-card.animating-in{animation:cardIn 0.4s ease forwards;}
-@keyframes cardOut{to{transform:translateY(-40px) scale(0.9);opacity:0;}}
-@keyframes cardIn{from{transform:translateY(20px) scale(0.98);opacity:0;}to{transform:translateY(0) scale(1);opacity:1;}}
-.testi-quote-mark{font-size:64px;line-height:0.8;color:var(--primary);opacity:0.2;font-family:Georgia,serif;margin-bottom:12px;}
-.testi-text{font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:24px;font-style:italic;}
-.testi-author{display:flex;align-items:center;gap:14px;border-top:1px solid rgba(196,184,157,0.3);padding-top:20px;}
-.testi-avatar{width:44px;height:44px;border-radius:50%;background:var(--primary-15);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--primary);flex-shrink:0;border:2px solid rgba(218,119,86,0.2);}
-.testi-name{font-size:13.5px;font-weight:600;color:var(--dark);}
-.testi-role{font-size:12px;color:rgba(44,44,44,0.5);margin-top:1px;}
-.testi-company-badge{margin-left:auto;font-size:11px;font-weight:600;color:var(--olive);background:var(--olive-15);padding:4px 10px;border-radius:100px;}
-.testi-controls{position:absolute;bottom:-56px;left:0;display:flex;align-items:center;gap:12px;}
-.testi-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.testi-btn:hover{border-color:var(--primary);background:var(--primary-8);}
-.testi-btn svg{width:14px;height:14px;stroke:var(--dark);}
-.testi-dots{display:flex;gap:6px;align-items:center;}
-.testi-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:all 0.2s;cursor:pointer;}
-.testi-dot.active{background:var(--primary);width:18px;border-radius:3px;}
-.testi-right{padding:8px 0;}
-.testi-section-label{font-size:11.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:20px;}
-.testi-section-label::before{content:'';width:20px;height:2px;background:var(--primary);border-radius:2px;}
-.testi-big-num{font-size:64px;font-weight:900;color:var(--dark);letter-spacing:-3px;line-height:1;}
-.testi-big-num span{color:var(--primary);}
-.testi-big-label{font-size:14px;color:rgba(44,44,44,0.55);margin-bottom:32px;line-height:1.5;}
-.testi-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.testi-stat-card{background:rgba(255,255,255,0.6);border-radius:14px;padding:20px;border:1px solid rgba(196,184,157,0.4);}
-.testi-stat-val{font-size:26px;font-weight:800;color:var(--dark);letter-spacing:-1px;}
-.testi-stat-label{font-size:12px;color:rgba(44,44,44,0.5);margin-top:4px;line-height:1.4;}
+.wt-screen{background:#fff;border-radius:18px;padding:20px;border:1px solid rgba(196,184,157,0.45);position:relative;overflow:hidden;min-height:320px;}
+.wt-screen::before{content:attr(data-label);position:absolute;top:12px;right:14px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(44,44,44,0.3);}
 
 /* ── USE CASES (INDUSTRIES) ── */
-.usecase-section{padding:96px 48px;background:var(--dark);position:relative;}
-.usecase-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(218,119,86,0.4),transparent);}
+.usecase-section{padding:96px 48px;background:var(--cream);position:relative;}
+.usecase-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(218,119,86,0.25),transparent);}
 .usecase-inner{max-width:1200px;margin:0 auto;}
 .usecase-section .section-eyebrow{color:var(--primary);}
-.usecase-section .section-title{color:#F6F4EE;}
+.usecase-section .section-title{color:var(--dark);}
 .usecase-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:56px;}
-.uc-card{background:rgba(246,244,238,0.04);border:1px solid rgba(246,244,238,0.08);border-radius:20px;padding:32px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
-.uc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(218,119,86,0.08) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;}
-.uc-card:hover{border-color:rgba(218,119,86,0.25);transform:translateY(-3px);}
+.uc-card{background:var(--surface);border:1px solid rgba(196,184,157,0.4);border-radius:20px;padding:32px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
+.uc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(218,119,86,0.06) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;}
+.uc-card:hover{border-color:rgba(218,119,86,0.3);transform:translateY(-3px);box-shadow:0 12px 36px rgba(44,44,44,0.06);}
 .uc-card:hover::before{opacity:1;}
 .uc-card.featured{grid-column:span 2;}
 .uc-icon{width:44px;height:44px;border-radius:12px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
 .uc-icon svg{width:20px;height:20px;stroke:var(--primary);}
 .uc-tag{font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary);margin-bottom:10px;}
-.uc-title{font-size:17px;font-weight:700;color:#F6F4EE;line-height:1.3;margin-bottom:12px;letter-spacing:-0.3px;}
+.uc-title{font-size:17px;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:12px;letter-spacing:-0.3px;}
 .uc-card.featured .uc-title{font-size:24px;letter-spacing:-0.8px;}
 .uc-impact{font-size:42px;font-weight:900;color:var(--primary);letter-spacing:-2px;line-height:1;margin:16px 0 4px;}
-.uc-impact-label{font-size:12px;color:rgba(246,244,238,0.4);margin-bottom:14px;}
-.uc-body{font-size:13.5px;color:rgba(246,244,238,0.5);line-height:1.65;margin-bottom:20px;}
+.uc-impact-label{font-size:12px;color:rgba(44,44,44,0.5);margin-bottom:14px;}
+.uc-body{font-size:13.5px;color:rgba(44,44,44,0.58);line-height:1.65;margin-bottom:20px;}
 .uc-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;transition:gap 0.2s;}
 .uc-link:hover{gap:10px;}
 .uc-link svg{width:13px;height:13px;stroke:currentColor;}
@@ -318,8 +269,8 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .uc-modal-body li{font-size:14px;color:rgba(44,44,44,0.65);line-height:1.7;margin-bottom:4px;}
 
 /* ── TEAMS ── */
-.teams-section{padding:96px 48px;position:relative;overflow:hidden;}
-.teams-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(158,200,186,0.1) 0%,transparent 70%);pointer-events:none;}
+.teams-section{padding:96px 48px;position:relative;overflow:hidden;background:var(--band);}
+.teams-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(158,200,186,0.08) 0%,transparent 70%);pointer-events:none;}
 .teams-inner{max-width:1200px;margin:0 auto;}
 .teams-layout{display:flex;flex-direction:column;gap:40px;margin-top:56px;}
 .teams-tabs{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;padding-bottom:16px;border-bottom:1px solid rgba(196,184,157,0.35);}
@@ -344,19 +295,19 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .team-panel-screen{background:var(--cream);border-radius:16px;padding:20px;border:1px solid rgba(196,184,157,0.4);min-height:280px;position:relative;overflow:hidden;}
 
 /* ── ENDING BANNER ── */
-.banner-section{padding:96px 48px;background:var(--dark);position:relative;overflow:hidden;text-align:center;}
-.banner-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(218,119,86,0.15) 0%,transparent 70%);pointer-events:none;}
+.banner-section{padding:96px 48px;background:var(--band);position:relative;overflow:hidden;text-align:center;}
+.banner-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(218,119,86,0.12) 0%,transparent 70%);pointer-events:none;}
 .banner-inner{max-width:680px;margin:0 auto;position:relative;}
 .banner-section .section-eyebrow{justify-content:center;margin-bottom:20px;}
 .banner-section .section-eyebrow{color:var(--primary);}
-.banner-title{font-size:clamp(32px,4.5vw,58px);font-weight:800;color:#F6F4EE;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;}
+.banner-title{font-size:clamp(32px,4.5vw,58px);font-weight:800;color:var(--dark);letter-spacing:-2px;line-height:1.1;margin-bottom:20px;}
 .banner-title .accent{color:var(--primary);}
-.banner-sub{font-size:16px;color:rgba(246,244,238,0.5);line-height:1.65;margin-bottom:36px;}
+.banner-sub{font-size:16px;color:rgba(44,44,44,0.58);line-height:1.65;margin-bottom:36px;}
 .banner-ctas{display:flex;align-items:center;justify-content:center;gap:14px;}
 .banner-cta-primary{font-family:var(--font);font-size:15px;font-weight:600;color:#fff;background:var(--primary);border:none;cursor:pointer;padding:15px 32px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 28px rgba(218,119,86,0.4);transition:all 0.25s ease;}
 .banner-cta-primary:hover{background:#c96540;transform:translateY(-2px);}
-.banner-cta-ghost{font-family:var(--font);font-size:15px;font-weight:500;color:rgba(246,244,238,0.7);background:transparent;border:1.5px solid rgba(246,244,238,0.2);cursor:pointer;padding:14px 28px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;}
-.banner-cta-ghost:hover{border-color:rgba(246,244,238,0.5);color:#F6F4EE;}
+.banner-cta-ghost{font-family:var(--font);font-size:15px;font-weight:500;color:rgba(44,44,44,0.65);background:transparent;border:1.5px solid rgba(196,184,157,0.55);cursor:pointer;padding:14px 28px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;}
+.banner-cta-ghost:hover{border-color:var(--primary);color:var(--dark);}
 
 /* ── CONTACT ── */
 .contact-section{padding:96px 48px;}
@@ -381,23 +332,23 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 .form-submit:hover{background:#c96540;transform:translateY(-1px);}
 
 /* ── FOOTER ── */
-footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(246,244,238,0.06);}
+footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(196,184,157,0.35);}
 .footer-inner{max-width:1200px;margin:0 auto;}
 .footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
-.footer-brand-name{font-size:18px;font-weight:700;color:#F6F4EE;margin-bottom:8px;}
+.footer-brand-name{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:8px;}
 .footer-brand-name span{color:var(--primary);}
-.footer-brand-desc{font-size:13px;color:rgba(246,244,238,0.4);line-height:1.65;margin-bottom:20px;}
-.footer-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:rgba(246,244,238,0.5);background:rgba(246,244,238,0.05);border:1px solid rgba(246,244,238,0.1);border-radius:100px;padding:5px 12px;}
+.footer-brand-desc{font-size:13px;color:rgba(44,44,44,0.52);line-height:1.65;margin-bottom:20px;}
+.footer-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:rgba(44,44,44,0.55);background:rgba(44,44,44,0.04);border:1px solid rgba(196,184,157,0.45);border-radius:100px;padding:5px 12px;}
 .footer-badge svg{width:12px;height:12px;stroke:var(--primary);}
-.footer-col-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(246,244,238,0.4);margin-bottom:16px;}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(44,44,44,0.45);margin-bottom:16px;}
 .footer-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
-.footer-links a{font-size:13.5px;color:rgba(246,244,238,0.5);text-decoration:none;transition:color 0.2s;}
-.footer-links a:hover{color:#F6F4EE;}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(246,244,238,0.06);}
-.footer-copy{font-size:12.5px;color:rgba(246,244,238,0.3);}
+.footer-links a{font-size:13.5px;color:rgba(44,44,44,0.58);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--dark);}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(196,184,157,0.3);}
+.footer-copy{font-size:12.5px;color:rgba(44,44,44,0.42);}
 .footer-legal{display:flex;gap:20px;}
-.footer-legal a{font-size:12.5px;color:rgba(246,244,238,0.3);text-decoration:none;transition:color 0.2s;}
-.footer-legal a:hover{color:rgba(246,244,238,0.7);}
+.footer-legal a{font-size:12.5px;color:rgba(44,44,44,0.42);text-decoration:none;transition:color 0.2s;}
+.footer-legal a:hover{color:var(--dark);}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -408,14 +359,13 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
   .usps-layout{grid-template-columns:1fr;}
   .wt-layout{grid-template-columns:1fr;}
   .wt-panel.active{grid-template-columns:1fr;}
-  .testi-layout{grid-template-columns:1fr;}
   .usecase-grid{grid-template-columns:1fr 1fr;}
   .uc-card.featured{grid-column:span 2;grid-row:auto;}
   .teams-layout{grid-template-columns:1fr;}
   .team-panel.active{grid-template-columns:1fr;}
   .contact-layout{grid-template-columns:1fr;}
   .footer-top{grid-template-columns:1fr 1fr;}
-  .section,.pain-section,.usps-section,.walkthrough-section,.testi-section,.usecase-section,.teams-section,.banner-section,.contact-section{padding:72px 32px;}
+  .section,.pain-section,.usps-section,.walkthrough-section,.usecase-section,.teams-section,.banner-section,.contact-section{padding:72px 32px;}
 }
 @media(max-width:768px){
   nav{padding:0 20px;}
@@ -431,7 +381,7 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
   .footer-top{grid-template-columns:1fr;}
   .banner-ctas{flex-direction:column;width:100%;}
   .banner-cta-primary,.banner-cta-ghost{width:100%;justify-content:center;}
-  .section,.pain-section,.usps-section,.walkthrough-section,.testi-section,.usecase-section,.teams-section,.banner-section,.contact-section{padding:60px 20px;}
+  .section,.pain-section,.usps-section,.walkthrough-section,.usecase-section,.teams-section,.banner-section,.contact-section{padding:60px 20px;}
 }
 </style>
 </head>
@@ -445,9 +395,10 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
       <span class="nav-logo-text">Lockated <span>Lease</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#pain">Why Lockated</a></li>
-      <li><a href="#features">Features</a></li>
+      <li><a href="#pain">Pain Points</a></li>
       <li><a href="#walkthrough">Walkthrough</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#teams">Teams</a></li>
       <li><a href="#usecases">Use Cases</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -523,41 +474,11 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
   </div>
 </section>
 
-<!-- ═══ CLIENTS ═══ -->
-<section class="clients-section">
-  <div class="clients-label">Trusted by India's fastest-growing real estate operations teams</div>
-  <div style="overflow:hidden;position:relative;">
-    <div class="clients-track">
-      <span class="client-item"><span class="client-dot"></span>Retail Chains</span>
-      <span class="client-item"><span class="client-dot"></span>BFSI Enterprises</span>
-      <span class="client-item"><span class="client-dot"></span>Property Managers</span>
-      <span class="client-item"><span class="client-dot"></span>IT/ITeS Companies</span>
-      <span class="client-item"><span class="client-dot"></span>Healthcare Chains</span>
-      <span class="client-item"><span class="client-dot"></span>PSUs</span>
-      <span class="client-item"><span class="client-dot"></span>Logistics Operators</span>
-      <span class="client-item"><span class="client-dot"></span>Conglomerates</span>
-      <span class="client-item"><span class="client-dot"></span>Restaurant Chains</span>
-      <span class="client-item"><span class="client-dot"></span>Manufacturing Firms</span>
-      <!-- duplicate -->
-      <span class="client-item"><span class="client-dot"></span>Retail Chains</span>
-      <span class="client-item"><span class="client-dot"></span>BFSI Enterprises</span>
-      <span class="client-item"><span class="client-dot"></span>Property Managers</span>
-      <span class="client-item"><span class="client-dot"></span>IT/ITeS Companies</span>
-      <span class="client-item"><span class="client-dot"></span>Healthcare Chains</span>
-      <span class="client-item"><span class="client-dot"></span>PSUs</span>
-      <span class="client-item"><span class="client-dot"></span>Logistics Operators</span>
-      <span class="client-item"><span class="client-dot"></span>Conglomerates</span>
-      <span class="client-item"><span class="client-dot"></span>Restaurant Chains</span>
-      <span class="client-item"><span class="client-dot"></span>Manufacturing Firms</span>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ PAIN POINTS ═══ -->
 <section class="pain-section" id="pain">
   <div class="pain-inner">
     <div class="section-eyebrow reveal">The Real Problem</div>
-    <h2 class="section-title reveal reveal-delay-1" style="color:#F6F4EE;">Your real estate operations are<br><span style="color:var(--primary);">quietly haemorrhaging money.</span></h2>
+    <h2 class="section-title reveal reveal-delay-1">Your real estate operations are<br><span class="accent">quietly haemorrhaging money.</span></h2>
     <p class="section-sub reveal reveal-delay-2">Large enterprises managing 50 to 500+ leases operate entirely on Excel, email, and disconnected tools — missing escalation dates, failing compliance audits, and negotiating renewals reactively. You're paying for it every quarter.</p>
     <div class="pain-grid" style="margin-top:56px;">
       <div class="pain-card reveal">
@@ -586,6 +507,241 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
         <div class="pain-card-body">Fire NOC expired. OC not renewed. Shop Act lapsed. Nobody flagged it because it was buried in a shared drive nobody checks. One inspection away from forced closure — and a penalty you don't want to explain to the CFO.</div>
         <div class="pain-stat">0</div>
         <div class="pain-stat-label">Compliance lapses for Lockated clients in their first 12 months. Auditors confirmed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WALKTHROUGH ═══ -->
+<section class="walkthrough-section" id="walkthrough">
+  <div class="walkthrough-inner">
+    <div class="section-eyebrow reveal">Product Walkthrough</div>
+    <h2 class="section-title reveal reveal-delay-1">See exactly what your team<br><span class="accent">will use every day.</span></h2>
+    <p class="section-sub reveal reveal-delay-2">Six core modules that replace the spreadsheets, shared drives, WhatsApp groups, and fragmented ERP modules your team operates on today.</p>
+    <div class="wt-layout reveal reveal-delay-2">
+      <div class="wt-tabs">
+        <div class="wt-tab active" data-wt="wt1">
+          <span class="wt-tab-num">01</span>
+          <span class="wt-tab-name">Dashboard & Analytics</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+        <div class="wt-tab" data-wt="wt2">
+          <span class="wt-tab-num">02</span>
+          <span class="wt-tab-name">Lease Management</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+        <div class="wt-tab" data-wt="wt3">
+          <span class="wt-tab-num">03</span>
+          <span class="wt-tab-name">Compliance Tracking</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+        <div class="wt-tab" data-wt="wt4">
+          <span class="wt-tab-num">04</span>
+          <span class="wt-tab-name">Utilities Management</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+        <div class="wt-tab" data-wt="wt5">
+          <span class="wt-tab-num">05</span>
+          <span class="wt-tab-name">AMC & Maintenance</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+        <div class="wt-tab" data-wt="wt6">
+          <span class="wt-tab-num">06</span>
+          <span class="wt-tab-name">Masters & Configuration</span>
+          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </div>
+
+      <!-- WT Panels -->
+      <div class="wt-panels">
+        <div class="wt-panel active" id="wt1">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 01 — Dashboard</div>
+            <div class="wt-panel-title">Command centre for your entire portfolio.</div>
+            <div class="wt-panel-body">Every KPI, alert, and insight surfaced in one real-time dashboard. No exports. No manual consolidation. The CFO and Head of Real Estate see the same numbers — live.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Portfolio Overview with 4 KPI cards updating in real time</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Lease expiry distribution — 30 / 60 / 90 / 180 / 365 day buckets</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Critical alerts panel with direct drill-down to source record</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Regional performance by Country → State → Zone → City → Circle</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">Schedule a live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="Dashboard">
+            <div class="mock-row" style="margin-bottom:12px;">
+              <div class="mock-kpi" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.1);"><div class="mock-kpi-val" style="color:var(--dark);">247</div><div class="mock-kpi-label" style="color:rgba(44,44,44,0.5);">Properties</div></div>
+              <div class="mock-kpi" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.1);"><div class="mock-kpi-val" style="color:var(--primary);">35</div><div class="mock-kpi-label" style="color:rgba(44,44,44,0.5);">Expiring</div></div>
+              <div class="mock-kpi" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.1);"><div class="mock-kpi-val" style="color:var(--dark);">₹4.2Cr</div><div class="mock-kpi-label" style="color:rgba(44,44,44,0.5);">Monthly Rent</div></div>
+            </div>
+            <div style="height:4px;background:rgba(44,44,44,0.06);border-radius:2px;overflow:hidden;margin-bottom:12px;"><div style="width:91%;height:100%;background:linear-gradient(90deg,var(--primary),#DA9B7A);border-radius:2px;"></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(231,132,142,0.1);border-radius:6px;border:1px solid rgba(231,132,142,0.2);">
+                <span style="font-size:11px;color:rgba(44,44,44,0.72);">Andheri Lease — 28 days</span>
+                <span style="font-size:10px;font-weight:700;color:#E7848E;">URGENT</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(237,196,136,0.08);border-radius:6px;border:1px solid rgba(237,196,136,0.15);">
+                <span style="font-size:11px;color:rgba(44,44,44,0.72);">Fire NOC Renewal — 45 days</span>
+                <span style="font-size:10px;font-weight:700;color:#EDC488;">DUE SOON</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(44,44,44,0.04);border-radius:6px;border:1px solid rgba(44,44,44,0.06);">
+                <span style="font-size:11px;color:rgba(44,44,44,0.72);">Rent Overdue — Powai</span>
+                <span style="font-size:10px;font-weight:700;color:#E7848E;">OVERDUE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-panel" id="wt2">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 02 — Lease Management</div>
+            <div class="wt-panel-title">Every lease. Every term. Every status. One source of truth.</div>
+            <div class="wt-panel-body">Create, manage, and track every lease through its full lifecycle — from Draft through Active, Expiring, Under Renewal, Renewed, to Terminated. Every change is immutably logged for audit.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Lease creation with auto-population from property and landlord masters</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Renewal pipeline: Kanban with proposed vs current rent comparison</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">CAM, escalation, lock-in, and penalty terms all structured and tracked</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Immutable audit log for every create, edit, and status change</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">See the renewal pipeline live <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="Leases">
+            <div class="mock-kanban">
+              <div class="mock-kanban-col" style="background:rgba(44,44,44,0.04);">
+                <div class="mock-kanban-head" style="color:rgba(44,44,44,0.45);">Expiring</div>
+                <div class="mock-kanban-card" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.1);color:rgba(44,44,44,0.88);">Koramangala<br><span class="mock-tag alert">32d</span></div>
+                <div class="mock-kanban-card" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.1);color:rgba(44,44,44,0.88);">MG Road<br><span class="mock-tag warn">58d</span></div>
+              </div>
+              <div class="mock-kanban-col" style="background:rgba(218,119,86,0.08);">
+                <div class="mock-kanban-head" style="color:var(--primary);">Negotiation</div>
+                <div class="mock-kanban-card" style="background:rgba(44,44,44,0.06);border-color:rgba(218,119,86,0.3);color:rgba(44,44,44,0.88);">
+                  Indiranagar<br>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.5);margin-top:2px;">₹1.8L → ₹2.1L → ₹1.95L</div>
+                </div>
+              </div>
+              <div class="mock-kanban-col" style="background:rgba(137,247,231,0.04);">
+                <div class="mock-kanban-head" style="color:#89F7E7;">Renewed</div>
+                <div class="mock-kanban-card" style="background:rgba(44,44,44,0.06);border-color:rgba(137,247,231,0.2);color:rgba(44,44,44,0.88);">HSR Layout<br><span style="font-size:9px;color:#89F7E7;">Saved 12% ✓</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-panel" id="wt3">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 03 — Compliance</div>
+            <div class="wt-panel-title">Never face an inspector unprepared again.</div>
+            <div class="wt-panel-body">Structured repository for every regulatory approval — Fire NOC, CC, OC, shop establishment, trade licences. Status tracking from Pending to Approved to Expired. 90/60/30-day alerts with ownership and escalation rules.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Multi-property compliance calendar — never miss a renewal</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Ownership assignment creates named accountability per document</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Escalation to department head if primary assignee doesn't respond in 10 days</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">See compliance module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="Compliance">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="padding:8px 12px;background:rgba(137,247,231,0.06);border-radius:8px;border:1px solid rgba(137,247,231,0.15);display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:11px;color:rgba(44,44,44,0.88);">Fire NOC — Bandra</div><div style="font-size:9px;color:rgba(44,44,44,0.45);">Valid · Priya assigned</div></div>
+                <span style="font-size:9px;font-weight:700;color:#89F7E7;">ACTIVE</span>
+              </div>
+              <div style="padding:8px 12px;background:rgba(237,196,136,0.06);border-radius:8px;border:1px solid rgba(237,196,136,0.15);display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:11px;color:rgba(44,44,44,0.88);">Shop Act — Andheri</div><div style="font-size:9px;color:rgba(44,44,44,0.45);">38 days · Renewal started</div></div>
+                <span style="font-size:9px;font-weight:700;color:#EDC488;">38 DAYS</span>
+              </div>
+              <div style="padding:8px 12px;background:rgba(231,132,142,0.08);border-radius:8px;border:1px solid rgba(231,132,142,0.2);display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:11px;color:rgba(44,44,44,0.88);">OC — Powai Tower</div><div style="font-size:9px;color:#E7848E;">12 days · ESCALATED</div></div>
+                <span style="font-size:9px;font-weight:700;color:#E7848E;">CRITICAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-panel" id="wt4">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 04 — Utilities</div>
+            <div class="wt-panel-title">Find the utility waste before it costs you a crore.</div>
+            <div class="wt-panel-body">Monthly consumption tracking for electricity, water, gas, and internet across every property. YoY trend analysis flags abnormal consumption. Per-sqft efficiency metrics benchmarked across similar properties in the same city.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Auto-flag properties with 15%+ YoY consumption increase</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Cost per sqft per month benchmark across portfolio</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Utility bill payment tracking with automated reminders</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">See utilities module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="Utilities">
+            <div class="mock-row" style="margin-bottom:12px;">
+              <div class="mock-kpi" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.06);"><div class="mock-kpi-val" style="color:var(--dark);">₹8.4</div><div class="mock-kpi-label" style="color:rgba(44,44,44,0.45);">/sqft elec</div></div>
+              <div class="mock-kpi" style="background:rgba(44,44,44,0.06);border-color:rgba(44,44,44,0.06);"><div class="mock-kpi-val" style="color:#89F7E7;">-11%</div><div class="mock-kpi-label" style="color:rgba(44,44,44,0.45);">YoY saving</div></div>
+            </div>
+            <div style="font-size:10px;font-weight:700;color:rgba(44,44,44,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Flagged Properties</div>
+            <div style="padding:8px 12px;background:rgba(231,132,142,0.08);border-radius:6px;border:1px solid rgba(231,132,142,0.15);margin-bottom:6px;display:flex;justify-content:space-between;">
+              <div style="font-size:11px;color:rgba(44,44,44,0.72);">Worli Tower · ₹14.2/sqft</div>
+              <span style="font-size:9px;font-weight:700;color:#E7848E;">+23%</span>
+            </div>
+            <div style="padding:8px 12px;background:rgba(237,196,136,0.06);border-radius:6px;border:1px solid rgba(237,196,136,0.12);display:flex;justify-content:space-between;">
+              <div style="font-size:11px;color:rgba(44,44,44,0.72);">Lower Parel · ₹11.8/sqft</div>
+              <span style="font-size:9px;font-weight:700;color:#EDC488;">+16%</span>
+            </div>
+            <div style="font-size:10px;color:rgba(44,44,44,0.45);margin-top:10px;">Estimated savings: ₹3.8L/year</div>
+          </div>
+        </div>
+
+        <div class="wt-panel" id="wt5">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 05 — AMC & Maintenance</div>
+            <div class="wt-panel-title">Replace WhatsApp coordination with structured operations.</div>
+            <div class="wt-panel-body">Every AMC contract — HVAC, lift, fire, electrical, pest — tracked with schedules, renewal alerts, and 4-dimension vendor performance scores. Maintenance tickets replace WhatsApp with SLA timers, vendor assignment, and full resolution history.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">AMC register with renewal alerts at 60/30 days per property</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Vendor rated 1–5 on response time, quality, SLA, and professionalism</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Maintenance tickets with Critical/High/Medium/Low priority SLAs</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">See maintenance module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="AMC">
+            <div style="font-size:10px;font-weight:700;color:rgba(44,44,44,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">AMC Vendors</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(44,44,44,0.05);border-radius:6px;border:1px solid rgba(44,44,44,0.06);">
+                <span style="font-size:11px;color:rgba(44,44,44,0.72);">RapidCool HVAC · 14 sites</span>
+                <span style="font-size:13px;font-weight:800;color:#89F7E7;">4.8★</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(237,196,136,0.06);border-radius:6px;border:1px solid rgba(237,196,136,0.12);">
+                <span style="font-size:11px;color:rgba(44,44,44,0.72);">Otis Elevators · 8 sites</span>
+                <span style="font-size:13px;font-weight:800;color:#EDC488;">3.2★</span>
+              </div>
+            </div>
+            <div style="font-size:10px;font-weight:700;color:rgba(44,44,44,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Open Tickets</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(231,132,142,0.08);border-radius:6px;border:1px solid rgba(231,132,142,0.15);">
+              <span style="font-size:11px;color:rgba(44,44,44,0.72);">HVAC failure — Nariman Point</span>
+              <span style="font-size:9px;font-weight:700;color:#E7848E;">CRITICAL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wt-panel" id="wt6">
+          <div class="wt-panel-info">
+            <div class="wt-panel-eyebrow">Module 06 — Masters & Config</div>
+            <div class="wt-panel-title">The engine that makes every other module effortless.</div>
+            <div class="wt-panel-body">Configure your location hierarchy, tenant and landlord masters, vendor profiles, custom fields, and role-based access once. Every downstream module auto-populates from this foundation — eliminating re-entry and ensuring consistency.</div>
+            <div class="wt-panel-features">
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">6-level geography: Country → State → Region → Zone → City → Circle</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Custom fields for Cost Centre, Business Unit, Approval Reference</span></div>
+              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Role-based access: 7 predefined roles + unlimited custom roles</span></div>
+            </div>
+            <a href="#contact" class="wt-panel-cta">See configuration demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+          <div class="wt-screen" data-label="Masters">
+            <div style="font-size:10px;font-weight:700;color:rgba(44,44,44,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Location Hierarchy</div>
+            <div style="font-size:11px;color:var(--primary);padding:6px 10px;background:rgba(218,119,86,0.1);border-radius:6px;border-left:3px solid var(--primary);margin-bottom:10px;">India → Maharashtra → West → Zone 2 → Mumbai → Andheri</div>
+            <div style="font-size:11px;color:rgba(44,44,44,0.55);padding:5px 10px;background:rgba(44,44,44,0.04);border-radius:6px;margin-bottom:8px;font-size:10px;">Auto-populates 42 properties · 8 managers · ₹1.2Cr/mo</div>
+            <div style="font-size:10px;font-weight:700;color:rgba(44,44,44,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Custom Fields</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Cost Centre</span>
+              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Business Unit</span>
+              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Approval Ref</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -918,303 +1074,171 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
   </div>
 </section>
 
-<!-- ═══ WALKTHROUGH ═══ -->
-<section class="walkthrough-section" id="walkthrough">
-  <div class="walkthrough-inner">
-    <div class="section-eyebrow reveal">Product Walkthrough</div>
-    <h2 class="section-title reveal reveal-delay-1" style="color:#F6F4EE;">See exactly what your team<br><span style="color:var(--primary);">will use every day.</span></h2>
-    <p class="section-sub reveal reveal-delay-2">Six core modules that replace the spreadsheets, shared drives, WhatsApp groups, and fragmented ERP modules your team operates on today.</p>
-    <div class="wt-layout reveal reveal-delay-2">
-      <div class="wt-tabs">
-        <div class="wt-tab active" data-wt="wt1">
-          <span class="wt-tab-num">01</span>
-          <span class="wt-tab-name">Dashboard & Analytics</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+<!-- ═══ TEAMS ═══ -->
+<section class="teams-section" id="teams">
+  <div class="teams-inner">
+    <div class="section-eyebrow reveal">Built for Every Team</div>
+    <h2 class="section-title reveal reveal-delay-1">Your whole organisation.<br><span class="accent">One platform.</span></h2>
+    <p class="section-sub reveal reveal-delay-2">From the CFO approving the lease budget to the Facility Manager closing a maintenance ticket, Lockated gives every team exactly what they need — without getting in each other's way.</p>
+    <div class="teams-layout">
+      <div class="teams-tabs reveal">
+        <div class="team-tab active" data-team="team1">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
+          <span class="team-tab-name">Real Estate Team</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="wt-tab" data-wt="wt2">
-          <span class="wt-tab-num">02</span>
-          <span class="wt-tab-name">Lease Management</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="team-tab" data-team="team2">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <span class="team-tab-name">Finance & Accounts</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="wt-tab" data-wt="wt3">
-          <span class="wt-tab-num">03</span>
-          <span class="wt-tab-name">Compliance Tracking</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="team-tab" data-team="team3">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
+          <span class="team-tab-name">Compliance & Legal</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="wt-tab" data-wt="wt4">
-          <span class="wt-tab-num">04</span>
-          <span class="wt-tab-name">Utilities Management</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="team-tab" data-team="team4">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <span class="team-tab-name">Facility & Operations</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="wt-tab" data-wt="wt5">
-          <span class="wt-tab-num">05</span>
-          <span class="wt-tab-name">AMC & Maintenance</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="team-tab" data-team="team5">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+          <span class="team-tab-name">Senior Leadership</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="wt-tab" data-wt="wt6">
-          <span class="wt-tab-num">06</span>
-          <span class="wt-tab-name">Masters & Configuration</span>
-          <span class="wt-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        <div class="team-tab" data-team="team6">
+          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <span class="team-tab-name">Internal Audit</span>
+          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
       </div>
-
-      <!-- WT Panels -->
-      <div class="wt-panels">
-        <div class="wt-panel active" id="wt1">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 01 — Dashboard</div>
-            <div class="wt-panel-title">Command centre for your entire portfolio.</div>
-            <div class="wt-panel-body">Every KPI, alert, and insight surfaced in one real-time dashboard. No exports. No manual consolidation. The CFO and Head of Real Estate see the same numbers — live.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Portfolio Overview with 4 KPI cards updating in real time</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Lease expiry distribution — 30 / 60 / 90 / 180 / 365 day buckets</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Critical alerts panel with direct drill-down to source record</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Regional performance by Country → State → Zone → City → Circle</span></div>
+      <div class="team-panels reveal reveal-delay-2">
+        <div class="team-panel active" id="team1">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Real Estate / Lease Management Team</div>
+            <div class="team-panel-title">One source of truth. Zero missed renewals.</div>
+            <div class="team-panel-body">The Lease Manager's daily workflow — checking renewal pipeline, logging landlord calls, uploading agreement documents, and tracking rent payments — all happens in Lockated. No switching between files. No searching inboxes for previous terms.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">Lease Repository</span>
+              <span class="team-module-tag">Renewal Pipeline</span>
+              <span class="team-module-tag">Landlord Directory</span>
+              <span class="team-module-tag">Audit Logs</span>
             </div>
-            <a href="#contact" class="wt-panel-cta">Schedule a live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">daily</strong> by Lease Managers and Heads of Real Estate. Renewal pipeline reduces missed windows by 100%.</div>
           </div>
-          <div class="wt-screen" data-label="Dashboard">
+          <div class="team-panel-screen">
+            <div class="mock-list-item"><div><div class="mock-list-title">Indiranagar Flagship</div><div class="mock-list-sub">Lease Manager: Rahul · Renewal due in 28 days</div></div><span class="mock-tag alert">Action Needed</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Koramangala Branch</div><div class="mock-list-sub">In Negotiation · Proposed: ₹2.1L → Counter: ₹1.9L</div></div><span class="mock-tag warn">Negotiating</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">HSR Layout Store</div><div class="mock-list-sub">Renewed · Saved 12% vs proposed rent</div></div><span class="mock-tag">Renewed ✓</span></div>
+          </div>
+        </div>
+        <div class="team-panel" id="team2">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Finance & Accounts Team</div>
+            <div class="team-panel-title">Month-end close in half a day. Not four.</div>
+            <div class="team-panel-body">Automated rent due schedules, GST-compliant invoice generation, security deposit reconciliation, and OPEX budget vs actual — all in one platform. Finance teams stop chasing 5 teams for data and start closing in hours.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">Rent Collection</span>
+              <span class="team-module-tag">Invoicing & Payments</span>
+              <span class="team-module-tag">Security Deposits</span>
+              <span class="team-module-tag">OPEX Management</span>
+            </div>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Finance teams save an average of <strong style="color:var(--dark);">250 hours/year per person</strong> after full deployment. Daily active users.</div>
+          </div>
+          <div class="team-panel-screen">
+            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Rent Status — This Month</div>
+            <div class="mock-row">
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#108C72;">₹3.8Cr</div><div class="mock-kpi-label">Collected</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#EDC488;">₹28L</div><div class="mock-kpi-label">Pending</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#E7848E;">₹6L</div><div class="mock-kpi-label">Overdue</div></div>
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:rgba(44,44,44,0.5);">Collection Rate: 91% · 3 reminders sent</div>
+          </div>
+        </div>
+        <div class="team-panel" id="team3">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Compliance & Legal Team</div>
+            <div class="team-panel-title">Zero compliance lapses. Accountability by design.</div>
+            <div class="team-panel-body">The Compliance Officer uses Lockated's repository weekly — reviewing the alert dashboard, uploading renewed certificates, and assigning renewal tasks to property teams. Ownership assignment means there's always a named person responsible for every document.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">Compliance Repository</span>
+              <span class="team-module-tag">Renewal Alerts</span>
+              <span class="team-module-tag">Ownership Assignment</span>
+              <span class="team-module-tag">Audit Logs</span>
+            </div>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">weekly</strong>. 0 compliance lapses reported for clients in their first 12 months.</div>
+          </div>
+          <div class="team-panel-screen">
+            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Compliance Overview</div>
             <div class="mock-row" style="margin-bottom:12px;">
-              <div class="mock-kpi" style="background:rgba(246,244,238,0.08);border-color:rgba(246,244,238,0.1);"><div class="mock-kpi-val" style="color:#F6F4EE;">247</div><div class="mock-kpi-label" style="color:rgba(246,244,238,0.4);">Properties</div></div>
-              <div class="mock-kpi" style="background:rgba(246,244,238,0.08);border-color:rgba(246,244,238,0.1);"><div class="mock-kpi-val" style="color:var(--primary);">35</div><div class="mock-kpi-label" style="color:rgba(246,244,238,0.4);">Expiring</div></div>
-              <div class="mock-kpi" style="background:rgba(246,244,238,0.08);border-color:rgba(246,244,238,0.1);"><div class="mock-kpi-val" style="color:#F6F4EE;">₹4.2Cr</div><div class="mock-kpi-label" style="color:rgba(246,244,238,0.4);">Monthly Rent</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#108C72;">84</div><div class="mock-kpi-label">Active</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#EDC488;">6</div><div class="mock-kpi-label">Due &lt;60d</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#E7848E;">2</div><div class="mock-kpi-label">Critical</div></div>
             </div>
-            <div style="height:4px;background:rgba(246,244,238,0.08);border-radius:2px;overflow:hidden;margin-bottom:12px;"><div style="width:91%;height:100%;background:linear-gradient(90deg,var(--primary),#DA9B7A);border-radius:2px;"></div></div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(231,132,142,0.1);border-radius:6px;border:1px solid rgba(231,132,142,0.2);">
-                <span style="font-size:11px;color:rgba(246,244,238,0.7);">Andheri Lease — 28 days</span>
-                <span style="font-size:10px;font-weight:700;color:#E7848E;">URGENT</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(237,196,136,0.08);border-radius:6px;border:1px solid rgba(237,196,136,0.15);">
-                <span style="font-size:11px;color:rgba(246,244,238,0.7);">Fire NOC Renewal — 45 days</span>
-                <span style="font-size:10px;font-weight:700;color:#EDC488;">DUE SOON</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(246,244,238,0.04);border-radius:6px;border:1px solid rgba(246,244,238,0.08);">
-                <span style="font-size:11px;color:rgba(246,244,238,0.7);">Rent Overdue — Powai</span>
-                <span style="font-size:10px;font-weight:700;color:#E7848E;">OVERDUE</span>
-              </div>
-            </div>
+            <div class="mock-list-item" style="background:rgba(231,132,142,0.06);border-color:rgba(231,132,142,0.2);"><div><div class="mock-list-title">OC — Powai</div><div class="mock-list-sub">12 days · Assigned: Priya</div></div><span class="mock-tag alert">Critical</span></div>
           </div>
         </div>
-
-        <div class="wt-panel" id="wt2">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 02 — Lease Management</div>
-            <div class="wt-panel-title">Every lease. Every term. Every status. One source of truth.</div>
-            <div class="wt-panel-body">Create, manage, and track every lease through its full lifecycle — from Draft through Active, Expiring, Under Renewal, Renewed, to Terminated. Every change is immutably logged for audit.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Lease creation with auto-population from property and landlord masters</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Renewal pipeline: Kanban with proposed vs current rent comparison</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">CAM, escalation, lock-in, and penalty terms all structured and tracked</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Immutable audit log for every create, edit, and status change</span></div>
+        <div class="team-panel" id="team4">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Facility & Operations Team</div>
+            <div class="team-panel-title">Structured operations. No WhatsApp required.</div>
+            <div class="team-panel-body">The Facility Manager raises and tracks maintenance tickets, manages AMC service calendars, records monthly utility meter readings, and monitors vendor performance scores — all in Lockated. Daily active users from day one.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">AMC Management</span>
+              <span class="team-module-tag">Maintenance Tickets</span>
+              <span class="team-module-tag">Utilities Tracking</span>
+              <span class="team-module-tag">Vendor Performance</span>
             </div>
-            <a href="#contact" class="wt-panel-cta">See the renewal pipeline live <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Maintenance SLA breach rates drop by <strong style="color:var(--dark);">70% within 90 days</strong> of go-live for facility-heavy clients.</div>
           </div>
-          <div class="wt-screen" data-label="Leases">
-            <div class="mock-kanban">
-              <div class="mock-kanban-col" style="background:rgba(246,244,238,0.04);">
-                <div class="mock-kanban-head" style="color:rgba(246,244,238,0.3);">Expiring</div>
-                <div class="mock-kanban-card" style="background:rgba(246,244,238,0.06);border-color:rgba(246,244,238,0.1);color:rgba(246,244,238,0.8);">Koramangala<br><span class="mock-tag alert">32d</span></div>
-                <div class="mock-kanban-card" style="background:rgba(246,244,238,0.06);border-color:rgba(246,244,238,0.1);color:rgba(246,244,238,0.8);">MG Road<br><span class="mock-tag warn">58d</span></div>
-              </div>
-              <div class="mock-kanban-col" style="background:rgba(218,119,86,0.08);">
-                <div class="mock-kanban-head" style="color:var(--primary);">Negotiation</div>
-                <div class="mock-kanban-card" style="background:rgba(246,244,238,0.08);border-color:rgba(218,119,86,0.3);color:rgba(246,244,238,0.8);">
-                  Indiranagar<br>
-                  <div style="font-size:9px;color:rgba(246,244,238,0.4);margin-top:2px;">₹1.8L → ₹2.1L → ₹1.95L</div>
-                </div>
-              </div>
-              <div class="mock-kanban-col" style="background:rgba(137,247,231,0.04);">
-                <div class="mock-kanban-head" style="color:#89F7E7;">Renewed</div>
-                <div class="mock-kanban-card" style="background:rgba(246,244,238,0.06);border-color:rgba(137,247,231,0.2);color:rgba(246,244,238,0.8);">HSR Layout<br><span style="font-size:9px;color:#89F7E7;">Saved 12% ✓</span></div>
-              </div>
-            </div>
+          <div class="team-panel-screen">
+            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Open Tickets Today</div>
+            <div class="mock-list-item" style="background:rgba(231,132,142,0.06);border-color:rgba(231,132,142,0.15);"><div><div class="mock-list-title">HVAC Failure — Nariman</div><div class="mock-list-sub">Critical · SLA: 4hrs · RapidCool assigned</div></div><span class="mock-tag alert">2hrs left</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Plumbing — Bandra Branch</div><div class="mock-list-sub">High · SLA: 24hrs · Assigned</div></div><span class="mock-tag warn">In Progress</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Carpentry — Dadar Store</div><div class="mock-list-sub">Low · SLA: 7days · Pending</div></div><span class="mock-tag">Pending</span></div>
           </div>
         </div>
-
-        <div class="wt-panel" id="wt3">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 03 — Compliance</div>
-            <div class="wt-panel-title">Never face an inspector unprepared again.</div>
-            <div class="wt-panel-body">Structured repository for every regulatory approval — Fire NOC, CC, OC, shop establishment, trade licences. Status tracking from Pending to Approved to Expired. 90/60/30-day alerts with ownership and escalation rules.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Multi-property compliance calendar — never miss a renewal</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Ownership assignment creates named accountability per document</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Escalation to department head if primary assignee doesn't respond in 10 days</span></div>
+        <div class="team-panel" id="team5">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Senior Leadership & CFO</div>
+            <div class="team-panel-title">Real-time portfolio visibility. Without waiting for reports.</div>
+            <div class="team-panel-body">The CFO and Head of Real Estate use Lockated's dashboard before every leadership meeting — checking portfolio KPIs, lease expiry risk, compliance status, and total occupancy cost by region. Weekly, on demand, without asking anyone for a spreadsheet.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">Portfolio Dashboard</span>
+              <span class="team-module-tag">Regional Insights</span>
+              <span class="team-module-tag">Monthly Expense Analysis</span>
+              <span class="team-module-tag">KPI Cards</span>
             </div>
-            <a href="#contact" class="wt-panel-cta">See compliance module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">weekly</strong>. Leadership teams no longer wait for monthly team-prepared reports.</div>
           </div>
-          <div class="wt-screen" data-label="Compliance">
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <div style="padding:8px 12px;background:rgba(137,247,231,0.06);border-radius:8px;border:1px solid rgba(137,247,231,0.15);display:flex;justify-content:space-between;align-items:center;">
-                <div><div style="font-size:11px;color:rgba(246,244,238,0.8);">Fire NOC — Bandra</div><div style="font-size:9px;color:rgba(246,244,238,0.3);">Valid · Priya assigned</div></div>
-                <span style="font-size:9px;font-weight:700;color:#89F7E7;">ACTIVE</span>
-              </div>
-              <div style="padding:8px 12px;background:rgba(237,196,136,0.06);border-radius:8px;border:1px solid rgba(237,196,136,0.15);display:flex;justify-content:space-between;align-items:center;">
-                <div><div style="font-size:11px;color:rgba(246,244,238,0.8);">Shop Act — Andheri</div><div style="font-size:9px;color:rgba(246,244,238,0.3);">38 days · Renewal started</div></div>
-                <span style="font-size:9px;font-weight:700;color:#EDC488;">38 DAYS</span>
-              </div>
-              <div style="padding:8px 12px;background:rgba(231,132,142,0.08);border-radius:8px;border:1px solid rgba(231,132,142,0.2);display:flex;justify-content:space-between;align-items:center;">
-                <div><div style="font-size:11px;color:rgba(246,244,238,0.8);">OC — Powai Tower</div><div style="font-size:9px;color:#E7848E;">12 days · ESCALATED</div></div>
-                <span style="font-size:9px;font-weight:700;color:#E7848E;">CRITICAL</span>
-              </div>
+          <div class="team-panel-screen">
+            <div class="mock-row" style="margin-bottom:10px;">
+              <div class="mock-kpi"><div class="mock-kpi-val">₹4.2Cr</div><div class="mock-kpi-label">Monthly Rent</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#DA7756;">35</div><div class="mock-kpi-label">Expiring &lt;90d</div></div>
             </div>
+            <div style="font-size:10px;color:rgba(44,44,44,0.4);margin-bottom:6px;">Top Cost Region — West Mumbai: ₹1.8Cr/mo</div>
+            <div style="height:5px;background:rgba(44,44,44,0.07);border-radius:3px;overflow:hidden;"><div style="width:43%;height:100%;background:var(--primary);border-radius:3px;"></div></div>
           </div>
         </div>
-
-        <div class="wt-panel" id="wt4">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 04 — Utilities</div>
-            <div class="wt-panel-title">Find the utility waste before it costs you a crore.</div>
-            <div class="wt-panel-body">Monthly consumption tracking for electricity, water, gas, and internet across every property. YoY trend analysis flags abnormal consumption. Per-sqft efficiency metrics benchmarked across similar properties in the same city.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Auto-flag properties with 15%+ YoY consumption increase</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Cost per sqft per month benchmark across portfolio</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Utility bill payment tracking with automated reminders</span></div>
+        <div class="team-panel" id="team6">
+          <div class="team-panel-info">
+            <div class="team-panel-eyebrow">Internal Audit Team</div>
+            <div class="team-panel-title">Audits in hours. Not days.</div>
+            <div class="team-panel-body">The Internal Audit team accesses Lockated's immutable audit logs for complete lease change history, payment records, and compliance events — without chasing teams for documentation. Every action is timestamped, attributed, and searchable.</div>
+            <div class="team-modules">
+              <span class="team-module-tag">Audit Logs</span>
+              <span class="team-module-tag">Payment History</span>
+              <span class="team-module-tag">Compliance Repository</span>
+              <span class="team-module-tag">Lease Repository</span>
             </div>
-            <a href="#contact" class="wt-panel-cta">See utilities module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Audit packages that took 3–5 days to compile are now generated <strong style="color:var(--dark);">in under 2 hours</strong>.</div>
           </div>
-          <div class="wt-screen" data-label="Utilities">
-            <div class="mock-row" style="margin-bottom:12px;">
-              <div class="mock-kpi" style="background:rgba(246,244,238,0.06);border-color:rgba(246,244,238,0.08);"><div class="mock-kpi-val" style="color:#F6F4EE;">₹8.4</div><div class="mock-kpi-label" style="color:rgba(246,244,238,0.3);">/sqft elec</div></div>
-              <div class="mock-kpi" style="background:rgba(246,244,238,0.06);border-color:rgba(246,244,238,0.08);"><div class="mock-kpi-val" style="color:#89F7E7;">-11%</div><div class="mock-kpi-label" style="color:rgba(246,244,238,0.3);">YoY saving</div></div>
-            </div>
-            <div style="font-size:10px;font-weight:700;color:rgba(246,244,238,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Flagged Properties</div>
-            <div style="padding:8px 12px;background:rgba(231,132,142,0.08);border-radius:6px;border:1px solid rgba(231,132,142,0.15);margin-bottom:6px;display:flex;justify-content:space-between;">
-              <div style="font-size:11px;color:rgba(246,244,238,0.7);">Worli Tower · ₹14.2/sqft</div>
-              <span style="font-size:9px;font-weight:700;color:#E7848E;">+23%</span>
-            </div>
-            <div style="padding:8px 12px;background:rgba(237,196,136,0.06);border-radius:6px;border:1px solid rgba(237,196,136,0.12);display:flex;justify-content:space-between;">
-              <div style="font-size:11px;color:rgba(246,244,238,0.7);">Lower Parel · ₹11.8/sqft</div>
-              <span style="font-size:9px;font-weight:700;color:#EDC488;">+16%</span>
-            </div>
-            <div style="font-size:10px;color:rgba(246,244,238,0.35);margin-top:10px;">Estimated savings: ₹3.8L/year</div>
-          </div>
-        </div>
-
-        <div class="wt-panel" id="wt5">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 05 — AMC & Maintenance</div>
-            <div class="wt-panel-title">Replace WhatsApp coordination with structured operations.</div>
-            <div class="wt-panel-body">Every AMC contract — HVAC, lift, fire, electrical, pest — tracked with schedules, renewal alerts, and 4-dimension vendor performance scores. Maintenance tickets replace WhatsApp with SLA timers, vendor assignment, and full resolution history.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">AMC register with renewal alerts at 60/30 days per property</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Vendor rated 1–5 on response time, quality, SLA, and professionalism</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Maintenance tickets with Critical/High/Medium/Low priority SLAs</span></div>
-            </div>
-            <a href="#contact" class="wt-panel-cta">See maintenance module demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-          </div>
-          <div class="wt-screen" data-label="AMC">
-            <div style="font-size:10px;font-weight:700;color:rgba(246,244,238,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">AMC Vendors</div>
-            <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(246,244,238,0.05);border-radius:6px;border:1px solid rgba(246,244,238,0.08);">
-                <span style="font-size:11px;color:rgba(246,244,238,0.7);">RapidCool HVAC · 14 sites</span>
-                <span style="font-size:13px;font-weight:800;color:#89F7E7;">4.8★</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(237,196,136,0.06);border-radius:6px;border:1px solid rgba(237,196,136,0.12);">
-                <span style="font-size:11px;color:rgba(246,244,238,0.7);">Otis Elevators · 8 sites</span>
-                <span style="font-size:13px;font-weight:800;color:#EDC488;">3.2★</span>
-              </div>
-            </div>
-            <div style="font-size:10px;font-weight:700;color:rgba(246,244,238,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Open Tickets</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(231,132,142,0.08);border-radius:6px;border:1px solid rgba(231,132,142,0.15);">
-              <span style="font-size:11px;color:rgba(246,244,238,0.7);">HVAC failure — Nariman Point</span>
-              <span style="font-size:9px;font-weight:700;color:#E7848E;">CRITICAL</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="wt-panel" id="wt6">
-          <div class="wt-panel-info">
-            <div class="wt-panel-eyebrow">Module 06 — Masters & Config</div>
-            <div class="wt-panel-title">The engine that makes every other module effortless.</div>
-            <div class="wt-panel-body">Configure your location hierarchy, tenant and landlord masters, vendor profiles, custom fields, and role-based access once. Every downstream module auto-populates from this foundation — eliminating re-entry and ensuring consistency.</div>
-            <div class="wt-panel-features">
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">6-level geography: Country → State → Region → Zone → City → Circle</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Custom fields for Cost Centre, Business Unit, Approval Reference</span></div>
-              <div class="wt-feature-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span class="wt-feature-text">Role-based access: 7 predefined roles + unlimited custom roles</span></div>
-            </div>
-            <a href="#contact" class="wt-panel-cta">See configuration demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-          </div>
-          <div class="wt-screen" data-label="Masters">
-            <div style="font-size:10px;font-weight:700;color:rgba(246,244,238,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Location Hierarchy</div>
-            <div style="font-size:11px;color:var(--primary);padding:6px 10px;background:rgba(218,119,86,0.1);border-radius:6px;border-left:3px solid var(--primary);margin-bottom:10px;">India → Maharashtra → West → Zone 2 → Mumbai → Andheri</div>
-            <div style="font-size:11px;color:rgba(246,244,238,0.5);padding:5px 10px;background:rgba(246,244,238,0.03);border-radius:6px;margin-bottom:8px;font-size:10px;">Auto-populates 42 properties · 8 managers · ₹1.2Cr/mo</div>
-            <div style="font-size:10px;font-weight:700;color:rgba(246,244,238,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Custom Fields</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Cost Centre</span>
-              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Business Unit</span>
-              <span style="font-size:10px;background:rgba(121,140,94,0.15);color:#9EC8BA;padding:3px 8px;border-radius:100px;border:1px solid rgba(121,140,94,0.2);">Approval Ref</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ TESTIMONIALS ═══ -->
-<section class="testi-section" id="testimonials">
-  <div class="testi-inner">
-    <div class="section-eyebrow reveal">Client Stories</div>
-    <h2 class="section-title reveal reveal-delay-1">Don't take our word for it.</h2>
-    <div class="testi-layout">
-      <div style="position:relative;padding-bottom:64px;">
-        <div class="testi-stack" id="testiStack">
-          <!-- back 2 -->
-          <div class="testi-card" style="transform:translateY(14px) scale(0.95);z-index:1;background:rgba(246,244,238,0.7);">
-            <div class="testi-quote-mark">"</div>
-            <p class="testi-text">We were tracking 150 branch leases on five Excel files. Lockated gave us one dashboard and our Head of RE finally stopped getting called at 11pm about expiry dates.</p>
-            <div class="testi-author"><div class="testi-avatar">RS</div><div><div class="testi-name">Rajesh Sharma</div><div class="testi-role">CFO, Mid-size NBFC</div></div><span class="testi-company-badge">BFSI</span></div>
-          </div>
-          <!-- back 1 -->
-          <div class="testi-card" style="transform:translateY(7px) scale(0.975);z-index:2;">
-            <div class="testi-quote-mark">"</div>
-            <p class="testi-text">The compliance module alone was worth it. We had three documents expire before Lockated. In the 14 months since, zero. Our internal audit team actually congratulated us.</p>
-            <div class="testi-author"><div class="testi-avatar">PK</div><div><div class="testi-name">Priya Kulkarni</div><div class="testi-role">Head of Real Estate, Pharmacy Chain</div></div><span class="testi-company-badge">Retail</span></div>
-          </div>
-          <!-- front -->
-          <div class="testi-card" id="testiActive">
-            <div class="testi-quote-mark">"</div>
-            <p class="testi-text">Month-end rent reconciliation used to take my Finance team four days. With Lockated it's a half-day. The GST-compliant invoices alone save us three working hours per property per month. The data sovereignty was non-negotiable for our board — and Lockated was the only platform that didn't store our data on their cloud.</p>
-            <div class="testi-author"><div class="testi-avatar">AM</div><div><div class="testi-name">Ananya Mehta</div><div class="testi-role">VP Corporate Real Estate, FMCG Enterprise</div></div><span class="testi-company-badge">Corporate</span></div>
-          </div>
-        </div>
-        <div class="testi-controls">
-          <button class="testi-btn" id="testiBtnPrev" aria-label="Previous">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-          </button>
-          <div class="testi-dots">
-            <div class="testi-dot active"></div>
-            <div class="testi-dot"></div>
-            <div class="testi-dot"></div>
-            <div class="testi-dot"></div>
-          </div>
-          <button class="testi-btn" id="testiBtnNext" aria-label="Next">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="testi-right reveal reveal-delay-2">
-        <div class="testi-section-label">What clients measure</div>
-        <div class="testi-big-num">250<span>+</span></div>
-        <div class="testi-big-label">Finance team hours saved per year per person<br>after full module deployment</div>
-        <div class="testi-stats">
-          <div class="testi-stat-card">
-            <div class="testi-stat-val">4 days → ½</div>
-            <div class="testi-stat-label">Month-end rent reconciliation time, every month</div>
-          </div>
-          <div class="testi-stat-card">
-            <div class="testi-stat-val">0 lapses</div>
-            <div class="testi-stat-label">Compliance documents expired in client's first 12 months</div>
-          </div>
-          <div class="testi-stat-card">
-            <div class="testi-stat-val">₹8L avg</div>
-            <div class="testi-stat-label">Annual rent overpayment identified in first 3 months</div>
-          </div>
-          <div class="testi-stat-card">
-            <div class="testi-stat-val">70% drop</div>
-            <div class="testi-stat-label">Maintenance SLA breach rate within 90 days of go-live</div>
+          <div class="team-panel-screen">
+            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Audit Log — Recent</div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Rent Amount Changed — Andheri</div><div class="mock-list-sub">₹1.8L → ₹2.0L · Rahul Kumar · 14 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Compliance Uploaded — Fire NOC</div><div class="mock-list-sub">Bandra Branch · Priya Sharma · 18 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
+            <div class="mock-list-item"><div><div class="mock-list-title">Lease Status → Renewed</div><div class="mock-list-sub">Koramangala · Amit Joshi · 20 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
           </div>
         </div>
       </div>
@@ -1228,9 +1252,9 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
     <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:56px;">
       <div>
         <div class="section-eyebrow reveal">Industry Use Cases</div>
-        <h2 class="section-title reveal reveal-delay-1" style="color:#F6F4EE;margin-bottom:0;max-width:520px;">One platform.<br><span style="color:var(--primary);">Deployed differently for every industry.</span></h2>
+        <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:0;max-width:520px;">One platform.<br><span class="accent">Deployed differently for every industry.</span></h2>
       </div>
-      <p class="reveal reveal-delay-2" style="font-size:14px;color:rgba(246,244,238,0.4);max-width:280px;margin-bottom:0;">Click any card to see exactly how Lockated is deployed in that sector.</p>
+      <p class="reveal reveal-delay-2" style="font-size:14px;color:rgba(44,44,44,0.5);max-width:280px;margin-bottom:0;">Click any card to see exactly how Lockated is deployed in that sector.</p>
     </div>
     <div class="usecase-grid reveal">
       <div class="uc-card featured" onclick="openUCModal('retail')">
@@ -1405,180 +1429,8 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
   </div>
 </div>
 
-<!-- ═══ TEAMS ═══ -->
-<section class="teams-section" id="teams">
-  <div class="teams-inner">
-    <div class="section-eyebrow reveal">Built for Every Team</div>
-    <h2 class="section-title reveal reveal-delay-1">Your whole organisation.<br><span class="accent">One platform.</span></h2>
-    <p class="section-sub reveal reveal-delay-2">From the CFO approving the lease budget to the Facility Manager closing a maintenance ticket, Lockated gives every team exactly what they need — without getting in each other's way.</p>
-    <div class="teams-layout">
-      <div class="teams-tabs reveal">
-        <div class="team-tab active" data-team="team1">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
-          <span class="team-tab-name">Real Estate Team</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-        <div class="team-tab" data-team="team2">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <span class="team-tab-name">Finance & Accounts</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-        <div class="team-tab" data-team="team3">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
-          <span class="team-tab-name">Compliance & Legal</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-        <div class="team-tab" data-team="team4">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-          <span class="team-tab-name">Facility & Operations</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-        <div class="team-tab" data-team="team5">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
-          <span class="team-tab-name">Senior Leadership</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-        <div class="team-tab" data-team="team6">
-          <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <span class="team-tab-name">Internal Audit</span>
-          <span class="team-tab-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-      </div>
-      <div class="team-panels reveal reveal-delay-2">
-        <div class="team-panel active" id="team1">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Real Estate / Lease Management Team</div>
-            <div class="team-panel-title">One source of truth. Zero missed renewals.</div>
-            <div class="team-panel-body">The Lease Manager's daily workflow — checking renewal pipeline, logging landlord calls, uploading agreement documents, and tracking rent payments — all happens in Lockated. No switching between files. No searching inboxes for previous terms.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">Lease Repository</span>
-              <span class="team-module-tag">Renewal Pipeline</span>
-              <span class="team-module-tag">Landlord Directory</span>
-              <span class="team-module-tag">Audit Logs</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">daily</strong> by Lease Managers and Heads of Real Estate. Renewal pipeline reduces missed windows by 100%.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div class="mock-list-item"><div><div class="mock-list-title">Indiranagar Flagship</div><div class="mock-list-sub">Lease Manager: Rahul · Renewal due in 28 days</div></div><span class="mock-tag alert">Action Needed</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Koramangala Branch</div><div class="mock-list-sub">In Negotiation · Proposed: ₹2.1L → Counter: ₹1.9L</div></div><span class="mock-tag warn">Negotiating</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">HSR Layout Store</div><div class="mock-list-sub">Renewed · Saved 12% vs proposed rent</div></div><span class="mock-tag">Renewed ✓</span></div>
-          </div>
-        </div>
-        <div class="team-panel" id="team2">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Finance & Accounts Team</div>
-            <div class="team-panel-title">Month-end close in half a day. Not four.</div>
-            <div class="team-panel-body">Automated rent due schedules, GST-compliant invoice generation, security deposit reconciliation, and OPEX budget vs actual — all in one platform. Finance teams stop chasing 5 teams for data and start closing in hours.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">Rent Collection</span>
-              <span class="team-module-tag">Invoicing & Payments</span>
-              <span class="team-module-tag">Security Deposits</span>
-              <span class="team-module-tag">OPEX Management</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Finance teams save an average of <strong style="color:var(--dark);">250 hours/year per person</strong> after full deployment. Daily active users.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Rent Status — This Month</div>
-            <div class="mock-row">
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#108C72;">₹3.8Cr</div><div class="mock-kpi-label">Collected</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#EDC488;">₹28L</div><div class="mock-kpi-label">Pending</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#E7848E;">₹6L</div><div class="mock-kpi-label">Overdue</div></div>
-            </div>
-            <div style="margin-top:10px;font-size:11px;color:rgba(44,44,44,0.5);">Collection Rate: 91% · 3 reminders sent</div>
-          </div>
-        </div>
-        <div class="team-panel" id="team3">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Compliance & Legal Team</div>
-            <div class="team-panel-title">Zero compliance lapses. Accountability by design.</div>
-            <div class="team-panel-body">The Compliance Officer uses Lockated's repository weekly — reviewing the alert dashboard, uploading renewed certificates, and assigning renewal tasks to property teams. Ownership assignment means there's always a named person responsible for every document.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">Compliance Repository</span>
-              <span class="team-module-tag">Renewal Alerts</span>
-              <span class="team-module-tag">Ownership Assignment</span>
-              <span class="team-module-tag">Audit Logs</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">weekly</strong>. 0 compliance lapses reported for clients in their first 12 months.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Compliance Overview</div>
-            <div class="mock-row" style="margin-bottom:12px;">
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#108C72;">84</div><div class="mock-kpi-label">Active</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#EDC488;">6</div><div class="mock-kpi-label">Due &lt;60d</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#E7848E;">2</div><div class="mock-kpi-label">Critical</div></div>
-            </div>
-            <div class="mock-list-item" style="background:rgba(231,132,142,0.06);border-color:rgba(231,132,142,0.2);"><div><div class="mock-list-title">OC — Powai</div><div class="mock-list-sub">12 days · Assigned: Priya</div></div><span class="mock-tag alert">Critical</span></div>
-          </div>
-        </div>
-        <div class="team-panel" id="team4">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Facility & Operations Team</div>
-            <div class="team-panel-title">Structured operations. No WhatsApp required.</div>
-            <div class="team-panel-body">The Facility Manager raises and tracks maintenance tickets, manages AMC service calendars, records monthly utility meter readings, and monitors vendor performance scores — all in Lockated. Daily active users from day one.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">AMC Management</span>
-              <span class="team-module-tag">Maintenance Tickets</span>
-              <span class="team-module-tag">Utilities Tracking</span>
-              <span class="team-module-tag">Vendor Performance</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Maintenance SLA breach rates drop by <strong style="color:var(--dark);">70% within 90 days</strong> of go-live for facility-heavy clients.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Open Tickets Today</div>
-            <div class="mock-list-item" style="background:rgba(231,132,142,0.06);border-color:rgba(231,132,142,0.15);"><div><div class="mock-list-title">HVAC Failure — Nariman</div><div class="mock-list-sub">Critical · SLA: 4hrs · RapidCool assigned</div></div><span class="mock-tag alert">2hrs left</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Plumbing — Bandra Branch</div><div class="mock-list-sub">High · SLA: 24hrs · Assigned</div></div><span class="mock-tag warn">In Progress</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Carpentry — Dadar Store</div><div class="mock-list-sub">Low · SLA: 7days · Pending</div></div><span class="mock-tag">Pending</span></div>
-          </div>
-        </div>
-        <div class="team-panel" id="team5">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Senior Leadership & CFO</div>
-            <div class="team-panel-title">Real-time portfolio visibility. Without waiting for reports.</div>
-            <div class="team-panel-body">The CFO and Head of Real Estate use Lockated's dashboard before every leadership meeting — checking portfolio KPIs, lease expiry risk, compliance status, and total occupancy cost by region. Weekly, on demand, without asking anyone for a spreadsheet.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">Portfolio Dashboard</span>
-              <span class="team-module-tag">Regional Insights</span>
-              <span class="team-module-tag">Monthly Expense Analysis</span>
-              <span class="team-module-tag">KPI Cards</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Used <strong style="color:var(--dark);">weekly</strong>. Leadership teams no longer wait for monthly team-prepared reports.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div class="mock-row" style="margin-bottom:10px;">
-              <div class="mock-kpi"><div class="mock-kpi-val">₹4.2Cr</div><div class="mock-kpi-label">Monthly Rent</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val" style="color:#DA7756;">35</div><div class="mock-kpi-label">Expiring &lt;90d</div></div>
-            </div>
-            <div style="font-size:10px;color:rgba(44,44,44,0.4);margin-bottom:6px;">Top Cost Region — West Mumbai: ₹1.8Cr/mo</div>
-            <div style="height:5px;background:rgba(44,44,44,0.07);border-radius:3px;overflow:hidden;"><div style="width:43%;height:100%;background:var(--primary);border-radius:3px;"></div></div>
-          </div>
-        </div>
-        <div class="team-panel" id="team6">
-          <div class="team-panel-info">
-            <div class="team-panel-eyebrow">Internal Audit Team</div>
-            <div class="team-panel-title">Audits in hours. Not days.</div>
-            <div class="team-panel-body">The Internal Audit team accesses Lockated's immutable audit logs for complete lease change history, payment records, and compliance events — without chasing teams for documentation. Every action is timestamped, attributed, and searchable.</div>
-            <div class="team-modules">
-              <span class="team-module-tag">Audit Logs</span>
-              <span class="team-module-tag">Payment History</span>
-              <span class="team-module-tag">Compliance Repository</span>
-              <span class="team-module-tag">Lease Repository</span>
-            </div>
-            <div style="font-size:13px;color:rgba(44,44,44,0.5);line-height:1.5;background:var(--primary-8);padding:12px 16px;border-radius:10px;border-left:3px solid var(--primary);">Audit packages that took 3–5 days to compile are now generated <strong style="color:var(--dark);">in under 2 hours</strong>.</div>
-          </div>
-          <div class="team-panel-screen">
-            <div style="font-size:11px;font-weight:600;color:rgba(44,44,44,0.5);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Audit Log — Recent</div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Rent Amount Changed — Andheri</div><div class="mock-list-sub">₹1.8L → ₹2.0L · Rahul Kumar · 14 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Compliance Uploaded — Fire NOC</div><div class="mock-list-sub">Bandra Branch · Priya Sharma · 18 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
-            <div class="mock-list-item"><div><div class="mock-list-title">Lease Status → Renewed</div><div class="mock-list-sub">Koramangala · Amit Joshi · 20 Jan 2025</div></div><span class="mock-tag">Logged</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ ENDING BANNER ═══ -->
-<section class="banner-section">
+<section class="banner-section" id="end-banner">
   <div class="banner-inner">
     <div class="section-eyebrow" style="justify-content:center;">Limited Onboarding Slots Available</div>
     <h2 class="banner-title reveal">Stop paying for leases<br>you've already <span class="accent">overpaid.</span></h2>
@@ -1690,8 +1542,9 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
         <ul class="footer-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#walkthrough">Walkthrough</a></li>
+          <li><a href="#teams">Teams</a></li>
           <li><a href="#usecases">Use Cases</a></li>
-          <li><a href="#contact">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -1716,7 +1569,7 @@ footer{background:var(--dark);padding:56px 48px 32px;border-top:1px solid rgba(2
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2025 GoPhygital.work · Lockated Lease Management · Mumbai, India</div>
+      <div class="footer-copy">© 2026 GoPhygital.work · Lockated Lease Management · Mumbai, India</div>
       <div class="footer-legal">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
@@ -1812,60 +1665,6 @@ document.querySelectorAll('.team-tab').forEach(tab => {
     document.getElementById(panelId).classList.add('active');
   });
 });
-
-// Testimonials
-const testiData = [
-  {
-    quote: "Month-end rent reconciliation used to take my Finance team four days. With Lockated it's a half-day. The GST-compliant invoices alone save us three working hours per property per month. The data sovereignty was non-negotiable for our board — and Lockated was the only platform that didn't store our data on their cloud.",
-    name: "Ananya Mehta",
-    role: "VP Corporate Real Estate, FMCG Enterprise",
-    initials: "AM",
-    sector: "Corporate"
-  },
-  {
-    quote: "The compliance module alone was worth it. We had three documents expire before Lockated. In the 14 months since, zero. Our internal audit team actually congratulated us.",
-    name: "Priya Kulkarni",
-    role: "Head of Real Estate, Pharmacy Chain",
-    initials: "PK",
-    sector: "Retail"
-  },
-  {
-    quote: "We were tracking 150 branch leases on five Excel files. Lockated gave us one dashboard and our Head of RE finally stopped getting called at 11pm about expiry dates.",
-    name: "Rajesh Sharma",
-    role: "CFO, Mid-size NBFC",
-    initials: "RS",
-    sector: "BFSI"
-  },
-  {
-    quote: "Before Lockated, our AMC contracts lived in a shared drive nobody updated. In the first quarter we identified three expired contracts we were still paying for. The vendor performance scores completely changed how we select and retain service partners across our facilities.",
-    name: "Vikram Nair",
-    role: "Head of Facilities, IT/ITeS Company",
-    initials: "VN",
-    sector: "IT/ITeS"
-  }
-];
-let testiIdx = 0;
-const stack = document.getElementById('testiStack');
-const dots = document.querySelectorAll('.testi-dot');
-
-function setTesti(idx) {
-  testiIdx = (idx + testiData.length) % testiData.length;
-  const d = testiData[testiIdx];
-  const front = stack.querySelector('.testi-card:last-child');
-  front.innerHTML = `
-    <div class="testi-quote-mark">"</div>
-    <p class="testi-text">${d.quote}</p>
-    <div class="testi-author">
-      <div class="testi-avatar">${d.initials}</div>
-      <div><div class="testi-name">${d.name}</div><div class="testi-role">${d.role}</div></div>
-      <span class="testi-company-badge">${d.sector}</span>
-    </div>`;
-  dots.forEach((dot, i) => dot.classList.toggle('active', i === testiIdx));
-}
-document.getElementById('testiBtnNext').addEventListener('click', () => setTesti(testiIdx + 1));
-document.getElementById('testiBtnPrev').addEventListener('click', () => setTesti(testiIdx - 1));
-dots.forEach((dot, i) => dot.addEventListener('click', () => setTesti(i)));
-setInterval(() => setTesti(testiIdx + 1), 5000);
 
 // Use Case Modals
 function openUCModal(id) {

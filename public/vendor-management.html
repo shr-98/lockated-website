@@ -17,8 +17,15 @@
     --green: #798C5E;
     --teal: #9EC8BA;
     --card-border: #C4B89D;
-    --divider: #D5DBDB;
+    /* Warm neutrals (avoid cool gray / printer-white) */
+    --divider: #C4BCAD;
     --muted: #D3D1C7;
+    /* Elevated panels & fields — warm paper, not #fff */
+    --surface: #F0EAE1;
+    /* Full-width bands (industries, CTA) */
+    --band: #E8E2D6;
+    /* Text/icons on coral — matches page cream vs pure white */
+    --on-primary: #F6F4EE;
     --info-blue: #6B9BCC;
     --warning: #EDC488;
     --success: #89F7E7;
@@ -77,7 +84,7 @@
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
   }
-  .nav-logo-mark svg { width: 20px; height: 20px; color: white; }
+  .nav-logo-mark svg { width: 20px; height: 20px; color: var(--on-primary); }
   .nav-logo-text { font-size: 17px; font-weight: 700; color: var(--dark); letter-spacing: -0.3px; }
   .nav-logo-text span { color: var(--primary); }
   .nav-links {
@@ -110,7 +117,7 @@
   .btn-secondary:hover { border-color: var(--primary); color: var(--primary); background: rgba(218,119,86,0.06); }
   .btn-primary {
     padding: 9px 22px; border-radius: 8px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     border: none; font-size: 13px; font-weight: 600;
     cursor: pointer; text-decoration: none;
     transition: all 0.2s ease;
@@ -197,7 +204,7 @@
   }
   .btn-hero-primary {
     padding: 14px 32px; border-radius: 10px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     font-size: 15px; font-weight: 600;
     text-decoration: none; border: none;
     transition: all 0.25s ease;
@@ -207,7 +214,7 @@
   .btn-hero-secondary {
     padding: 14px 32px; border-radius: 10px;
     border: 1.5px solid var(--card-border);
-    color: var(--dark); background: rgba(255,255,255,0.6);
+    color: var(--dark); background: rgba(246,244,238,0.82);
     font-size: 15px; font-weight: 500;
     text-decoration: none;
     transition: all 0.25s ease;
@@ -271,7 +278,7 @@
     margin-top: 52px;
   }
   .pain-card {
-    background: white;
+    background: var(--surface);
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 36px 32px;
@@ -327,7 +334,7 @@
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
-    background: white;
+    background: var(--surface);
   }
   .feature-item.active {
     border-color: var(--primary);
@@ -350,7 +357,7 @@
   }
   .feature-icon-small svg { color: var(--primary); width: 18px; height: 18px; }
   .feature-item.active .feature-icon-small { background: var(--primary); }
-  .feature-item.active .feature-icon-small svg { color: white; }
+  .feature-item.active .feature-icon-small svg { color: var(--on-primary); }
   .feature-name { font-size: 14.5px; font-weight: 600; color: var(--dark); }
   .feature-add-icon {
     width: 28px; height: 28px; border-radius: 50%;
@@ -360,7 +367,7 @@
   }
   .feature-add-icon svg { width: 14px; height: 14px; color: var(--dark); transition: transform 0.3s ease; }
   .feature-item.active .feature-add-icon { background: var(--primary); border-color: var(--primary); }
-  .feature-item.active .feature-add-icon svg { color: white; transform: rotate(45deg); }
+  .feature-item.active .feature-add-icon svg { color: var(--on-primary); transform: rotate(45deg); }
   .feature-body {
     max-height: 0; overflow: hidden;
     transition: max-height 0.4s ease, padding 0.3s ease;
@@ -387,7 +394,7 @@
     top: 88px;
   }
   .feature-ui-card {
-    background: white;
+    background: var(--surface);
     border: 1px solid var(--card-border);
     border-radius: 20px;
     overflow: hidden;
@@ -468,7 +475,8 @@
   .ui-portal-tile-value { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
 
   /* WALKTHROUGH */
-  .walkthrough-section { background: white; }
+  /* Same cream as rest of page — avoids a bright “white band” under the tabs */
+  .walkthrough-section { background: var(--bg); }
   .walkthrough-tabs {
     display: flex; gap: 0;
     overflow-x: auto;
@@ -476,17 +484,24 @@
     margin: 48px 0 0;
     padding-bottom: 0;
     scrollbar-width: none;
+    background-color: var(--bg);
   }
   .walkthrough-tabs::-webkit-scrollbar { display: none; }
   .wt-tab {
     padding: 12px 20px;
     font-size: 13px; font-weight: 500;
+    font-family: inherit;
     color: rgba(44,44,44,0.5);
     cursor: pointer;
     white-space: nowrap;
     border-bottom: 2.5px solid transparent;
     transition: all 0.2s ease;
-    background: none; border-top: none; border-left: none; border-right: none;
+    /* UA + Tailwind often default buttons to white — match page cream */
+    background-color: var(--bg) !important;
+    background-image: none !important;
+    border-top: none; border-left: none; border-right: none;
+    -webkit-appearance: none;
+    appearance: none;
     position: relative;
     bottom: -1px;
   }
@@ -503,7 +518,7 @@
   }
   .wt-panel-step-num {
     width: 22px; height: 22px; border-radius: 50%;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     font-size: 11px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
   }
@@ -522,7 +537,7 @@
   .wt-cta {
     display: inline-flex; align-items: center; gap: 8px;
     margin-top: 28px; padding: 12px 24px; border-radius: 8px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     font-size: 14px; font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -530,7 +545,7 @@
   }
   .wt-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(218,119,86,0.4); }
   .wt-ui-card {
-    background: white;
+    background: var(--surface);
     border: 1px solid var(--card-border);
     border-radius: 20px;
     overflow: hidden;
@@ -549,19 +564,33 @@
     background: rgba(218,119,86,0.1); color: var(--primary);
     font-size: 11px; font-weight: 600;
   }
-  .wt-ui-body { padding: 20px; }
+  .wt-ui-body { padding: 20px; background: var(--bg); }
   .wt-form-group { margin-bottom: 16px; }
   .wt-form-label { font-size: 11px; font-weight: 700; color: rgba(44,44,44,0.5); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
   .wt-form-input {
     width: 100%; padding: 10px 14px;
     border: 1.5px solid var(--divider); border-radius: 8px;
     font-size: 13.5px; font-family: var(--font); color: var(--dark);
-    background: var(--bg);
+    background-color: var(--bg) !important;
+    background-image: none !important;
+    -webkit-text-fill-color: var(--dark);
+  }
+  .wt-form-input:read-only {
+    background-color: var(--bg) !important;
+    opacity: 1;
+  }
+  .wt-form-input:-webkit-autofill,
+  .wt-form-input:-webkit-autofill:hover,
+  .wt-form-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px var(--bg) inset !important;
+    box-shadow: 0 0 0px 1000px var(--bg) inset !important;
+    -webkit-text-fill-color: var(--dark) !important;
+    transition: background-color 99999s ease-out;
   }
   .wt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .wt-form-submit {
     width: 100%; padding: 12px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     border: none; border-radius: 8px;
     font-size: 14px; font-weight: 600;
     font-family: var(--font); cursor: pointer;
@@ -571,7 +600,7 @@
   .wt-form-submit:hover { opacity: 0.9; }
 
   /* USE CASES - INDUSTRIES */
-  .industries-section { background: white; }
+  .industries-section { background: var(--band); }
   .industries-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -602,7 +631,7 @@
   .industry-card:hover::after { transform: scaleX(1); }
   .industry-icon {
     width: 48px; height: 48px; border-radius: 12px;
-    background: white; border: 1px solid var(--divider);
+    background: var(--surface); border: 1px solid var(--divider);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 16px; box-shadow: 0 2px 8px rgba(44,44,44,0.06);
   }
@@ -629,7 +658,7 @@
   }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal-box {
-    background: white; border-radius: 24px;
+    background: var(--surface); border-radius: 24px;
     max-width: 680px; width: 100%;
     max-height: 85vh; overflow-y: auto;
     box-shadow: 0 40px 80px rgba(44,44,44,0.25);
@@ -650,7 +679,7 @@
     flex-shrink: 0; transition: all 0.2s ease;
   }
   .modal-close:hover { background: var(--primary); border-color: var(--primary); }
-  .modal-close:hover svg { color: white; }
+  .modal-close:hover svg { color: var(--on-primary); }
   .modal-close svg { color: var(--dark); }
   .modal-icon {
     width: 56px; height: 56px; border-radius: 16px;
@@ -691,7 +720,7 @@
     display: flex; align-items: center; gap: 14px;
     padding: 16px 18px; border-radius: 12px;
     cursor: pointer; border: 1.5px solid transparent;
-    background: white; transition: all 0.2s ease;
+    background: var(--surface); transition: all 0.2s ease;
   }
   .team-tab:hover { border-color: var(--card-border); }
   .team-tab.active { border-color: var(--primary); background: rgba(218,119,86,0.05); }
@@ -701,7 +730,7 @@
     flex-shrink: 0; border: 1px solid var(--divider);
   }
   .team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
-  .team-tab.active .team-tab-icon svg { color: white; }
+  .team-tab.active .team-tab-icon svg { color: var(--on-primary); }
   .team-tab-icon svg { color: rgba(44,44,44,0.5); }
   .team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
   .team-tab.active .team-tab-text { color: var(--dark); }
@@ -712,7 +741,7 @@
   .team-features-list { display: flex; flex-direction: column; gap: 10px; }
   .team-feature {
     display: flex; align-items: flex-start; gap: 12px;
-    padding: 14px 18px; background: white; border-radius: 10px;
+    padding: 14px 18px; background: var(--surface); border-radius: 10px;
     border: 1px solid var(--divider); font-size: 13.5px; font-weight: 500; color: var(--dark);
     line-height: 1.5;
   }
@@ -721,7 +750,7 @@
 
   /* END BANNER (light) */
   #end-banner.cta-banner {
-    background: #fdfbf7;
+    background: var(--band);
     padding: 100px 48px;
     text-align: center;
     position: relative;
@@ -759,7 +788,7 @@
   #end-banner.cta-banner .cta-banner-btns { display: flex; gap: 12px; justify-content: center; position: relative; z-index: 1; flex-wrap: wrap; }
   .btn-banner-primary {
     padding: 16px 40px; border-radius: 10px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     font-size: 15px; font-weight: 700;
     text-decoration: none;
     transition: all 0.25s ease;
@@ -770,7 +799,7 @@
     padding: 16px 40px; border-radius: 10px;
     border: 1.5px solid var(--card-border);
     color: var(--dark); font-size: 15px; font-weight: 600;
-    text-decoration: none; background: rgba(255,255,255,0.85);
+    text-decoration: none; background: rgba(246,244,238,0.94);
     transition: all 0.25s ease;
   }
   .btn-banner-secondary:hover { border-color: var(--primary); color: var(--primary); background: rgba(218,119,86,0.06); }
@@ -800,7 +829,7 @@
     width: 100%; padding: 12px 16px;
     border: 1.5px solid var(--divider); border-radius: 10px;
     font-size: 14px; font-family: var(--font); color: var(--dark);
-    background: white; outline: none;
+    background: var(--surface); outline: none;
     transition: border-color 0.2s ease;
   }
   .form-textarea { resize: vertical; min-height: 100px; }
@@ -808,7 +837,7 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-submit {
     width: 100%; padding: 14px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--on-primary);
     border: none; border-radius: 10px;
     font-size: 15px; font-weight: 700;
     font-family: var(--font); cursor: pointer;
@@ -1292,7 +1321,7 @@
           </div>
           <div class="wt-ui-body">
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-              <span style="padding:5px 10px;background:var(--primary);color:white;border-radius:6px;font-size:11px;font-weight:600">Org Data</span>
+              <span style="padding:5px 10px;background:var(--primary);color:var(--on-primary);border-radius:6px;font-size:11px;font-weight:600">Org Data</span>
               <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Statutory</span>
               <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Banking</span>
               <span style="padding:5px 10px;background:var(--bg);border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--divider)">Approvals</span>
@@ -2165,7 +2194,7 @@
     <div>
       <div class="footer-logo">
         <div class="footer-logo-mark">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--on-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
         </div>
         <div class="footer-logo-text">Vendor Management</div>
       </div>

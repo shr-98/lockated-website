@@ -36,6 +36,59 @@ const VENDOR_MGMT_ISOLATION_CSS = `
     transition: none !important;
   }
 }
+/* Tailwind preflight / UA: white buttons & inputs — lock walkthrough to page tokens */
+.vendor-mgmt-root .walkthrough-section {
+  background-color: var(--bg) !important;
+}
+.vendor-mgmt-root .walkthrough-tabs,
+.vendor-mgmt-root #wtTabs {
+  background-color: var(--bg) !important;
+}
+.vendor-mgmt-root button.wt-tab {
+  background-color: var(--bg) !important;
+  background-image: none !important;
+}
+.vendor-mgmt-root .wt-form-input,
+.vendor-mgmt-root .wt-ui-body input {
+  background-color: var(--bg) !important;
+  color: var(--dark) !important;
+}
+.vendor-mgmt-root .wt-form-input:read-only,
+.vendor-mgmt-root .wt-ui-body input:read-only {
+  background-color: var(--bg) !important;
+  opacity: 1 !important;
+}
+.vendor-mgmt-root .wt-ui-body input:-webkit-autofill,
+.vendor-mgmt-root .wt-ui-body input:-webkit-autofill:hover,
+.vendor-mgmt-root .wt-ui-body input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--bg) inset !important;
+  -webkit-text-fill-color: var(--dark) !important;
+}
+.vendor-mgmt-root .form-input,
+.vendor-mgmt-root .form-select,
+.vendor-mgmt-root .form-textarea {
+  background-color: var(--surface) !important;
+  color: var(--dark) !important;
+}
+.vendor-mgmt-root .btn-primary,
+.vendor-mgmt-root .btn-hero-primary,
+.vendor-mgmt-root .btn-banner-primary,
+.vendor-mgmt-root .wt-cta,
+.vendor-mgmt-root .wt-form-submit,
+.vendor-mgmt-root .form-submit {
+  color: var(--on-primary) !important;
+}
+.vendor-mgmt-root a.btn-secondary,
+.vendor-mgmt-root .btn-secondary {
+  background-color: transparent !important;
+}
+.vendor-mgmt-root .industries-section {
+  background-color: var(--band) !important;
+}
+.vendor-mgmt-root #end-banner.cta-banner {
+  background-color: var(--band) !important;
+}
 `
 
 export default function VendorManagementLandingPage() {

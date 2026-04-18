@@ -1,5 +1,108 @@
 import { useEffect, useRef, useState } from 'react'
 
+/**
+ * `public/fm-matrix.html` ships its own `.reveal` animation. The app `index.css`
+ * adds a global blur reveal — scope overrides + Tailwind/UA fixes (same structure
+ * as Vendor Management).
+ */
+const FM_MATRIX_ISOLATION_CSS = `
+.fm-matrix-root .reveal {
+  opacity: 0 !important;
+  transform: translateY(40px) !important;
+  filter: none !important;
+  will-change: auto !important;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.fm-matrix-root .reveal.visible,
+.fm-matrix-root .reveal.reveal--in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+.fm-matrix-root h1,
+.fm-matrix-root h2,
+.fm-matrix-root h3,
+.fm-matrix-root h4,
+.fm-matrix-root h5,
+.fm-matrix-root h6 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-matrix-root .reveal,
+  .fm-matrix-root .reveal.visible,
+  .fm-matrix-root .reveal.reveal--in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.fm-matrix-root .walkthrough-section {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root .features-section {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root .teams-section {
+  background-color: var(--band) !important;
+}
+.fm-matrix-root .contact-section {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root .usecase-card {
+  background-color: var(--surface) !important;
+}
+.fm-matrix-root .visual-dashboard {
+  background-color: var(--surface) !important;
+}
+.fm-matrix-root .solutions-visual {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--bg-cream) 100%) !important;
+}
+.fm-matrix-root .form-group input,
+.fm-matrix-root .form-group select,
+.fm-matrix-root .form-group textarea {
+  background-color: var(--surface) !important;
+  color: var(--dark) !important;
+}
+.fm-matrix-root .form-group input:-webkit-autofill,
+.fm-matrix-root .form-group input:-webkit-autofill:hover,
+.fm-matrix-root .form-group input:-webkit-autofill:focus,
+.fm-matrix-root .form-group textarea:-webkit-autofill,
+.fm-matrix-root .form-group textarea:-webkit-autofill:hover,
+.fm-matrix-root .form-group textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--dark) !important;
+}
+.fm-matrix-root button.btn-primary,
+.fm-matrix-root .btn-primary {
+  color: var(--on-primary) !important;
+}
+.fm-matrix-root button.btn-outline {
+  background-color: transparent !important;
+}
+.fm-matrix-root .walk-tab {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root .fm-matrix-team-tab {
+  background-color: var(--surface) !important;
+}
+.fm-matrix-root .fm-matrix-team-tab.active {
+  background-color: rgba(218, 119, 86, 0.05) !important;
+}
+.fm-matrix-root .pain-section {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root #end-banner.cta-banner {
+  background-color: var(--band) !important;
+}
+.fm-matrix-root footer {
+  background-color: var(--bg-cream) !important;
+}
+.fm-matrix-root .btn-banner-primary {
+  color: var(--on-primary) !important;
+}
+`
+
 export default function FmMatrixLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -24,7 +127,7 @@ export default function FmMatrixLandingPage() {
         }
 
         if (cancelled) return
-        setCssText(style)
+        setCssText(`${style}\n${FM_MATRIX_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -104,26 +207,35 @@ export default function FmMatrixLandingPage() {
       })
     })
 
-    // Testimonials deck
-    let ct = 0
-    const tc = Array.from(root.querySelectorAll<HTMLElement>('.testi-card'))
-    const td = Array.from(root.querySelectorAll<HTMLElement>('.testi-dot'))
-    const ut = (i: number) => {
-      ct = i
-      tc.forEach((c, j) => {
-        const o = (j - i + tc.length) % tc.length
-        c.style.zIndex = String(tc.length - o)
-        c.style.transform = `translateY(${o * 16}px) scale(${1 - o * 0.03})`
-        c.style.opacity = o === 0 ? '1' : o === 1 ? '0.7' : o === 2 ? '0.4' : '0.2'
-      })
-      td.forEach((d, j) => d.classList.toggle('active', j === i))
+    // Team use-case tabs
+    const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.fm-matrix-team-tab'))
+    const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.fm-matrix-teams-panel'))
+    const switchFmTeam = (teamId: string, tabEl?: HTMLElement) => {
+      teamTabs.forEach((t) => t.classList.remove('active'))
+      teamPanels.forEach((p) => p.classList.remove('active'))
+      tabEl?.classList.add('active')
+      root.querySelector<HTMLElement>(`#fm-team-${CSS.escape(teamId)}`)?.classList.add('active')
     }
-    td.forEach((d) => {
-      d.addEventListener('click', () => ut(Number.parseInt(d.dataset.index || '0', 10)))
+    const teamTabsAbort = new AbortController()
+    const { signal: teamTabsSignal } = teamTabsAbort
+    teamTabs.forEach((tab) => {
+      const teamId = tab.dataset.team
+      if (!teamId) return
+      const activate = (e: Event) => {
+        e.preventDefault()
+        switchFmTeam(teamId, tab)
+      }
+      tab.addEventListener('click', activate, { signal: teamTabsSignal })
+      tab.addEventListener(
+        'keydown',
+        (e) => {
+          if (e.key === 'Enter' || e.key === ' ') activate(e)
+        },
+        { signal: teamTabsSignal },
+      )
     })
-    const testimonialTimer = window.setInterval(() => {
-      if (tc.length) ut((ct + 1) % tc.length)
-    }, 4500)
+    const initialTeam = teamTabs.find((t) => t.classList.contains('active'))
+    if (initialTeam?.dataset.team) switchFmTeam(initialTeam.dataset.team, initialTeam)
 
     // Walkthrough tabs
     type WalkthroughDatum = { title: string; name: string; desc: string; highlights: string[] }
@@ -236,12 +348,12 @@ export default function FmMatrixLandingPage() {
       window.removeEventListener('scroll', onScroll)
       revealObserver.disconnect()
       countersObserver.disconnect()
-      window.clearInterval(testimonialTimer)
+      teamTabsAbort.abort()
     }
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="fm-matrix-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
