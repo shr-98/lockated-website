@@ -25,12 +25,16 @@
     --font: 'Poppins', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: only light;
+  }
   body {
     font-family: var(--font);
     background: var(--bg);
     color: var(--dark);
     overflow-x: hidden;
+    color-scheme: only light;
   }
 
   /* NOISE OVERLAY */
@@ -128,6 +132,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    background: var(--bg);
   }
 
   /* BENTO GRID BACKGROUND */
@@ -229,37 +234,6 @@
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* CLIENT STRIP */
-  .client-strip {
-    background: white;
-    border-top: 1px solid var(--divider);
-    border-bottom: 1px solid var(--divider);
-    padding: 22px 0;
-    overflow: hidden;
-  }
-  .client-strip-label {
-    text-align: center; font-size: 11px; font-weight: 600;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(44,44,44,0.4); margin-bottom: 18px;
-  }
-  .clients-track {
-    display: flex; align-items: center; gap: 64px;
-    width: max-content;
-    animation: scrollLeft 28s linear infinite;
-  }
-  .client-strip:hover .clients-track { animation-play-state: paused; }
-  .clients-wrapper { display: flex; overflow: hidden; }
-  @keyframes scrollLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .client-logo {
-    font-size: 14px; font-weight: 700; color: rgba(44,44,44,0.35);
-    white-space: nowrap; letter-spacing: -0.3px;
-    transition: color 0.25s ease;
-  }
-  .client-logo:hover { color: var(--primary); }
 
   /* SECTIONS */
   section { padding: 96px 48px; }
@@ -596,45 +570,6 @@
   }
   .wt-form-submit:hover { opacity: 0.9; }
 
-  /* TESTIMONIALS */
-  .testimonials-section { background: var(--bg); }
-  .testimonials-track-wrapper { overflow: hidden; margin-top: 52px; }
-  .testimonials-track {
-    display: flex; gap: 24px;
-    width: max-content;
-    animation: testimonialScroll 35s linear infinite;
-  }
-  .testimonials-section:hover .testimonials-track { animation-play-state: paused; }
-  @keyframes testimonialScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  .testimonial-card {
-    width: 380px; flex-shrink: 0;
-    background: white;
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 32px;
-    box-shadow: 0 4px 24px rgba(44,44,44,0.06);
-    transition: all 0.3s ease;
-  }
-  .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(44,44,44,0.12); }
-  .testimonial-stars { display: flex; gap: 3px; margin-bottom: 18px; }
-  .star { color: var(--warning); font-size: 14px; }
-  .testimonial-quote {
-    font-size: 15px; line-height: 1.7;
-    color: var(--dark); margin-bottom: 24px;
-    font-style: italic;
-  }
-  .testimonial-quote::before { content: '\201C'; font-size: 28px; color: var(--primary); line-height: 0; vertical-align: -8px; margin-right: 4px; }
-  .testimonial-author { display: flex; align-items: center; gap: 14px; }
-  .author-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800; color: white;
-    flex-shrink: 0;
-  }
-  .author-name { font-size: 14px; font-weight: 700; color: var(--dark); }
-  .author-title { font-size: 12px; color: rgba(44,44,44,0.5); margin-top: 1px; }
-  .author-company { font-size: 12px; font-weight: 600; color: var(--primary); }
-
   /* USE CASES - INDUSTRIES */
   .industries-section { background: white; }
   .industries-grid {
@@ -784,42 +719,44 @@
   .team-feature-icon { flex-shrink: 0; }
   .team-feature-icon svg { color: var(--primary); width: 16px; height: 16px; margin-top: 1px; }
 
-  /* END BANNER */
-  .cta-banner {
-    background: var(--dark);
+  /* END BANNER (light) */
+  #end-banner.cta-banner {
+    background: #fdfbf7;
     padding: 100px 48px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
   }
-  .cta-banner::before {
+  #end-banner.cta-banner::before {
     content: '';
     position: absolute;
     top: -60px; right: -60px;
     width: 360px; height: 360px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(218,119,86,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(218,119,86,0.12) 0%, transparent 70%);
   }
-  .cta-banner::after {
+  #end-banner.cta-banner::after {
     content: '';
     position: absolute;
     bottom: -80px; left: -80px;
     width: 400px; height: 400px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(121,140,94,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(121,140,94,0.08) 0%, transparent 70%);
   }
-  .cta-banner h2 {
+  #end-banner.cta-banner h2 {
     font-size: clamp(32px, 4vw, 56px); font-weight: 800;
-    color: white; letter-spacing: -1.5px; line-height: 1.1;
+    color: var(--dark); letter-spacing: -1.5px; line-height: 1.1;
     position: relative; z-index: 1;
   }
-  .cta-banner h2 .accent { color: var(--primary); }
-  .cta-banner p {
-    font-size: 17px; color: rgba(255,255,255,0.55);
+  #end-banner.cta-banner h2 .accent { color: var(--primary); }
+  #end-banner.cta-banner p {
+    font-size: 17px; color: rgba(44,44,44,0.6);
     margin: 16px auto 40px; max-width: 500px; line-height: 1.65;
     position: relative; z-index: 1;
   }
-  .cta-banner-btns { display: flex; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+  #end-banner.cta-banner .cta-banner-btns { display: flex; gap: 12px; justify-content: center; position: relative; z-index: 1; flex-wrap: wrap; }
   .btn-banner-primary {
     padding: 16px 40px; border-radius: 10px;
     background: var(--primary); color: white;
@@ -831,15 +768,15 @@
   .btn-banner-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(218,119,86,0.5); }
   .btn-banner-secondary {
     padding: 16px 40px; border-radius: 10px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    color: white; font-size: 15px; font-weight: 600;
-    text-decoration: none; background: transparent;
+    border: 1.5px solid var(--card-border);
+    color: var(--dark); font-size: 15px; font-weight: 600;
+    text-decoration: none; background: rgba(255,255,255,0.85);
     transition: all 0.25s ease;
   }
-  .btn-banner-secondary:hover { border-color: white; background: rgba(255,255,255,0.06); }
+  .btn-banner-secondary:hover { border-color: var(--primary); color: var(--primary); background: rgba(218,119,86,0.06); }
 
   /* CONTACT */
-  .contact-section { background: white; }
+  .contact-section { background: var(--bg); }
   .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
   .contact-info h3 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
   .contact-info p { font-size: 15px; color: rgba(44,44,44,0.6); line-height: 1.7; }
@@ -880,34 +817,35 @@
   }
   .form-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(218,119,86,0.4); }
 
-  /* FOOTER */
+  /* FOOTER (light) */
   footer {
-    background: var(--dark);
+    background: var(--bg);
     padding: 56px 48px 36px;
+    border-top: 1px solid var(--card-border);
   }
   .footer-top {
     display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 48px; padding-bottom: 40px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid var(--divider);
   }
   .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .footer-logo-mark {
     width: 32px; height: 32px; background: var(--primary);
     border-radius: 8px; display: flex; align-items: center; justify-content: center;
   }
-  .footer-logo-text { font-size: 16px; font-weight: 700; color: white; }
-  .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 280px; }
-  .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+  .footer-logo-text { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .footer-brand-desc { font-size: 13px; color: rgba(44,44,44,0.55); line-height: 1.7; max-width: 280px; }
+  .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(44,44,44,0.45); margin-bottom: 16px; }
   .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s ease; }
+  .footer-links a { font-size: 13.5px; color: rgba(44,44,44,0.65); text-decoration: none; transition: color 0.2s ease; }
   .footer-links a:hover { color: var(--primary); }
   .footer-bottom {
     display: flex; align-items: center; justify-content: space-between;
     padding-top: 28px;
-    font-size: 12.5px; color: rgba(255,255,255,0.35);
+    font-size: 12.5px; color: rgba(44,44,44,0.45);
   }
   .footer-bottom-links { display: flex; gap: 24px; }
-  .footer-bottom-links a { color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s ease; }
+  .footer-bottom-links a { color: rgba(44,44,44,0.45); text-decoration: none; transition: color 0.2s ease; }
   .footer-bottom-links a:hover { color: var(--primary); }
 
   /* SCROLL ANIMATIONS */
@@ -939,7 +877,7 @@
     <li><a href="#walkthrough">Walkthrough</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#teams">Teams</a></li>
-    <li><a href="#industries">Use Cases</a></li>
+    <li><a href="#use-cases">Use Cases</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-ctas">
@@ -2005,9 +1943,9 @@
   </div>
 </section>
 
-<!-- INDUSTRIES -->
-<section class="industries-section" id="industries">
-  <div class="section-label">Industry Use Cases</div>
+<!-- USE CASES -->
+<section class="industries-section" id="use-cases">
+  <div class="section-label">Use Cases</div>
   <div class="section-title">Built for the sectors<br>that run on vendors</div>
   <p class="section-sub">From manufacturing floors to hospital supply chains. VMS adapts to the compliance requirements of your industry.</p>
 
@@ -2116,14 +2054,14 @@
 </div>
 
 <!-- END BANNER -->
-<div class="cta-banner">
+<section id="end-banner" class="cta-banner" aria-label="Get started with Vendor Management">
   <h2>Stop managing vendors.<br>Start <span class="accent">governing</span> them.</h2>
   <p>Join procurement teams across India who replaced spreadsheet chaos with Vendor Management. Go live in weeks, not months.</p>
   <div class="cta-banner-btns">
     <a href="#contact" class="btn-banner-primary">Get Started Today</a>
     <a href="#contact" class="btn-banner-secondary">Book a Demo</a>
   </div>
-</div>
+</section>
 
 <!-- CONTACT -->
 <section class="contact-section" id="contact">
@@ -2238,7 +2176,7 @@
       <ul class="footer-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#walkthrough">Walkthrough</a></li>
-        <li><a href="#industries">Industries</a></li>
+        <li><a href="#use-cases">Use Cases</a></li>
         <li><a href="#teams">Team Use Cases</a></li>
         <li><a href="#contact">Pricing</a></li>
       </ul>
