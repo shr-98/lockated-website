@@ -813,7 +813,7 @@ nav.scrolled {
 /* ── WALKTHROUGH ── */
 #walkthrough {
   padding: 120px 0;
-  background: var(--bg-mid);
+  background: #fdfbf7;
 }
 .wt-tabs {
   display: flex;
@@ -827,10 +827,10 @@ nav.scrolled {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: 1px solid var(--border-soft);
-  background: transparent;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(44,44,44,0.12);
+  background: #f0ebe3;
   color: var(--text-muted);
   font-size: 13px;
   font-weight: 500;
@@ -839,10 +839,10 @@ nav.scrolled {
   font-family: var(--font-body);
 }
 .wt-tab i { font-size: 12px; }
-.wt-tab:hover { color: var(--text); border-color: rgba(44,44,44,0.2); background: var(--bg-card); }
+.wt-tab:hover { color: var(--text); border-color: rgba(44,44,44,0.2); background: #e8e2d8; }
 .wt-tab.active {
-  background: rgba(218,119,86,0.1);
-  border-color: rgba(218,119,86,0.4);
+  background: rgba(218,119,86,0.14);
+  border-color: rgba(218,119,86,0.45);
   color: var(--brand);
 }
 .wt-layout {
@@ -864,13 +864,15 @@ nav.scrolled {
 .feat-panel.visible { display: block; }
 .wt-app-img {
   width: auto;
-  max-width: 78%;
-  max-height: 560px;
+  max-width: min(420px, 82vw);
+  max-height: min(640px, 78vh);
+  height: auto;
   object-fit: contain;
   display: block;
   background: transparent;
   margin: 0 auto;
-  border-radius: 40px;
+  border-radius: 36px;
+  box-shadow: 0 24px 60px rgba(44, 44, 44, 0.12);
 }
 .wt-info { padding-top: 8px; }
 .wt-info-label {
@@ -899,11 +901,23 @@ nav.scrolled {
 .wt-feat-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 14px;
   color: var(--text-soft);
 }
-.wt-feat-row i { color: var(--brand); font-size: 13px; width: 16px; }
+.wt-feat-row i {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
 /* Mini charts */
 .mini-chart { }
@@ -1754,7 +1768,7 @@ footer {
   <div class="container">
     <div class="sec-header fade-in">
       <div class="section-eyebrow">Product Walkthrough</div>
-      <h2 class="section-title">See it <span class="brand-text">in action</span>.</h2>
+      <h2 class="section-title">See it <span class="brand-text">in action.</span></h2>
       <p class="section-sub">From buyer referral to home loan commission — explore every feature of Post Sales.</p>
     </div>
     <div class="wt-tabs fade-in" id="wtTabs">
@@ -1771,43 +1785,43 @@ footer {
         <div class="wt-screen-content img-panel" id="wtScreenContent">
           <!-- Panel 0: Home -->
           <div class="feat-panel visible" id="wt-panel-0">
-            <img src="/Users/abcom/Desktop/Post sales/images/Home page.png" alt="Home Screen" class="wt-app-img">
+            <img src="/post-sales-walkthrough/home.png" alt="Post Sales home screen" class="wt-app-img" width="900" height="1800" loading="eager" decoding="async">
           </div>
           <!-- Panel 1: Journey -->
           <div class="feat-panel" id="wt-panel-1">
-            <img src="/Users/abcom/Desktop/Post sales/images/Journey.avif" alt="My Booking Journey" class="wt-app-img">
+            <img src="/post-sales-walkthrough/journey.png" alt="Customer journey dashboard" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
           <!-- Panel 2: Support -->
           <div class="feat-panel" id="wt-panel-2">
-            <img src="/Users/abcom/Desktop/Post sales/images/Support.png" alt="Support & Case Management" class="wt-app-img">
+            <img src="/post-sales-walkthrough/support.png" alt="Support and case management" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
           <!-- Panel 3: Referral -->
           <div class="feat-panel" id="wt-panel-3">
-            <img src="/Users/abcom/Desktop/Post sales/images/Referral.png" alt="Referral — How Does It Work" class="wt-app-img">
+            <img src="/post-sales-walkthrough/referral.png" alt="Referral hub" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
           <!-- Panel 4: Payments -->
           <div class="feat-panel" id="wt-panel-4">
-            <img src="/Users/abcom/Desktop/Post sales/images/payments.webp" alt="Payments Due" class="wt-app-img">
+            <img src="/post-sales-walkthrough/payments.webp" alt="Payments and schedule" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
           <!-- Panel 5: Construction -->
           <div class="feat-panel" id="wt-panel-5">
-            <img src="/Users/abcom/Desktop/Post sales/images/construction.webp" alt="Construction Updates" class="wt-app-img">
+            <img src="/post-sales-walkthrough/construction.webp" alt="Construction updates" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
           <!-- Panel 6: My Account -->
           <div class="feat-panel" id="wt-panel-6">
-            <img src="/Users/abcom/Desktop/Post sales/images/My account.png" alt="My Account" class="wt-app-img">
+            <img src="/post-sales-walkthrough/my-account.png" alt="My account overview" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
           </div>
         </div>
       </div>
       <div class="wt-info" id="wtInfo">
-        <div class="wt-info-label" id="wtInfoLabel">Feature 1 of 6</div>
-        <h3 class="wt-info-title" id="wtInfoTitle">Every buyer. Every milestone. Zero missed steps.</h3>
-        <p class="wt-info-desc" id="wtInfoDesc">The Customer Journey Dashboard guides buyers from booking to possession with live milestones, pending action alerts, and next-step prompts. Buyers who see their journey trust you more and refer you more.</p>
+        <div class="wt-info-label" id="wtInfoLabel">Feature 1 of 7</div>
+        <h3 class="wt-info-title" id="wtInfoTitle">Everything a buyer needs. Right on the home screen.</h3>
+        <p class="wt-info-desc" id="wtInfoDesc">The Home screen gives buyers instant access to their unit, account, documents, support, loan assistance, and loyalty program — all from a single personalised dashboard with their property project front and centre.</p>
         <div class="wt-features-list" id="wtFeatList">
-          <div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>Live milestone tracking from Booking to Possession</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>Pending action alerts with one-tap resolution</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>Multi-project view for multiple unit holders</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>Referral prompts triggered at every completed milestone</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Personalised welcome with unit and project details</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Quick-access tiles: My Account, My Unit, Support, Loan Assistance, Documents, Loyalty</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Payment Milestone summary with View All shortcut</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Property carousel with new launch highlights</span></div>
         </div>
         <a href="#contact" class="btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
       </div>
@@ -2204,7 +2218,7 @@ const wtData = [
   {
     label: "postsales.app · My Journey",
     featureNum: "Feature 2 of 7",
-    title: "Every buyer. Every milestone. Zero missed steps.",
+    title: "Every buyer. Every milestone. No missed steps.",
     desc: "The Customer Journey Dashboard guides buyers from booking to possession with live milestones, pending action alerts, and next-step prompts. Buyers who see their journey trust you more and refer you more.",
     feats: ["Live milestone tracking from Booking to Possession","Pending action alerts with one-tap resolution","Multi-project view for multiple unit holders","Referral prompts triggered at every completed milestone"]
   },
@@ -2249,12 +2263,13 @@ function selectWtTab(idx) {
   document.querySelectorAll('.wt-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
   document.querySelectorAll('.feat-panel').forEach((p,i) => p.classList.toggle('visible', i===idx));
   const d = wtData[idx];
-  document.getElementById('wtScreenTitle').textContent = d.label;
+  const wtScreenTitle = document.getElementById('wtScreenTitle');
+  if (wtScreenTitle) wtScreenTitle.textContent = d.label;
   document.getElementById('wtInfoLabel').textContent = d.featureNum;
   document.getElementById('wtInfoTitle').textContent = d.title;
   document.getElementById('wtInfoDesc').textContent = d.desc;
   const list = document.getElementById('wtFeatList');
-  list.innerHTML = d.feats.map(f => `<div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>${f}</span></div>`).join('');
+  list.innerHTML = d.feats.map(f => `<div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>${f}</span></div>`).join('');
 }
 
 // ── TEAM TABS ──

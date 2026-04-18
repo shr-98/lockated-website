@@ -168,7 +168,7 @@ export default function PostSalesLandingPage() {
       {
         label: 'postsales.app · My Journey',
         featureNum: 'Feature 2 of 7',
-        title: 'Every buyer. Every milestone. Zero missed steps.',
+        title: 'Every buyer. Every milestone. No missed steps.',
         desc: 'The Customer Journey Dashboard guides buyers from booking to possession with live milestones, pending action alerts, and next-step prompts. Buyers who see their journey trust you more and refer you more.',
         feats: [
           'Live milestone tracking from Booking to Possession',
@@ -395,7 +395,7 @@ ${chipSvgs}
       if (wtInfoDesc) wtInfoDesc.textContent = d.desc
       if (wtFeatList) {
         wtFeatList.innerHTML = d.feats
-          .map((f) => `<div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>${f}</span></div>`)
+          .map((f) => `<div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>${f}</span></div>`)
           .join('')
       }
     }
