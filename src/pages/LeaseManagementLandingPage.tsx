@@ -117,11 +117,157 @@ export default function LeaseManagementLandingPage() {
     }
     document.addEventListener('keydown', onKeyDown)
 
+    const cleanups: Array<() => void> = []
+
+    // Role switcher (Lessee / Lessor)
+    root.querySelectorAll<HTMLButtonElement>('.role-btn').forEach((btn) => {
+      const handler = () => {
+        const role = btn.dataset.role
+        if (!role) return
+        root.querySelectorAll('.role-btn').forEach((b) => b.classList.remove('active'))
+        btn.classList.add('active')
+        root.querySelectorAll<HTMLElement>('[data-role-layout]').forEach((layout) => {
+          layout.style.display = layout.dataset.roleLayout === role ? 'grid' : 'none'
+        })
+      }
+      btn.addEventListener('click', handler)
+      cleanups.push(() => btn.removeEventListener('click', handler))
+    })
+
+    // USP tabs — scoped to each [data-role-layout] block
+    root.querySelectorAll<HTMLElement>('.usp-tab').forEach((tab) => {
+      const handler = () => {
+        const panelId = tab.dataset.panel
+        const layout = tab.closest<HTMLElement>('[data-role-layout]')
+        if (!panelId || !layout) return
+        layout.querySelectorAll('.usp-tab').forEach((t) => t.classList.remove('active'))
+        layout.querySelectorAll('.usp-panel').forEach((p) => p.classList.remove('active'))
+        tab.classList.add('active')
+        const panel = root.querySelector<HTMLElement>('#' + CSS.escape(panelId))
+        panel?.classList.add('active')
+        layout.querySelectorAll<HTMLElement>('.mock-progress-fill').forEach((bar) => {
+          const w = bar.style.width
+          bar.style.width = '0'
+          window.setTimeout(() => {
+            bar.style.width = w
+          }, 50)
+        })
+      }
+      tab.addEventListener('click', handler)
+      cleanups.push(() => tab.removeEventListener('click', handler))
+    })
+
+    // Walkthrough tabs
+    root.querySelectorAll<HTMLElement>('.wt-tab').forEach((tab) => {
+      const handler = () => {
+        const panelId = tab.dataset.wt
+        if (!panelId) return
+        root.querySelectorAll('.wt-tab').forEach((t) => t.classList.remove('active'))
+        root.querySelectorAll('.wt-panel').forEach((p) => p.classList.remove('active'))
+        tab.classList.add('active')
+        root.querySelector<HTMLElement>('#' + CSS.escape(panelId))?.classList.add('active')
+      }
+      tab.addEventListener('click', handler)
+      cleanups.push(() => tab.removeEventListener('click', handler))
+    })
+
+    // Team tabs
+    root.querySelectorAll<HTMLElement>('.team-tab').forEach((tab) => {
+      const handler = () => {
+        const panelId = tab.dataset.team
+        if (!panelId) return
+        root.querySelectorAll('.team-tab').forEach((t) => t.classList.remove('active'))
+        root.querySelectorAll('.team-panel').forEach((p) => p.classList.remove('active'))
+        tab.classList.add('active')
+        root.querySelector<HTMLElement>('#' + CSS.escape(panelId))?.classList.add('active')
+      }
+      tab.addEventListener('click', handler)
+      cleanups.push(() => tab.removeEventListener('click', handler))
+    })
+
+    // Testimonials carousel (matches inline script in reference HTML)
+    const testiData = [
+      {
+        quote:
+          "Month-end rent reconciliation used to take my Finance team four days. With Lockated it's a half-day. The GST-compliant invoices alone save us three working hours per property per month. The data sovereignty was non-negotiable for our board — and Lockated was the only platform that didn't store our data on their cloud.",
+        name: 'Ananya Mehta',
+        role: 'VP Corporate Real Estate, FMCG Enterprise',
+        initials: 'AM',
+        sector: 'Corporate',
+      },
+      {
+        quote:
+          'The compliance module alone was worth it. We had three documents expire before Lockated. In the 14 months since, zero. Our internal audit team actually congratulated us.',
+        name: 'Priya Kulkarni',
+        role: 'Head of Real Estate, Pharmacy Chain',
+        initials: 'PK',
+        sector: 'Retail',
+      },
+      {
+        quote:
+          'We were tracking 150 branch leases on five Excel files. Lockated gave us one dashboard and our Head of RE finally stopped getting called at 11pm about expiry dates.',
+        name: 'Rajesh Sharma',
+        role: 'CFO, Mid-size NBFC',
+        initials: 'RS',
+        sector: 'BFSI',
+      },
+      {
+        quote:
+          'Before Lockated, our AMC contracts lived in a shared drive nobody updated. In the first quarter we identified three expired contracts we were still paying for. The vendor performance scores completely changed how we select and retain service partners across our facilities.',
+        name: 'Vikram Nair',
+        role: 'Head of Facilities, IT/ITeS Company',
+        initials: 'VN',
+        sector: 'IT/ITeS',
+      },
+    ]
+
+    const stack = root.querySelector<HTMLElement>('#testiStack')
+    const btnNext = root.querySelector<HTMLElement>('#testiBtnNext')
+    const btnPrev = root.querySelector<HTMLElement>('#testiBtnPrev')
+    const testiDots = root.querySelectorAll<HTMLElement>('.testi-dot')
+
+    let testiIdx = 0
+    const setTesti = (idx: number) => {
+      if (!stack) return
+      testiIdx = (idx + testiData.length) % testiData.length
+      const d = testiData[testiIdx]
+      const front = stack.querySelector<HTMLElement>('.testi-card:last-child')
+      if (!front) return
+      front.innerHTML = `
+    <div class="testi-quote-mark">"</div>
+    <p class="testi-text">${d.quote.replace(/</g, '&lt;')}</p>
+    <div class="testi-author">
+      <div class="testi-avatar">${d.initials}</div>
+      <div><div class="testi-name">${d.name.replace(/</g, '&lt;')}</div><div class="testi-role">${d.role.replace(/</g, '&lt;')}</div></div>
+      <span class="testi-company-badge">${d.sector.replace(/</g, '&lt;')}</span>
+    </div>`
+      testiDots.forEach((dot, i) => dot.classList.toggle('active', i === testiIdx))
+    }
+
+    const onNext = () => setTesti(testiIdx + 1)
+    const onPrev = () => setTesti(testiIdx - 1)
+    btnNext?.addEventListener('click', onNext)
+    btnPrev?.addEventListener('click', onPrev)
+    if (btnNext) cleanups.push(() => btnNext.removeEventListener('click', onNext))
+    if (btnPrev) cleanups.push(() => btnPrev.removeEventListener('click', onPrev))
+
+    testiDots.forEach((dot, i) => {
+      const h = () => setTesti(i)
+      dot.addEventListener('click', h)
+      cleanups.push(() => dot.removeEventListener('click', h))
+    })
+
+    const testiInterval = window.setInterval(() => setTesti(testiIdx + 1), 5000)
+
     return () => {
+      window.clearInterval(testiInterval)
+      cleanups.forEach((fn) => fn())
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('keydown', onKeyDown)
       revealObserver.disconnect()
       counterObserver.disconnect()
+      delete (window as unknown as { openUCModal?: unknown }).openUCModal
+      delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
     }
   }, [bodyHtml])
 
