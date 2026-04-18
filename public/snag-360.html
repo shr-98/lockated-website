@@ -1817,6 +1817,16 @@
         position: relative;
         overflow: hidden;
       }
+      .teams-section::before {
+        content: '';
+        position: absolute;
+        top: -200px;
+        left: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(121, 140, 94, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+      }
       .teams-inner {
         max-width: 1400px;
         margin: 0 auto;
@@ -1897,6 +1907,114 @@
         letter-spacing: 0.08em;
         margin-bottom: 20px;
         width: fit-content;
+      }
+      .team-headline {
+        font-size: clamp(26px, 3vw, 36px);
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        line-height: 1.15;
+        color: var(--dark);
+        margin-bottom: 16px;
+      }
+      .team-desc {
+        font-size: 15px;
+        line-height: 1.7;
+        color: rgba(44, 44, 44, 0.58);
+        margin-bottom: 28px;
+      }
+      .team-features {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 36px;
+        padding: 0;
+      }
+      .team-features > li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13.5px;
+        color: rgba(44, 44, 44, 0.65);
+        line-height: 1.5;
+      }
+      .team-features > li::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 1px;
+        background: var(--primary-8);
+        border: 1.5px solid var(--primary);
+        background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4L3.5 6L6.5 2' stroke='%23DA7756' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 8px;
+      }
+      .team-visual {
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(196, 184, 157, 0.4);
+        box-shadow: 0 24px 60px rgba(44, 44, 44, 0.08);
+      }
+      .team-visual-header {
+        padding: 14px 18px;
+        background: rgba(246, 244, 238, 0.8);
+        border-bottom: 1px solid rgba(196, 184, 157, 0.25);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .team-visual-body {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .team-visual-stat {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: var(--cream);
+        border-radius: 10px;
+        border: 1px solid rgba(196, 184, 157, 0.2);
+      }
+      .tvs-label {
+        font-size: 12px;
+        color: rgba(44, 44, 44, 0.55);
+      }
+      .tvs-val {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .tvs-val.green {
+        color: var(--olive);
+      }
+      .tvs-val.orange {
+        color: var(--primary);
+      }
+      .productivity-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        background: var(--dark);
+        border-radius: 12px;
+        color: #fff;
+        margin-top: 4px;
+      }
+      .productivity-pill .pval {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .productivity-pill .ptxt {
+        font-size: 12px;
+        opacity: 0.6;
       }
 
       /* ── END BANNER ── */
@@ -3594,59 +3712,226 @@
         </p>
 
         <div class="teams-tabs reveal">
-          <button class="team-tab active" onclick="switchTeam(0)">QC Team</button>
-          <button class="team-tab" onclick="switchTeam(1)">Site Engineers</button>
-          <button class="team-tab" onclick="switchTeam(2)">PMO</button>
-          <button class="team-tab" onclick="switchTeam(3)">FM Team</button>
-          <button class="team-tab" onclick="switchTeam(4)">Top Management</button>
-          <button class="team-tab" onclick="switchTeam(5)">IT Team</button>
+          <button class="team-tab active" onclick="switchTeam(0)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4" />
+              <path d="M2 14C2 11.2 4.7 9 8 9C11.3 9 14 11.2 14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            QC Team
+          </button>
+          <button class="team-tab" onclick="switchTeam(1)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 3H13V13H3V3Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path d="M6 8L7.5 9.5L10 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            Site Engineers
+          </button>
+          <button class="team-tab" onclick="switchTeam(2)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4" />
+              <path d="M5 8H11M5 5H11M5 11H8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            PMO
+          </button>
+          <button class="team-tab" onclick="switchTeam(3)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 12V8L8 4L13 8V12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path d="M6 12H10V8H6V12Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            FM Team
+          </button>
+          <button class="team-tab" onclick="switchTeam(4)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M2 11L5.5 3.5L8.5 8.5L10.5 5.5L13 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Top Management
+          </button>
+          <button class="team-tab" onclick="switchTeam(5)">
+            <svg viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4" />
+              <path d="M8 6V10M5.5 8H10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            IT Team
+          </button>
         </div>
 
         <div class="team-content active" id="team-0">
           <div class="team-info">
             <div class="team-badge">QC / Quality Control Team</div>
-            <div style="font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -0.8px; line-height: 1.15; color: var(--dark); margin-bottom: 16px;">
-              Their primary work tool. On site. Every day.
+            <div class="team-headline">Their primary work tool. On site. Every day.</div>
+            <div class="team-desc">
+              Quality control teams replace paper checklists, WhatsApp photo sharing, and manual Excel snag registers with one mobile app. Every snag is traceable. Every closure is timestamped. No follow-up calls needed.
             </div>
-            <div style="font-size: 15px; line-height: 1.7; color: rgba(44,44,44,0.58); margin-bottom: 28px;">
-              Replace paper checklists and WhatsApp with one mobile workflow and full traceability.
+            <ul class="team-features">
+              <li>Log snags in under 30 seconds with annotated photo evidence</li>
+              <li>Complete multi-level checklists stage by stage on mobile</li>
+              <li>Real-time closure tracking without manual follow-up</li>
+              <li>Personal productivity automatically tracked in dashboard</li>
+            </ul>
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                background: var(--primary-8);
+                border: 1px solid rgba(218, 119, 86, 0.2);
+                border-radius: 9px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--primary);
+              "
+            >
+              3 to 5 hours saved per inspector daily
             </div>
           </div>
-          <div style="background:#fff;border-radius:24px;border:1px solid rgba(196,184,157,0.4);padding:24px;">
-            <div style="font-weight:700;">Inspector — Daily View</div>
-            <div style="margin-top:12px;color:rgba(44,44,44,0.6);">Demo visual placeholder.</div>
+          <div class="team-visual">
+            <div class="team-visual-header">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+              <span style="font-size: 11px; color: rgba(44, 44, 44, 0.4); margin-left: 8px">Inspector — Daily View</span>
+            </div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat">
+                <div class="tvs-label">Snags raised today</div>
+                <div class="tvs-val orange">8</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Snags closed today</div>
+                <div class="tvs-val green">11</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Checklist completion</div>
+                <div class="tvs-val">74%</div>
+              </div>
+              <div class="productivity-pill">
+                <div>
+                  <div class="pval">3h 47m</div>
+                  <div class="ptxt">saved vs. manual today</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="team-content" id="team-1">
           <div class="team-info">
             <div class="team-badge">Site Engineering / Project Execution</div>
-            <div style="font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -0.8px; line-height: 1.15; color: var(--dark); margin-bottom: 16px;">
-              Know exactly what to fix. No calls needed.
+            <div class="team-headline">Know exactly what to fix. No calls needed.</div>
+            <div class="team-desc">
+              Site engineers receive assigned snags with annotated photo evidence. They mark repairs complete, attach repair photos, and get re-verified by supervisor. The entire cycle is digital and accountable.
             </div>
-            <div style="font-size: 15px; line-height: 1.7; color: rgba(44,44,44,0.58); margin-bottom: 28px;">
-              Assigned snags + annotated photos mean clear instructions and accountability.
+            <ul class="team-features">
+              <li>Receive assigned snags with annotated photo clarity</li>
+              <li>Mark repair complete with evidence photo attached</li>
+              <li>No verbal handoff — instructions embedded in the snag</li>
+              <li>Repair accountability tracked per engineer automatically</li>
+            </ul>
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                background: var(--primary-8);
+                border: 1px solid rgba(218, 119, 86, 0.2);
+                border-radius: 9px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--primary);
+              "
+            >
+              Zero disputes on whether a repair was done
             </div>
           </div>
-          <div style="background:#fff;border-radius:24px;border:1px solid rgba(196,184,157,0.4);padding:24px;">
-            <div style="font-weight:700;">Reviewer — Assigned Snags</div>
-            <div style="margin-top:12px;color:rgba(44,44,44,0.6);">Demo visual placeholder.</div>
+          <div class="team-visual">
+            <div class="team-visual-header">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+              <span style="font-size: 11px; color: rgba(44, 44, 44, 0.4); margin-left: 8px">Reviewer — Assigned Snags</span>
+            </div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat">
+                <div class="tvs-label">Snags assigned to me</div>
+                <div class="tvs-val orange">6</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Repairs marked done today</div>
+                <div class="tvs-val green">9</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Pending verification</div>
+                <div class="tvs-val">3</div>
+              </div>
+              <div class="productivity-pill">
+                <div>
+                  <div class="pval">0</div>
+                  <div class="ptxt">disputes on repair completion</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="team-content" id="team-2">
           <div class="team-info">
             <div class="team-badge">Project Management Office</div>
-            <div style="font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -0.8px; line-height: 1.15; color: var(--dark); margin-bottom: 16px;">
-              Portfolio quality health without status calls.
+            <div class="team-headline">Portfolio quality health without a single status call.</div>
+            <div class="team-desc">
+              The PMO monitors quality scores, stage gate progress, and snag velocity across all active projects in real time. Weekly reporting is automated. Intervention happens before problems escalate.
             </div>
-            <div style="font-size: 15px; line-height: 1.7; color: rgba(44,44,44,0.58); margin-bottom: 28px;">
-              Monitor stage gate progress, snag velocity, and quality score in real time.
+            <ul class="team-features">
+              <li>Portfolio-level quality score visible at all times</li>
+              <li>Stage gate progress across multiple projects in one view</li>
+              <li>Weekly quality reports automated with zero manual effort</li>
+              <li>Proactive alerts for overdue snags and blocked gates</li>
+            </ul>
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                background: var(--primary-8);
+                border: 1px solid rgba(218, 119, 86, 0.2);
+                border-radius: 9px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--primary);
+              "
+            >
+              Weekly reporting automated — zero manual assembly
             </div>
           </div>
-          <div style="background:#fff;border-radius:24px;border:1px solid rgba(196,184,157,0.4);padding:24px;">
-            <div style="font-weight:700;">PMO — Portfolio Dashboard</div>
-            <div style="margin-top:12px;color:rgba(44,44,44,0.6);">Demo visual placeholder.</div>
+          <div class="team-visual">
+            <div class="team-visual-header">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+              <span style="font-size: 11px; color: rgba(44, 44, 44, 0.4); margin-left: 8px">PMO — Portfolio Dashboard</span>
+            </div>
+            <div class="team-visual-body">
+              <div class="team-visual-stat">
+                <div class="tvs-label">Active projects monitored</div>
+                <div class="tvs-val">7</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Portfolio quality score</div>
+                <div class="tvs-val green">84.2</div>
+              </div>
+              <div class="team-visual-stat">
+                <div class="tvs-label">Stage gates cleared this week</div>
+                <div class="tvs-val orange">3</div>
+              </div>
+              <div class="productivity-pill">
+                <div>
+                  <div class="pval">Auto</div>
+                  <div class="ptxt">weekly quality reports sent</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
