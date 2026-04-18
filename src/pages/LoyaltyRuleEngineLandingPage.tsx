@@ -9,6 +9,142 @@ type IndustryDatum = {
   metrics: { val: string; label: string }[]
 }
 
+type LoyaltyRuleWindow = Window & typeof globalThis & {
+  openIndustry?: (id: string) => void
+  closeIndustry?: (_e: unknown, force?: boolean) => void
+  submitForm?: () => void
+}
+
+const LOYALTY_RULE_ISOLATION_CSS = `
+.loyalty-rule-root,
+.loyalty-rule-root * {
+  color-scheme: only light !important;
+}
+.loyalty-rule-root .reveal {
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
+  filter: none !important;
+  will-change: auto !important;
+  transition: opacity 0.6s ease, transform 0.6s ease !important;
+}
+.loyalty-rule-root .reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+.loyalty-rule-root h1,
+.loyalty-rule-root h2,
+.loyalty-rule-root h3,
+.loyalty-rule-root h4,
+.loyalty-rule-root h5,
+.loyalty-rule-root h6 {
+  font-family: var(--font, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.loyalty-rule-root .walkthrough-section,
+.loyalty-rule-root .contact-section,
+.loyalty-rule-root footer {
+  background: var(--cream, #F6F4EE) !important;
+}
+.loyalty-rule-root .walkthrough-title,
+.loyalty-rule-root .feature-name,
+.loyalty-rule-root .feature-screen-title,
+.loyalty-rule-root .cta-headline,
+.loyalty-rule-root .footer-logo-text,
+.loyalty-rule-root .footer-col-title,
+.loyalty-rule-root .footer-copy,
+.loyalty-rule-root .contact-info-headline,
+.loyalty-rule-root .form-title,
+.loyalty-rule-root .office-city {
+  color: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .walkthrough-sub,
+.loyalty-rule-root .feature-desc,
+.loyalty-rule-root .feature-bullet span,
+.loyalty-rule-root .section-sub,
+.loyalty-rule-root .cta-sub,
+.loyalty-rule-root .footer-brand-desc,
+.loyalty-rule-root .footer-link,
+.loyalty-rule-root .footer-legal a,
+.loyalty-rule-root .contact-info-sub,
+.loyalty-rule-root .office-address,
+.loyalty-rule-root .form-sub,
+.loyalty-rule-root .form-label {
+  color: rgba(44, 44, 44, 0.62) !important;
+}
+.loyalty-rule-root .feature-tabs {
+  border-bottom-color: rgba(44, 44, 44, 0.1) !important;
+}
+.loyalty-rule-root .feature-tab {
+  color: rgba(44, 44, 44, 0.45) !important;
+}
+.loyalty-rule-root .feature-tab.active {
+  color: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .feature-screen,
+.loyalty-rule-root .feature-screen-body,
+.loyalty-rule-root .wallet-screen-card,
+.loyalty-rule-root .int-flow-card,
+.loyalty-rule-root .team-visual,
+.loyalty-rule-root .team-visual-body {
+  background: var(--surface, #F0EAE1) !important;
+  color: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .feature-screen {
+  border: 1px solid rgba(196, 184, 157, 0.45) !important;
+  box-shadow: 0 20px 48px rgba(44, 44, 44, 0.09) !important;
+}
+.loyalty-rule-root .feature-screen-header,
+.loyalty-rule-root .team-visual-header {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-bottom: 1px solid rgba(196, 184, 157, 0.28) !important;
+}
+.loyalty-rule-root .feature-screen-body *,
+.loyalty-rule-root .team-visual-body * {
+  color: inherit;
+}
+.loyalty-rule-root .feature-screen-body svg [stroke='white'],
+.loyalty-rule-root .team-visual-body svg [stroke='white'] {
+  stroke: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .feature-screen-body svg [fill='white'],
+.loyalty-rule-root .team-visual-body svg [fill='white'] {
+  fill: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .cta-banner {
+  background: var(--band, #E8E2D6) !important;
+}
+.loyalty-rule-root .cta-eyebrow,
+.loyalty-rule-root .accent {
+  color: var(--primary, #DA7756) !important;
+}
+.loyalty-rule-root .btn-primary,
+.loyalty-rule-root .btn-hero-primary,
+.loyalty-rule-root .btn-cta-primary,
+.loyalty-rule-root .btn-form-submit {
+  color: var(--cream, #F6F4EE) !important;
+}
+.loyalty-rule-root .btn-ghost,
+.loyalty-rule-root .btn-hero-outline,
+.loyalty-rule-root .btn-cta-outline {
+  background: transparent !important;
+}
+.loyalty-rule-root .contact-form-area,
+.loyalty-rule-root .form-input,
+.loyalty-rule-root .form-select,
+.loyalty-rule-root .form-textarea {
+  background: var(--surface, #F0EAE1) !important;
+  color: var(--dark, #2C2C2C) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .loyalty-rule-root .reveal,
+  .loyalty-rule-root .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+`
+
 export default function LoyaltyRuleEngineLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -25,6 +161,56 @@ export default function LoyaltyRuleEngineLandingPage() {
         const text = await res.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
 
+        doc.querySelector('.clients-section')?.remove()
+        doc.querySelector('.testimonials-section')?.remove()
+        doc.querySelector('a[href="#testimonials"]')?.closest('li')?.remove()
+
+        const nav = doc.querySelector('#navbar')
+        const navLinks = nav?.querySelector('.nav-links')
+        if (navLinks) {
+          const painLink = doc.createElement('li')
+          painLink.innerHTML = '<a href="#pain-section">Pain Points</a>'
+          const walkLink = navLinks.querySelector('a[href="#walkthrough"]')?.closest('li')
+          const featuresLink = navLinks.querySelector('a[href="#features"]')?.closest('li')
+          const teamsLink = doc.createElement('li')
+          teamsLink.innerHTML = '<a href="#teams">Teams</a>'
+          const useCasesLink = navLinks.querySelector('a[href="#use-cases"]')?.closest('li')
+          const contactLink = navLinks.querySelector('a[href="#contact"]')?.closest('li')
+
+          navLinks.innerHTML = ''
+          ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink, contactLink].forEach((item) => {
+            if (item) navLinks.appendChild(item)
+          })
+        }
+
+        const hero = doc.querySelector('.hero')
+        const pain = doc.querySelector('#pain-section')
+        const walkthrough = doc.querySelector('#walkthrough')
+        const features = doc.querySelector('#features')
+        const teams = doc.querySelector('#teams')
+        const useCases = doc.querySelector('#use-cases')
+        const popup = doc.querySelector('#industryPopup')
+        const endingBanner = doc.querySelector('.cta-banner')
+        const contact = doc.querySelector('#contact')
+        const footer = doc.querySelector('footer')
+
+        doc.body.innerHTML = ''
+        ;[
+          nav,
+          hero,
+          pain,
+          walkthrough,
+          features,
+          teams,
+          useCases,
+          popup,
+          endingBanner,
+          contact,
+          footer,
+        ].forEach((node) => {
+          if (node) doc.body.appendChild(node)
+        })
+
         const styles = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')
           .join('\n')
@@ -35,7 +221,7 @@ export default function LoyaltyRuleEngineLandingPage() {
         }
 
         if (cancelled) return
-        setCssText(styles)
+  setCssText(`${styles}\n${LOYALTY_RULE_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -55,6 +241,7 @@ export default function LoyaltyRuleEngineLandingPage() {
     if (!rootEl) return
     if (!bodyHtml) return
     const root = rootEl
+    const loyaltyWindow: LoyaltyRuleWindow = window
 
     // NAV SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -156,27 +343,6 @@ export default function LoyaltyRuleEngineLandingPage() {
       })
     })
 
-    // TESTIMONIALS
-    let currentTesti = 0
-    const cards = Array.from(root.querySelectorAll<HTMLElement>('.testi-card'))
-    const dots = Array.from(root.querySelectorAll<HTMLElement>('.testi-dot'))
-    const classes = ['card-active', 'card-back1', 'card-back2', 'card-back3']
-    const showTesti = (idx: number) => {
-      cards.forEach((c, i) => {
-        c.classList.remove('card-active', 'card-back1', 'card-back2', 'card-back3')
-        const offset = (i - idx + cards.length) % cards.length
-        if (offset < classes.length) c.classList.add(classes[offset]!)
-      })
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx))
-      currentTesti = idx
-    }
-    dots.forEach((d, i) => d.addEventListener('click', () => showTesti(i)))
-    const testiTimer = window.setInterval(() => {
-      if (!cards.length) return
-      showTesti((currentTesti + 1) % cards.length)
-    }, 4000)
-    showTesti(0)
-
     // TEAMS TABS
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-panel'))
@@ -254,7 +420,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       },
     }
 
-    ;(window as any).openIndustry = (id: string) => {
+    loyaltyWindow.openIndustry = (id: string) => {
       const data = industryData[id]
       if (!data) return
       const popupBody = root.querySelector<HTMLElement>('#popupBody')
@@ -280,7 +446,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       document.body.style.overflow = 'hidden'
     }
 
-    ;(window as any).closeIndustry = (_e: unknown, force?: boolean) => {
+    loyaltyWindow.closeIndustry = (_e: unknown, force?: boolean) => {
       const popup = root.querySelector<HTMLElement>('#industryPopup')
       if (!popup) return
       if (force) {
@@ -290,7 +456,7 @@ export default function LoyaltyRuleEngineLandingPage() {
     }
 
     // FORM SUBMIT (inline onclick uses it)
-    ;(window as any).submitForm = () => {
+    loyaltyWindow.submitForm = () => {
       const wrap = root.querySelector<HTMLElement>('#contactFormWrap')
       const success = root.querySelector<HTMLElement>('#formSuccess')
       if (wrap) wrap.style.display = 'none'
@@ -303,7 +469,7 @@ export default function LoyaltyRuleEngineLandingPage() {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
           const el = e.target as HTMLElement
-          el.classList.add('revealed')
+          el.classList.add('visible')
           el.classList.add('reveal--in') // avoid global blur reveal
           revealObserver.unobserve(el)
         })
@@ -361,7 +527,6 @@ export default function LoyaltyRuleEngineLandingPage() {
       window.removeEventListener('scroll', onScrollParallax)
       window.removeEventListener('scroll', onScrollUsp)
       window.removeEventListener('resize', onScrollUsp)
-      window.clearInterval(testiTimer)
       window.clearTimeout(t1)
       window.clearTimeout(t2)
       window.clearTimeout(t3)
@@ -370,11 +535,14 @@ export default function LoyaltyRuleEngineLandingPage() {
       window.clearTimeout(t6)
       revealObserver.disconnect()
       if (raf !== null) window.cancelAnimationFrame(raf)
+      delete loyaltyWindow.openIndustry
+      delete loyaltyWindow.closeIndustry
+      delete loyaltyWindow.submitForm
     }
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="loyalty-rule-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"

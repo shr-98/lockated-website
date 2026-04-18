@@ -1,473 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lockated PTM — Project & Task Manager</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      :root {
-        --primary: #da7756;
-        --cream: #f6f4ee;
-        --dark: #2c2c2c;
-        --olive: #798c5e;
-        --sage: #9ec8ba;
-        --border: #c4b89d;
-        --font: "Poppins", sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        font-family: var(--font);
-        background: var(--cream);
-        color: var(--dark);
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 0.5;
-      }
-
-      nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        padding: 0 48px;
-        height: 68px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(196, 184, 157, 0.35);
-        background: rgba(246, 244, 238, 0.72);
-        backdrop-filter: blur(10px);
-      }
-
-      nav.scrolled {
-        box-shadow: 0 10px 30px rgba(44, 44, 44, 0.08);
-      }
-
-      .nav-logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        color: var(--dark);
-        font-weight: 700;
-      }
-
-      .nav-logo-mark {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--primary), var(--olive));
-      }
-
-      .nav-links {
-        list-style: none;
-        display: flex;
-        gap: 22px;
-      }
-
-      .nav-links a {
-        text-decoration: none;
-        color: var(--dark);
-        font-weight: 500;
-        opacity: 0.85;
-      }
-
-      .nav-ctas {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .btn-ghost {
-        text-decoration: none;
-        color: var(--dark);
-        font-weight: 600;
-        padding: 10px 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(196, 184, 157, 0.7);
-        background: rgba(255, 255, 255, 0.5);
-      }
-
-      .btn-primary {
-        text-decoration: none;
-        color: #fff;
-        font-weight: 700;
-        padding: 10px 14px;
-        border-radius: 12px;
-        background: var(--primary);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 120px 48px 80px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-grid {
-        position: absolute;
-        inset: 0;
-        background-image: linear-gradient(rgba(44, 44, 44, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(44, 44, 44, 0.04) 1px, transparent 1px);
-        background-size: 48px 48px;
-        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-        -webkit-mask-image: radial-gradient(
-          ellipse 80% 80% at 50% 50%,
-          black 30%,
-          transparent 100%
-        );
-      }
-
-      .hero-glow {
-        position: absolute;
-        width: 740px;
-        height: 740px;
-        background: radial-gradient(circle, rgba(218, 119, 86, 0.25) 0%, transparent 70%);
-        top: -280px;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-      }
-
-      .hero-eyebrow {
-        display: inline-flex;
-        gap: 10px;
-        align-items: center;
-        padding: 10px 14px;
-        border-radius: 999px;
-        border: 1px solid rgba(196, 184, 157, 0.7);
-        background: rgba(255, 255, 255, 0.55);
-        margin-bottom: 18px;
-        font-weight: 600;
-      }
-
-      .hero-eyebrow .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: var(--sage);
-      }
-
-      .hero-headline {
-        font-size: clamp(38px, 5vw, 64px);
-        line-height: 1.05;
-        max-width: 1040px;
-        letter-spacing: -0.02em;
-      }
-
-      .hero-headline .highlight {
-        color: var(--primary);
-      }
-
-      .hero-sub {
-        max-width: 760px;
-        margin-top: 16px;
-        font-size: 18px;
-        opacity: 0.85;
-      }
-
-      .hero-ctas {
-        display: flex;
-        gap: 12px;
-        margin-top: 22px;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      .btn-hero-primary,
-      .btn-hero-outline {
-        display: inline-flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 18px;
-        border-radius: 14px;
-        font-weight: 800;
-        text-decoration: none;
-      }
-
-      .btn-hero-primary {
-        background: var(--primary);
-        color: #fff;
-      }
-
-      .btn-hero-outline {
-        border: 1px solid rgba(196, 184, 157, 0.85);
-        background: rgba(255, 255, 255, 0.6);
-        color: var(--dark);
-      }
-
-      .cta-subtext {
-        margin-top: 12px;
-        opacity: 0.7;
-        font-weight: 600;
-      }
-
-      .hero-metrics {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 16px;
-        margin-top: 36px;
-        max-width: 980px;
-        width: 100%;
-        padding: 18px;
-        border-radius: 18px;
-        border: 1px solid rgba(196, 184, 157, 0.7);
-        background: rgba(255, 255, 255, 0.55);
-      }
-
-      .metric-number {
-        font-size: 30px;
-        font-weight: 800;
-      }
-
-      .counter.accent {
-        color: var(--primary);
-      }
-
-      .metric-label {
-        margin-top: 6px;
-        font-weight: 600;
-        opacity: 0.8;
-      }
-
-      .clients-section {
-        padding: 36px 48px 72px;
-      }
-
-      .clients-header {
-        text-align: center;
-        font-weight: 700;
-        opacity: 0.8;
-      }
-
-      .clients-track-wrapper {
-        max-width: 1040px;
-        margin: 18px auto 0;
-        border-radius: 18px;
-        border: 1px solid rgba(196, 184, 157, 0.6);
-        background: rgba(255, 255, 255, 0.55);
-        overflow: hidden;
-        padding: 14px;
-      }
-
-      .clients-track {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .client-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border-radius: 14px;
-        border: 1px solid rgba(196, 184, 157, 0.6);
-        background: rgba(246, 244, 238, 0.6);
-        font-weight: 700;
-      }
-
-      .client-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 10px;
-        display: grid;
-        place-items: center;
-        background: var(--primary);
-        color: #fff;
-        font-weight: 800;
-      }
-
-      @media (min-width: 860px) {
-        .hero-metrics {
-          grid-template-columns: 1fr 1fr 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav id="navbar">
-      <a href="#" class="nav-logo">
-        <div class="nav-logo-mark"></div>
-        <span class="nav-logo-text">Lockated <span>PTM</span></span>
-      </a>
-
-      <ul class="nav-links">
-        <li><a href="#solutions">Solutions</a></li>
-        <li><a href="#walkthrough">Walkthrough</a></li>
-        <li><a href="#usecases">Use Cases</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#about">About</a></li>
-      </ul>
-
-      <div class="nav-ctas">
-        <a href="#" class="btn-ghost">Log in</a>
-        <a href="#" class="btn-primary"><span>Start Free Trial</span></a>
-      </div>
-    </nav>
-
-    <section class="hero" id="hero">
-      <div class="hero-grid"></div>
-      <div class="hero-glow"></div>
-
-      <div class="hero-eyebrow" id="eyebrow">
-        <span class="dot"></span>
-        Trusted by India's fastest-growing companies
-      </div>
-
-      <h1 class="hero-headline" id="headline">
-        One platform. Your data. <span class="highlight">Yours</span> alone.
-      </h1>
-
-      <p class="hero-sub" id="hero-sub">
-        Replace Jira, Slack, Google Docs, and your MoM tool with one platform where every byte stays on servers you
-        own and control.
-      </p>
-
-      <div class="hero-ctas" id="hero-ctas">
-        <a href="#" class="btn-hero-primary">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-          Start Free Trial
-        </a>
-        <a href="#" class="btn-hero-outline">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <polygon points="10 8 16 12 10 16 10 8" />
-          </svg>
-          Watch Demo
-        </a>
-      </div>
-
-      <p class="cta-subtext" id="cta-sub">
-        14-day free trial &bull; No credit card required &bull; Full-feature access
-      </p>
-
-      <div class="hero-metrics" id="hero-metrics">
-        <div class="metric-item">
-          <div class="metric-number"><span class="counter accent" data-target="22" data-suffix="%">0%</span></div>
-          <div class="metric-label">More sprint tasks completed vs Jira baseline</div>
-        </div>
-        <div class="metric-item">
-          <div class="metric-number"><span class="counter" data-target="87" data-suffix="%">0%</span></div>
-          <div class="metric-label">Meeting action items followed through</div>
-        </div>
-        <div class="metric-item">
-          <div class="metric-number">
-            <span class="counter accent" data-prefix="₹" data-target="1.8" data-suffix="Cr" data-decimal="true"
-              >₹0Cr</span
-            >
-          </div>
-          <div class="metric-label">Annual SaaS savings per 120-person firm</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="clients-section">
-      <p class="clients-header">Companies that have moved their entire work stack to Lockated PTM</p>
-      <div class="clients-track-wrapper">
-        <div class="clients-track" id="clients-track">
-          <div class="client-chip"><div class="client-icon">K</div><span class="client-name">Kalpataru</span></div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #798c5e">O</div>
-            <span class="client-name">Oberoi Realty</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #9ec8ba; color: #2c2c2c">P</div>
-            <span class="client-name">Panchshil</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #6b9bcc">G</div>
-            <span class="client-name">Godrej Properties</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #edc488; color: #2c2c2c">R</div>
-            <span class="client-name">Runwal Group</span>
-          </div>
-          <div class="client-chip"><div class="client-icon">L</div><span class="client-name">Lodha Group</span></div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #798c5e">S</div>
-            <span class="client-name">Shapoorji</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #6b9bcc">M</div>
-            <span class="client-name">Mahindra Lifespace</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #9ec8ba; color: #2c2c2c">P</div>
-            <span class="client-name">Prestige Group</span>
-          </div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #edc488; color: #2c2c2c">B</div>
-            <span class="client-name">Brigade Enterprises</span>
-          </div>
-          <div class="client-chip"><div class="client-icon">E</div><span class="client-name">Embassy Group</span></div>
-          <div class="client-chip">
-            <div class="client-icon" style="background: #798c5e">N</div>
-            <span class="client-name">Nexus Malls</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -490,12 +22,19 @@
     --muted: #D3D1C7;
     --warning: #EDC488;
     --info: #6B9BCC;
+    --band: #E8E2D6;
+    --on-primary: #F6F4EE;
+    --surface: #F0EAE1;
+    --divider: rgba(196, 184, 157, 0.55);
     --font: 'Poppins', sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: only light;
+  }
 
   body {
     font-family: var(--font);
@@ -503,6 +42,7 @@
     color: var(--dark);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    color-scheme: only light;
   }
 
   /* ── GRAIN OVERLAY ── */
@@ -1911,12 +1451,14 @@
 
   .trust-badge svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-  /* ── WALKTHROUGH ── */
+  /* ── WALKTHROUGH (light — matches vendor cream UI) ── */
   .walkthrough-section {
     padding: 100px 80px;
-    background: var(--dark);
+    background: var(--cream);
     position: relative;
     overflow: hidden;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
   }
 
   .walkthrough-section::before {
@@ -1924,7 +1466,7 @@
     position: absolute;
     top: -150px; left: -150px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(218,119,86,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(218,119,86,0.12) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -1933,7 +1475,7 @@
     position: absolute;
     bottom: -100px; right: -100px;
     width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(121,140,94,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(121,140,94,0.1) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -1962,7 +1504,7 @@
     font-weight: 800;
     letter-spacing: -1.5px;
     line-height: 1.1;
-    color: #fff;
+    color: var(--dark);
     max-width: 700px;
     margin-bottom: 16px;
   }
@@ -1971,7 +1513,7 @@
 
   .walkthrough-sub {
     font-size: 16px;
-    color: rgba(255,255,255,0.45);
+    color: rgba(44,44,44,0.55);
     line-height: 1.65;
     max-width: 540px;
     margin-bottom: 56px;
@@ -1983,9 +1525,10 @@
     gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid var(--divider);
     margin-bottom: 48px;
     -ms-overflow-style: none;
+    background: var(--cream);
   }
 
   .feature-tabs::-webkit-scrollbar { display: none; }
@@ -1997,12 +1540,12 @@
     padding: 14px 24px;
     font-size: 13px;
     font-weight: 500;
-    color: rgba(255,255,255,0.45);
+    color: rgba(44,44,44,0.48);
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.25s ease;
     white-space: nowrap;
-    background: none;
+    background: var(--cream);
     border-top: none;
     border-left: none;
     border-right: none;
@@ -2010,26 +1553,18 @@
     position: relative;
   }
 
-  .feature-tab svg { width: 16px; height: 16px; opacity: 0.6; transition: opacity 0.25s; }
+  .feature-tab svg { width: 16px; height: 16px; opacity: 0.55; transition: opacity 0.25s; color: inherit; }
 
-  .feature-tab:hover { color: rgba(255,255,255,0.75); }
-  .feature-tab:hover svg { opacity: 0.8; }
+  .feature-tab:hover { color: var(--dark); }
+  .feature-tab:hover svg { opacity: 0.85; }
 
   .feature-tab.active {
-    color: #fff;
+    color: var(--primary);
+    font-weight: 600;
     border-bottom-color: var(--primary);
   }
 
   .feature-tab.active svg { opacity: 1; }
-
-  .feature-tab.active::before {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 2px;
-    background: var(--primary);
-    box-shadow: 0 0 12px var(--primary);
-  }
 
   /* Feature Content */
   .feature-content {
@@ -2063,7 +1598,7 @@
   .feature-name {
     font-size: 30px;
     font-weight: 800;
-    color: #fff;
+    color: var(--dark);
     letter-spacing: -0.8px;
     line-height: 1.15;
     margin-bottom: 16px;
@@ -2072,7 +1607,7 @@
   .feature-desc {
     font-size: 15px;
     line-height: 1.7;
-    color: rgba(255,255,255,0.5);
+    color: rgba(44,44,44,0.58);
     margin-bottom: 28px;
   }
 
@@ -2080,7 +1615,7 @@
 
   .feature-bullet {
     display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.5;
+    font-size: 13.5px; color: rgba(44,44,44,0.65); line-height: 1.5;
   }
 
   .feature-bullet::before {
@@ -2112,17 +1647,18 @@
   .feature-cta-link:hover { gap: 12px; }
 
   .feature-screen {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: var(--surface);
+    border: 1px solid var(--divider);
     border-radius: 20px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 16px 48px rgba(44,44,44,0.08);
   }
 
   .feature-screen-header {
     padding: 12px 18px;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: var(--cream);
+    border-bottom: 1px solid var(--divider);
     display: flex; align-items: center; gap: 8px;
   }
 
@@ -2130,32 +1666,33 @@
     padding: 20px;
     min-height: 360px;
     display: flex; flex-direction: column; gap: 10px;
+    background: var(--cream);
   }
 
   /* Dashboard Screen */
   .dash-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 4px; }
 
   .dash-stat {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 10px;
     padding: 12px;
   }
 
-  .dash-stat-label { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-  .dash-stat-val { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .dash-stat-label { font-size: 9px; color: rgba(44,44,44,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .dash-stat-val { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
   .dash-stat-sub { font-size: 9px; margin-top: 2px; }
   .pos { color: #9EC8BA; }
   .neg { color: #E7848E; }
 
   .dash-chart-area {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 10px; padding: 14px;
     flex: 1;
   }
 
-  .dash-chart-label { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 10px; }
+  .dash-chart-label { font-size: 10px; color: rgba(44,44,44,0.48); margin-bottom: 10px; }
 
   .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
   .bar {
@@ -2167,32 +1704,32 @@
   .bar:hover::after {
     content: attr(data-val);
     position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
-    font-size: 9px; font-weight: 700; color: #fff; white-space: nowrap;
+    font-size: 9px; font-weight: 700; color: var(--dark); white-space: nowrap;
   }
 
   /* Kanban walkthrough screen */
   .wk-kanban { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
   .wk-col {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 10px;
     padding: 12px;
   }
 
   .wk-col-head {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; color: rgba(255,255,255,0.35);
+    letter-spacing: 0.08em; color: rgba(44,44,44,0.45);
     margin-bottom: 10px;
   }
 
   .wk-card {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--cream);
+    border: 1px solid var(--divider);
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 7px;
-    font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.4;
+    font-size: 11px; color: rgba(44,44,44,0.75); line-height: 1.4;
   }
 
   .wk-card-tag {
@@ -2206,55 +1743,56 @@
   /* Sprint Screen */
   .sprint-header-row {
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 10px; padding: 14px 16px;
     margin-bottom: 10px;
   }
 
-  .sprint-name { font-size: 14px; font-weight: 700; color: #fff; }
-  .sprint-dates { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+  .sprint-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .sprint-dates { font-size: 11px; color: rgba(44,44,44,0.45); margin-top: 2px; }
   .sprint-badge { font-size: 10px; font-weight: 700; background: rgba(158,200,186,0.2); color: var(--sage); padding: 4px 10px; border-radius: 6px; }
 
   .sprint-task-row {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 8px;
     margin-bottom: 6px;
   }
 
   .sprint-task-check {
     width: 16px; height: 16px; border-radius: 4px;
-    border: 1.5px solid rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(44,44,44,0.15);
     flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   }
 
   .sprint-task-check.done { background: var(--primary); border-color: var(--primary); }
 
-  .sprint-task-name { font-size: 12px; color: rgba(255,255,255,0.65); flex: 1; }
-  .sprint-task-name.done { text-decoration: line-through; color: rgba(255,255,255,0.3); }
-  .sprint-assignee { font-size: 10px; color: rgba(255,255,255,0.35); }
+  .sprint-task-name { font-size: 12px; color: rgba(44,44,44,0.75); flex: 1; }
+  .sprint-task-name.done { text-decoration: line-through; color: rgba(44,44,44,0.38); }
+  .sprint-assignee { font-size: 10px; color: rgba(44,44,44,0.45); }
 
   /* MoM Walkthrough Screen */
   .mom-wk-card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 10px;
     padding: 14px;
     margin-bottom: 10px;
   }
 
-  .mom-wk-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-  .mom-wk-meta { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 12px; display: flex; gap: 12px; }
+  .mom-wk-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .mom-wk-meta { font-size: 10px; color: rgba(44,44,44,0.45); margin-bottom: 12px; display: flex; gap: 12px; }
 
   .mom-wk-action {
     display: flex; align-items: center; gap: 8px;
     padding: 8px 10px;
-    background: rgba(255,255,255,0.04);
+    background: var(--cream);
+    border: 1px solid var(--divider);
     border-radius: 7px; margin-bottom: 6px;
-    font-size: 11px; color: rgba(255,255,255,0.55);
+    font-size: 11px; color: rgba(44,44,44,0.65);
   }
 
   .mom-arrow { color: var(--primary); font-size: 14px; margin-left: auto; cursor: pointer; }
@@ -2271,23 +1809,24 @@
   .msg-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; font-size: 11px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; }
 
   .msg-content {
-    background: rgba(255,255,255,0.08);
+    background: #fff;
+    border: 1px solid var(--divider);
     border-radius: 12px;
     padding: 8px 12px;
-    font-size: 11.5px; color: rgba(255,255,255,0.7); line-height: 1.5;
+    font-size: 11.5px; color: rgba(44,44,44,0.75); line-height: 1.5;
   }
 
   .msg-bubble.outgoing .msg-content {
-    background: rgba(218,119,86,0.2);
-    border: 1px solid rgba(218,119,86,0.2);
-    color: rgba(255,255,255,0.75);
+    background: rgba(218,119,86,0.12);
+    border: 1px solid rgba(218,119,86,0.28);
+    color: rgba(44,44,44,0.82);
   }
 
   .msg-task-pill {
     display: flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    background: var(--cream); border: 1px solid var(--divider);
     border-radius: 8px; padding: 6px 10px;
-    margin-top: 6px; font-size: 10.5px; color: rgba(255,255,255,0.5);
+    margin-top: 6px; font-size: 10.5px; color: rgba(44,44,44,0.6);
     cursor: pointer;
     transition: background 0.2s;
   }
@@ -2814,7 +2353,8 @@ svg { display: block; }
 .end-banner {
   margin: 0 80px 80px;
   border-radius: 28px;
-  background: var(--dark);
+  background: var(--band);
+  border: 1px solid rgba(196, 184, 157, 0.55);
   position: relative;
   overflow: hidden;
   padding: 100px 80px;
@@ -2865,8 +2405,8 @@ svg { display: block; }
 .banner-grid {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(44,44,44,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44,44,44,0.06) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 100%);
@@ -2888,13 +2428,13 @@ svg { display: block; }
 .banner-title {
   font-size: clamp(32px, 4vw, 56px);
   font-weight: 800; letter-spacing: -1.8px; line-height: 1.06;
-  color: #fff; margin-bottom: 20px;
+  color: var(--dark); margin-bottom: 20px;
 }
 .banner-title .accent { color: var(--primary); }
 
 .banner-sub {
   font-size: 16px; line-height: 1.65;
-  color: rgba(255,255,255,0.48); margin-bottom: 44px;
+  color: rgba(44,44,44,0.58); margin-bottom: 44px;
   max-width: 480px;
 }
 
@@ -2902,24 +2442,25 @@ svg { display: block; }
 
 .btn-banner-primary {
   font-family: var(--font); font-size: 15px; font-weight: 600;
-  color: var(--dark); background: #fff;
+  color: var(--on-primary); background: var(--primary);
   border: none; cursor: pointer; padding: 14px 28px; border-radius: 10px;
   transition: all 0.25s ease; text-decoration: none;
   display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 16px rgba(218,119,86,0.3);
 }
-.btn-banner-primary:hover { background: var(--cream); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,255,255,0.15); }
+.btn-banner-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(218,119,86,0.4); }
 
 .btn-banner-outline {
   font-family: var(--font); font-size: 15px; font-weight: 500;
-  color: rgba(255,255,255,0.75); background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.2); cursor: pointer;
+  color: var(--dark); background: rgba(255,255,255,0.65);
+  border: 1.5px solid rgba(196, 184, 157, 0.75); cursor: pointer;
   padding: 13px 26px; border-radius: 10px;
   transition: all 0.25s ease; text-decoration: none;
   display: inline-flex; align-items: center; gap: 8px;
 }
-.btn-banner-outline:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+.btn-banner-outline:hover { border-color: var(--primary); color: var(--primary); background: #fff; }
 
-.banner-sub-text { font-size: 12px; color: rgba(255,255,255,0.28); margin-top: 16px; }
+.banner-sub-text { font-size: 12px; color: rgba(44,44,44,0.45); margin-top: 16px; }
 
 /* Floating UI cards on right */
 .banner-visual {
@@ -2928,10 +2469,10 @@ svg { display: block; }
 }
 
 .float-card {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(196, 184, 157, 0.55);
   border-radius: 16px; padding: 16px 20px;
   margin-bottom: 12px;
   animation: floatCard 6s ease-in-out infinite;
@@ -2945,12 +2486,12 @@ svg { display: block; }
   50% { transform: translateY(-8px); }
 }
 
-.float-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
-.float-card-value { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+.float-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(44,44,44,0.45); margin-bottom: 6px; }
+.float-card-value { font-size: 22px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
 .float-card-sub { font-size: 10px; margin-top: 2px; color: var(--primary); font-weight: 600; }
 
 .float-progress {
-  height: 3px; background: rgba(255,255,255,0.1);
+  height: 3px; background: rgba(44,44,44,0.08);
   border-radius: 2px; margin-top: 10px; overflow: hidden;
 }
 .float-progress-fill { height: 100%; border-radius: 2px; background: var(--primary); }
@@ -2961,7 +2502,7 @@ svg { display: block; }
 /* ═══════════════════════════════════════ */
 .contact-section {
   padding: 100px 80px;
-  background: #fff;
+  background: var(--cream);
 }
 .contact-inner {
   max-width: 1200px; margin: 0 auto;
@@ -3068,26 +2609,22 @@ textarea.form-input { resize: vertical; min-height: 120px; }
 
 
 /* ═══════════════════════════════════════ */
-/* FOOTER                                  */
+/* FOOTER (light — matches vendor pattern)   */
 /* ═══════════════════════════════════════ */
 footer {
-  background: var(--dark);
-  padding: 64px 80px 32px;
+  background: var(--cream);
+  padding: 56px 48px 36px;
+  border-top: 1px solid var(--border);
   position: relative;
-  overflow: hidden;
-}
-
-footer::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(218,119,86,0.4), transparent);
 }
 
 .footer-inner { max-width: 1400px; margin: 0 auto; }
 
 .footer-top {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 60px; margin-bottom: 56px;
+  gap: 48px; padding-bottom: 40px;
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(196, 184, 157, 0.45);
 }
 
 .footer-brand { display: flex; flex-direction: column; gap: 0; }
@@ -3099,38 +2636,39 @@ footer::before {
   border-radius: 8px; display: flex; align-items: center; justify-content: center;
 }
 
-.footer-logo-text { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+.footer-logo-text { font-size: 17px; font-weight: 700; color: var(--dark); letter-spacing: -0.2px; }
 .footer-logo-text span { color: var(--primary); }
 
-.footer-tagline { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.35); margin-bottom: 24px; max-width: 280px; }
+.footer-tagline { font-size: 13.5px; line-height: 1.65; color: rgba(44,44,44,0.55); margin-bottom: 24px; max-width: 280px; }
 
 .footer-social { display: flex; gap: 8px; }
 .footer-social-btn {
   width: 34px; height: 34px; border-radius: 8px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(246, 244, 238, 0.9); border: 1px solid rgba(196, 184, 157, 0.5);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all 0.2s; text-decoration: none;
-  color: rgba(255,255,255,0.4);
+  color: rgba(44,44,44,0.45);
 }
 .footer-social-btn svg { width: 16px; height: 16px; }
 .footer-social-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; transform: translateY(-2px); }
 
-.footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+.footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(44,44,44,0.45); margin-bottom: 20px; }
 
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
-.footer-links a:hover { color: rgba(255,255,255,0.85); }
+.footer-links a { font-size: 13.5px; color: rgba(44,44,44,0.65); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--primary); }
 
-.footer-divider { height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 28px; }
+.footer-divider { height: 1px; background: rgba(44,44,44,0.08); margin-bottom: 28px; }
 
 .footer-bottom {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  padding-top: 28px;
 }
-.footer-bottom-left { font-size: 12.5px; color: rgba(255,255,255,0.25); }
-.footer-bottom-left .highlight { color: rgba(255,255,255,0.5); }
+.footer-bottom-left { font-size: 12.5px; color: rgba(44,44,44,0.45); }
+.footer-bottom-left .highlight { color: rgba(44,44,44,0.65); }
 .footer-bottom-right { display: flex; gap: 24px; }
-.footer-bottom-right a { font-size: 12.5px; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s; }
-.footer-bottom-right a:hover { color: rgba(255,255,255,0.55); }
+.footer-bottom-right a { font-size: 12.5px; color: rgba(44,44,44,0.45); text-decoration: none; transition: color 0.2s; }
+.footer-bottom-right a:hover { color: var(--primary); }
 
 /* Badge */
 .footer-badge {
@@ -3176,16 +2714,17 @@ footer::before {
   </a>
 
   <ul class="nav-links">
-    <li><a href="#solutions">Solutions</a></li>
+    <li><a href="#pain">Problems</a></li>
     <li><a href="#walkthrough">Walkthrough</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#teams">Teams</a></li>
     <li><a href="#usecases">Use Cases</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
 
   <div class="nav-ctas">
-    <a href="#" class="btn-ghost">Log in</a>
-    <a href="#" class="btn-primary"><span>Start Free Trial</span></a>
+    <a href="#contact" class="btn-ghost">Contact Sales</a>
+    <a href="#contact" class="btn-primary"><span>Get Started</span></a>
   </div>
 </nav>
 
@@ -3235,42 +2774,6 @@ footer::before {
     <div class="metric-item">
       <div class="metric-number"><span class="counter accent" data-prefix="₹" data-target="1.8" data-suffix="Cr" data-decimal="true">₹0Cr</span></div>
       <div class="metric-label">Annual SaaS savings per 120-person firm</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════ CLIENTS ═══ -->
-<section class="clients-section">
-  <p class="clients-header">Companies that have moved their entire work stack to Lockated PTM</p>
-  <div class="clients-track-wrapper">
-    <div class="clients-track" id="clients-track">
-      <!-- first copy -->
-      <div class="client-chip"><div class="client-icon">K</div><span class="client-name">Kalpataru</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">O</div><span class="client-name">Oberoi Realty</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#9EC8BA;color:#2C2C2C">P</div><span class="client-name">Panchshil</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#6B9BCC">G</div><span class="client-name">Godrej Properties</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#EDC488;color:#2C2C2C">R</div><span class="client-name">Runwal Group</span></div>
-      <div class="client-chip"><div class="client-icon">L</div><span class="client-name">Lodha Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">S</div><span class="client-name">Shapoorji</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#6B9BCC">M</div><span class="client-name">Mahindra Lifespace</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#9EC8BA;color:#2C2C2C">P</div><span class="client-name">Prestige Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#EDC488;color:#2C2C2C">B</div><span class="client-name">Brigade Enterprises</span></div>
-      <div class="client-chip"><div class="client-icon">E</div><span class="client-name">Embassy Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">N</div><span class="client-name">Nexus Malls</span></div>
-      <!-- duplicate for seamless loop -->
-      <div class="client-chip"><div class="client-icon">K</div><span class="client-name">Kalpataru</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">O</div><span class="client-name">Oberoi Realty</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#9EC8BA;color:#2C2C2C">P</div><span class="client-name">Panchshil</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#6B9BCC">G</div><span class="client-name">Godrej Properties</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#EDC488;color:#2C2C2C">R</div><span class="client-name">Runwal Group</span></div>
-      <div class="client-chip"><div class="client-icon">L</div><span class="client-name">Lodha Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">S</div><span class="client-name">Shapoorji</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#6B9BCC">M</div><span class="client-name">Mahindra Lifespace</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#9EC8BA;color:#2C2C2C">P</div><span class="client-name">Prestige Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#EDC488;color:#2C2C2C">B</div><span class="client-name">Brigade Enterprises</span></div>
-      <div class="client-chip"><div class="client-icon">E</div><span class="client-name">Embassy Group</span></div>
-      <div class="client-chip"><div class="client-icon" style="background:#798C5E">N</div><span class="client-name">Nexus Malls</span></div>
     </div>
   </div>
 </section>
@@ -3338,8 +2841,633 @@ footer::before {
 </section>
 
 
-<!-- ═══════════════════════════════════════════ USPs ═══ -->
-<section class="usps-section" id="solutions">
+<!-- ═══════════════════════════════════════════ WALKTHROUGH ═══ -->
+<section class="walkthrough-section" id="walkthrough">
+  <div class="walkthrough-inner">
+    <div class="walkthrough-eyebrow">See it in action</div>
+    <h2 class="walkthrough-title">Every module. One platform.<br><span class="accent">Zero tab-switching.</span></h2>
+    <p class="walkthrough-sub">See exactly how your team would use each module, from sprint planning to salary automation, all inside one sovereign workspace.</p>
+
+    <!-- Feature Tabs -->
+    <div class="feature-tabs">
+      <button class="feature-tab active" data-feature="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="feature-tab" data-feature="kanban">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="11" rx="1"/><rect x="17" y="3" width="4" height="7" rx="1"/></svg>
+        Kanban
+      </button>
+      <button class="feature-tab" data-feature="sprints">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Sprints
+      </button>
+      <button class="feature-tab" data-feature="mom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        MoM
+      </button>
+      <button class="feature-tab" data-feature="collab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Channels
+      </button>
+      <button class="feature-tab" data-feature="task-analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        Task Analytics
+      </button>
+      <button class="feature-tab" data-feature="project-analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+        Project Analytics
+      </button>
+      <button class="feature-tab" data-feature="documents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Documents
+      </button>
+    </div>
+
+    <!-- Feature Panels -->
+    <div id="feature-panels">
+
+      <!-- Dashboard -->
+      <div class="feature-panel active" data-panel="dashboard">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Real-time Analytics</div>
+            <h3 class="feature-name">Your entire company's health in one screen.</h3>
+            <p class="feature-desc">Eight live chart types per project. No more asking for status updates. No more Monday PPT prep. The dashboard is your weekly report, live, always accurate.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">Project completion % across all active projects</li>
+              <li class="feature-bullet">Assignee-wise task performance and delay patterns</li>
+              <li class="feature-bullet">Task dependency maps that surface blockers early</li>
+              <li class="feature-bullet">8 chart types including milestone progress and issues breakdown</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              See dashboard live
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div>
+              <div class="dot-yellow"></div>
+              <div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Project Analytics Dashboard</span>
+            </div>
+            <div class="feature-screen-body">
+              <div class="dash-row">
+                <div class="dash-stat">
+                  <div class="dash-stat-label">Completion</div>
+                  <div class="dash-stat-val">73%</div>
+                  <div class="dash-stat-sub pos">+12% vs last sprint</div>
+                </div>
+                <div class="dash-stat">
+                  <div class="dash-stat-label">On Time</div>
+                  <div class="dash-stat-val">79%</div>
+                  <div class="dash-stat-sub pos">+25pp baseline</div>
+                </div>
+                <div class="dash-stat">
+                  <div class="dash-stat-label">Open Issues</div>
+                  <div class="dash-stat-val">14</div>
+                  <div class="dash-stat-sub neg">3 critical</div>
+                </div>
+                <div class="dash-stat">
+                  <div class="dash-stat-label">Active Team</div>
+                  <div class="dash-stat-val">28</div>
+                  <div class="dash-stat-sub pos">All active</div>
+                </div>
+              </div>
+              <div class="dash-chart-area">
+                <div class="dash-chart-label">Sprint Velocity (Tasks Completed/Sprint)</div>
+                <div class="bar-chart">
+                  <div class="bar" style="height:45%;background:rgba(218,119,86,0.25)" data-val="42"></div>
+                  <div class="bar" style="height:52%;background:rgba(218,119,86,0.3)" data-val="49"></div>
+                  <div class="bar" style="height:48%;background:rgba(218,119,86,0.25)" data-val="45"></div>
+                  <div class="bar" style="height:60%;background:rgba(218,119,86,0.35)" data-val="57"></div>
+                  <div class="bar" style="height:70%;background:rgba(218,119,86,0.4)" data-val="66"></div>
+                  <div class="bar" style="height:65%;background:rgba(218,119,86,0.35)" data-val="61"></div>
+                  <div class="bar" style="height:80%;background:rgba(218,119,86,0.5)" data-val="76"></div>
+                  <div class="bar" style="height:88%;background:var(--primary)" data-val="83"></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <div class="assignee-row" style="flex:1;min-width:140px;">
+                  <div class="assignee-avatar" style="background:#DA7756">PR</div>
+                  <div class="assignee-name" style="color:rgba(44,44,44,0.65)">Priya R.</div>
+                  <div class="assignee-pct" style="color:var(--dark);">88%</div>
+                </div>
+                <div class="assignee-row" style="flex:1;min-width:140px;">
+                  <div class="assignee-avatar" style="background:#798C5E">AK</div>
+                  <div class="assignee-name" style="color:rgba(44,44,44,0.65)">Arjun K.</div>
+                  <div class="assignee-pct" style="color:var(--dark);">74%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kanban -->
+      <div class="feature-panel" data-panel="kanban">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Visual Workflow</div>
+            <h3 class="feature-name">Your sprint board, live. No status meetings needed.</h3>
+            <p class="feature-desc">Kanban for the team's sprint tasks. Eisenhower Matrix for each person's personal to-dos. Two views. Zero confusion. Every task has an owner, a status, and a deadline.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">Drag-and-drop across To Do, In Progress, On Hold, Done</li>
+              <li class="feature-bullet">Color-coded tags by team: Dev, Design, Ops, Marketing</li>
+              <li class="feature-bullet">Personal Eisenhower Matrix alongside team Kanban</li>
+              <li class="feature-bullet">Inline task creation from any chat message</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              Try the Kanban board
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Sprint 12 &mdash; Kanban Board</span>
+            </div>
+            <div class="feature-screen-body">
+              <div class="wk-kanban">
+                <div class="wk-col">
+                  <div class="wk-col-head">To Do (3)</div>
+                  <div class="wk-card"><div class="wk-card-tag tag-dev">Dev</div><div>Auth refactor</div></div>
+                  <div class="wk-card"><div class="wk-card-tag tag-design">Design</div><div>Dashboard v2</div></div>
+                  <div class="wk-card"><div class="wk-card-tag tag-ops">Ops</div><div>Deploy pipeline</div></div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-col-head">In Progress (4)</div>
+                  <div class="wk-card" style="border-left:2px solid #DA7756"><div class="wk-card-tag tag-dev">Dev</div><div>Payment gateway</div></div>
+                  <div class="wk-card" style="border-left:2px solid #EDC488"><div class="wk-card-tag tag-design">Design</div><div>Mobile mockups</div></div>
+                  <div class="wk-card" style="border-left:2px solid #DA7756"><div class="wk-card-tag tag-ops">Ops</div><div>API docs</div></div>
+                </div>
+                <div class="wk-col">
+                  <div class="wk-col-head">Done (5)</div>
+                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-design">Design</div><div>Landing page</div></div>
+                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-dev">Dev</div><div>CI/CD setup</div></div>
+                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-ops">Ops</div><div>DB migration</div></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;">
+                  <div style="font-size:10px;color:rgba(44,44,44,0.48);margin-bottom:6px;">URGENT/IMPORTANT</div>
+                  <div style="font-size:11px;color:rgba(44,44,44,0.65)">Payment gateway</div>
+                  <div style="font-size:11px;color:rgba(44,44,44,0.65)">Client demo prep</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;">
+                  <div style="font-size:10px;color:rgba(44,44,44,0.48);margin-bottom:6px;">PLAN/SCHEDULE</div>
+                  <div style="font-size:11px;color:rgba(44,44,44,0.65)">Q4 roadmap</div>
+                  <div style="font-size:11px;color:rgba(44,44,44,0.65)">Team retro</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sprints -->
+      <div class="feature-panel" data-panel="sprints">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Agile Management</div>
+            <h3 class="feature-name">Sprint planning that engineering teams actually use.</h3>
+            <p class="feature-desc">Connect sprint goals to milestone tasks. Track completion in real time. Assign story points. Every sprint has a clear scope, owner, and delivery date, visible to the entire company.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">Sprint planning with task-level linking and scope definition</li>
+              <li class="feature-bullet">Sprint start/end dates with automated escalation on delays</li>
+              <li class="feature-bullet">Issue register for client-reported bugs tied to sprints</li>
+              <li class="feature-bullet">Sprint retrospective MoM auto-converts to next sprint tasks</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              Plan your first sprint
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Sprint Management</span>
+            </div>
+            <div class="feature-screen-body">
+              <div class="sprint-header-row">
+                <div>
+                  <div class="sprint-name">Sprint 12 &mdash; Q4 Launch</div>
+                  <div class="sprint-dates">Mar 25 &rarr; Apr 7, 2026</div>
+                </div>
+                <div class="sprint-badge">In Progress</div>
+              </div>
+              <div class="sprint-task-row">
+                <div class="sprint-task-check done"><svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                <div class="sprint-task-name done">Authentication module refactor</div>
+                <div class="sprint-assignee">Priya R.</div>
+              </div>
+              <div class="sprint-task-row">
+                <div class="sprint-task-check done"><svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                <div class="sprint-task-name done">CI/CD pipeline setup</div>
+                <div class="sprint-assignee">Sahil M.</div>
+              </div>
+              <div class="sprint-task-row">
+                <div class="sprint-task-check"></div>
+                <div class="sprint-task-name">Payment gateway integration</div>
+                <div class="sprint-assignee">Arjun K.</div>
+              </div>
+              <div class="sprint-task-row">
+                <div class="sprint-task-check"></div>
+                <div class="sprint-task-name">Dashboard analytics v2</div>
+                <div class="sprint-assignee">Priya R.</div>
+              </div>
+              <div class="sprint-task-row">
+                <div class="sprint-task-check"></div>
+                <div class="sprint-task-name">Mobile responsive QA</div>
+                <div class="sprint-assignee">Nandita K.</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
+                <div style="font-size:10px;color:rgba(44,44,44,0.48)">Progress</div>
+                <div style="flex:1;height:4px;background:rgba(44,44,44,0.08);border-radius:2px;overflow:hidden;">
+                  <div style="width:40%;height:100%;background:var(--primary);border-radius:2px;"></div>
+                </div>
+                <div style="font-size:10px;color:rgba(44,44,44,0.55);font-weight:700;">2/5 done</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MoM -->
+      <div class="feature-panel" data-panel="mom">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Meeting Intelligence</div>
+            <h3 class="feature-name">Meeting ends. Tasks begin. Automatically.</h3>
+            <p class="feature-desc">Record meeting notes directly in PTM. Every action point becomes an assigned task with a deadline and responsible person in one click. Action completion rate jumps from 28% to 87% in 60 days.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">9 structured fields per MoM: attendees, type, action items</li>
+              <li class="feature-bullet">One-click conversion of any action point to a tracked task</li>
+              <li class="feature-bullet">Document attachment support within MoM records</li>
+              <li class="feature-bullet">AI can auto-extract action items from meeting transcripts</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              See MoM in action
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Minutes of Meeting</span>
+            </div>
+            <div class="feature-screen-body">
+              <div class="mom-wk-card">
+                <div class="mom-wk-title">Q4 Strategy Review</div>
+                <div class="mom-wk-meta">
+                  <span>Mar 28, 2026</span>
+                  <span>Internal</span>
+                  <span>11 Attendees</span>
+                </div>
+                <div class="mom-wk-action">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
+                  Finalize Q4 marketing budget &mdash; Riya S., Apr 4
+                  <span class="mom-arrow">&#8594;</span>
+                </div>
+                <div class="mom-wk-action">
+                  <div style="width:8px;height:8px;border-radius:50%;background:#9EC8BA;flex-shrink:0;"></div>
+                  Share competitor analysis &mdash; Dev T., Apr 2
+                  <span style="color:#9EC8BA;font-size:10px;font-weight:700;margin-left:auto;">&#10003; Task Created</span>
+                </div>
+                <div class="mom-wk-action">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
+                  Prepare onboarding deck &mdash; Nandita K., Apr 7
+                  <span class="mom-arrow">&#8594;</span>
+                </div>
+                <div class="mom-wk-action">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
+                  Review vendor contracts &mdash; Legal, Apr 10
+                  <span class="mom-arrow">&#8594;</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;background:rgba(218,119,86,0.08);border:1px solid rgba(218,119,86,0.15);border-radius:8px;padding:10px 14px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DA7756" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span style="font-size:11px;color:rgba(44,44,44,0.55);">3 of 4 actions pending. <span style="color:var(--primary);font-weight:600;">Convert all to tasks in one click.</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Channels -->
+      <div class="feature-panel" data-panel="collab">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Team Collaboration</div>
+            <h3 class="feature-name">Stop WhatsApp. Start working in context.</h3>
+            <p class="feature-desc">Direct messages and group channels, fully embedded in your project context. Turn any message into a task with one click. All communication stored on your servers, searchable, and permanently on record.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">1-on-1 direct messages with inline task creation</li>
+              <li class="feature-bullet">Project-specific group channels tied to your workspace</li>
+              <li class="feature-bullet">Turn any message into a tracked task instantly</li>
+              <li class="feature-bullet">All chat data on your infrastructure, never ours</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              See channels in action
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">#product-sprint</span>
+            </div>
+            <div class="feature-screen-body">
+              <div class="collab-msgs">
+                <div class="msg-bubble">
+                  <div class="msg-avatar" style="background:#6B9BCC">AK</div>
+                  <div>
+                    <div class="msg-content">The payment gateway PR is ready for review. Can someone check before EOD?</div>
+                    <div class="msg-task-pill">
+                      <span class="msg-task-icon">+</span>
+                      Create task from this message
+                    </div>
+                  </div>
+                </div>
+                <div class="msg-bubble outgoing">
+                  <div class="msg-avatar" style="background:#DA7756">PR</div>
+                  <div>
+                    <div class="msg-content">On it. I'll review by 3pm and push feedback inline.</div>
+                  </div>
+                </div>
+                <div class="msg-bubble">
+                  <div class="msg-avatar" style="background:#798C5E">SM</div>
+                  <div>
+                    <div class="msg-content">Also flagging, the API docs task is blocked. Waiting for Arjun's schema finalization.</div>
+                    <div class="msg-task-pill" style="background:rgba(218,119,86,0.12);border-color:rgba(218,119,86,0.2)">
+                      <span class="msg-task-icon">&#9888;</span>
+                      Blocker: API docs &mdash; View task
+                    </div>
+                  </div>
+                </div>
+                <div class="msg-bubble outgoing">
+                  <div class="msg-avatar" style="background:#DA7756">PR</div>
+                  <div>
+                    <div class="msg-content">Arjun &mdash; assigning you the schema task now. Due today 5pm.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Analytics -->
+      <div class="feature-panel" data-panel="task-analytics">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Task Intelligence</div>
+            <h3 class="feature-name">Know who's delivering. Before it's too late.</h3>
+            <p class="feature-desc">A comprehensive 18-column task table with assignee-level performance visibility. Planned vs actual hours per person. Spot chronic delays before they become project failures.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">18-column task table: assignee, status, effort, predecessor, completion %</li>
+              <li class="feature-bullet">Planned vs actual hours comparison per team member</li>
+              <li class="feature-bullet">Task dependency map — see which tasks are blocking others</li>
+              <li class="feature-bullet">Assignee-wise delay patterns surfaced automatically</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              Explore task analytics
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Task Analytics — Assignee View</span>
+            </div>
+            <div class="feature-screen-body">
+              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;">
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Total Tasks</div>
+                  <div style="font-size:26px;font-weight:800;color:var(--dark);letter-spacing:-0.5px;">247</div>
+                  <div style="font-size:9px;color:#9EC8BA;margin-top:2px;">+18 this week</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;">
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">On Track</div>
+                  <div style="font-size:26px;font-weight:800;color:var(--dark);letter-spacing:-0.5px;">189</div>
+                  <div style="font-size:9px;color:#9EC8BA;margin-top:2px;">76% of total</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;">
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Overdue</div>
+                  <div style="font-size:26px;font-weight:800;color:#E7848E;letter-spacing:-0.5px;">14</div>
+                  <div style="font-size:9px;color:#E7848E;margin-top:2px;">Action needed</div>
+                </div>
+              </div>
+              <div style="background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;margin-bottom:8px;">
+                <div style="font-size:10px;color:rgba(44,44,44,0.48);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Planned vs Actual Hours</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#DA7756;font-size:10px;font-weight:700;color:var(--dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;">PR</div>
+                    <div style="flex:1;">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(44,44,44,0.65);">Priya R.</span><span style="font-size:10px;color:#9EC8BA;font-weight:600;">32h / 28h</span></div>
+                      <div style="height:4px;background:rgba(44,44,44,0.08);border-radius:2px;overflow:hidden;"><div style="width:88%;height:100%;background:#9EC8BA;border-radius:2px;"></div></div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#798C5E;font-size:10px;font-weight:700;color:var(--dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;">AK</div>
+                    <div style="flex:1;">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(44,44,44,0.65);">Arjun K.</span><span style="font-size:10px;color:#EDC488;font-weight:600;">40h / 52h</span></div>
+                      <div style="height:4px;background:rgba(44,44,44,0.08);border-radius:2px;overflow:hidden;"><div style="width:75%;height:100%;background:#EDC488;border-radius:2px;"></div></div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#6B9BCC;font-size:10px;font-weight:700;color:var(--dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;">SM</div>
+                    <div style="flex:1;">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(44,44,44,0.65);">Sahil M.</span><span style="font-size:10px;color:#E7848E;font-weight:600;">36h / 61h</span></div>
+                      <div style="height:4px;background:rgba(44,44,44,0.08);border-radius:2px;overflow:hidden;"><div style="width:59%;height:100%;background:#E7848E;border-radius:2px;"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:rgba(218,119,86,0.07);border:1px solid rgba(218,119,86,0.15);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DA7756" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span style="font-size:11px;color:rgba(44,44,44,0.55);">Sahil M. is 25h over planned capacity this sprint. <span style="color:#DA7756;font-weight:600;">Redistribute?</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Analytics -->
+      <div class="feature-panel" data-panel="project-analytics">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Project Intelligence</div>
+            <h3 class="feature-name">Eight live charts. Zero Monday morning prep.</h3>
+            <p class="feature-desc">Project completion, milestone tracking, assignee workload, issue breakdown, task dependencies — all live, all on one dashboard. Leadership sees reality before the weekly call, not after.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">8 chart types per project: completion, milestone, dependency map</li>
+              <li class="feature-bullet">Cross-project portfolio view for CXOs and PMOs</li>
+              <li class="feature-bullet">Assignee-wise milestone progress with delay flags</li>
+              <li class="feature-bullet">Issue breakdown by type, priority, and responsible person</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              See live project analytics
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Project Analytics Dashboard</span>
+            </div>
+            <div class="feature-screen-body">
+              <div style="background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:14px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                  <div style="font-size:12px;font-weight:700;color:var(--dark);">Project Alpha — Q4 Launch</div>
+                  <div style="font-size:10px;font-weight:700;background:rgba(237,196,136,0.2);color:#EDC488;padding:3px 10px;border-radius:5px;">In Progress</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:9px;color:rgba(44,44,44,0.48);margin-bottom:4px;">Overall Completion</div>
+                    <div style="font-size:22px;font-weight:800;color:var(--dark);">73%</div>
+                    <div style="height:4px;background:rgba(44,44,44,0.08);border-radius:2px;margin-top:4px;overflow:hidden;"><div style="width:73%;height:100%;background:#DA7756;border-radius:2px;"></div></div>
+                  </div>
+                  <div>
+                    <div style="font-size:9px;color:rgba(44,44,44,0.48);margin-bottom:4px;">Milestone Progress</div>
+                    <div style="font-size:22px;font-weight:800;color:var(--dark);">4/7</div>
+                    <div style="height:4px;background:rgba(44,44,44,0.08);border-radius:2px;margin-top:4px;overflow:hidden;"><div style="width:57%;height:100%;background:#9EC8BA;border-radius:2px;"></div></div>
+                  </div>
+                </div>
+                <div style="font-size:10px;color:rgba(44,44,44,0.48);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Milestone Breakdown</div>
+                <div style="display:flex;flex-direction:column;gap:5px;">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#9EC8BA;flex-shrink:0;"></div>
+                    <span style="color:rgba(44,44,44,0.6);flex:1;">Design & Prototype</span>
+                    <span style="color:#9EC8BA;font-weight:600;">Done</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#EDC488;flex-shrink:0;"></div>
+                    <span style="color:rgba(44,44,44,0.6);flex:1;">Backend APIs</span>
+                    <span style="color:#EDC488;font-weight:600;">82%</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#DA7756;flex-shrink:0;"></div>
+                    <span style="color:rgba(44,44,44,0.6);flex:1;">QA & Testing</span>
+                    <span style="color:#DA7756;font-weight:600;">41%</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:rgba(44,44,44,0.12);flex-shrink:0;"></div>
+                    <span style="color:rgba(44,44,44,0.48);flex:1;">Launch & Deploy</span>
+                    <span style="color:rgba(44,44,44,0.42);font-weight:600;">Not started</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div style="background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;">
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Open Issues</div>
+                  <div style="font-size:22px;font-weight:800;color:var(--dark);margin-bottom:4px;">14</div>
+                  <div style="display:flex;gap:6px;">
+                    <span style="font-size:9px;font-weight:700;background:rgba(231,132,142,0.2);color:#E7848E;padding:2px 7px;border-radius:4px;">3 Critical</span>
+                    <span style="font-size:9px;font-weight:700;background:rgba(237,196,136,0.2);color:#EDC488;padding:2px 7px;border-radius:4px;">6 High</span>
+                  </div>
+                </div>
+                <div style="background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:10px;padding:12px;">
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Days to Deadline</div>
+                  <div style="font-size:22px;font-weight:800;color:#EDC488;margin-bottom:4px;">12</div>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);">Apr 9, 2026</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="feature-panel" data-panel="documents">
+        <div class="feature-content">
+          <div class="feature-info">
+            <div class="feature-tag">Document Suite</div>
+            <h3 class="feature-name">Write, collaborate, export. Your data stays yours.</h3>
+            <p class="feature-desc">Create Word docs, Excel sheets, PowerPoint decks, and PDFs directly inside PTM. Real-time collaborative editing. Export as official MS Office files. All stored on your servers — never ours. Cancel MS 365 for your team.</p>
+            <ul class="feature-bullets">
+              <li class="feature-bullet">Native Word, Excel, PPT, PDF creation — no MS 365 needed</li>
+              <li class="feature-bullet">Real-time multi-user collaborative editing like Google Docs</li>
+              <li class="feature-bullet">Export as official .docx, .xlsx, .pptx, .pdf for external sharing</li>
+              <li class="feature-bullet">All documents stored exclusively on your own infrastructure</li>
+            </ul>
+            <a href="#" class="feature-cta-link">
+              Try document creation
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="feature-screen">
+            <div class="feature-screen-header">
+              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
+              <span style="font-size:11px;color:rgba(44,44,44,0.42);margin-left:8px;">Document Drive</span>
+            </div>
+            <div class="feature-screen-body" style="gap:8px;">
+              <div style="display:flex;gap:6px;margin-bottom:2px;">
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;text-align:center;">
+                  <div style="font-size:18px;margin-bottom:4px;">📄</div>
+                  <div style="font-size:10px;font-weight:700;color:var(--dark);">.docx</div>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);">Word</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;text-align:center;">
+                  <div style="font-size:18px;margin-bottom:4px;">📊</div>
+                  <div style="font-size:10px;font-weight:700;color:var(--dark);">.xlsx</div>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);">Excel</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;text-align:center;">
+                  <div style="font-size:18px;margin-bottom:4px;">📋</div>
+                  <div style="font-size:10px;font-weight:700;color:var(--dark);">.pptx</div>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);">PowerPoint</div>
+                </div>
+                <div style="flex:1;background:#ffffff;border:1px solid rgba(196,184,157,0.4);border-radius:8px;padding:10px;text-align:center;">
+                  <div style="font-size:18px;margin-bottom:4px;">📑</div>
+                  <div style="font-size:10px;font-weight:700;color:var(--dark);">.pdf</div>
+                  <div style="font-size:9px;color:rgba(44,44,44,0.48);">PDF</div>
+                </div>
+              </div>
+              <div style="background:#ffffff;border:1px solid rgba(196,184,157,0.45);border-radius:10px;padding:14px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="font-size:12px;font-weight:700;color:var(--dark);">Q4 Investor Report.docx</div>
+                  <div style="display:flex;gap:6px;">
+                    <div style="width:20px;height:20px;border-radius:50%;background:#DA7756;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">PR</div>
+                    <div style="width:20px;height:20px;border-radius:50%;background:#798C5E;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">AK</div>
+                    <div style="font-size:10px;color:rgba(44,44,44,0.48);padding:0 4px;display:flex;align-items:center;">editing</div>
+                  </div>
+                </div>
+                <div style="background:#ffffff;border-radius:6px;padding:10px;">
+                  <div style="height:6px;background:rgba(44,44,44,0.08);border-radius:3px;margin-bottom:6px;width:85%;"></div>
+                  <div style="height:6px;background:rgba(44,44,44,0.08);border-radius:3px;margin-bottom:6px;width:70%;"></div>
+                  <div style="height:6px;background:rgba(218,119,86,0.3);border-radius:3px;margin-bottom:6px;width:55%;position:relative;">
+                    <div style="position:absolute;right:-2px;top:-2px;width:2px;height:10px;background:#DA7756;border-radius:1px;animation:blink 1s ease-in-out infinite;"></div>
+                  </div>
+                  <div style="height:6px;background:rgba(44,44,44,0.06);border-radius:3px;width:40%;"></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#faf9f6;border:1px solid rgba(196,184,157,0.38);border-radius:7px;">
+                  <div style="font-size:12px;">📄</div>
+                  <div style="flex:1;font-size:11px;color:rgba(44,44,44,0.6);">Client Proposal — Oberoi.docx</div>
+                  <div style="font-size:9px;font-weight:700;background:rgba(121,140,94,0.15);color:#798C5E;padding:2px 7px;border-radius:4px;">Your Server</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#faf9f6;border:1px solid rgba(196,184,157,0.38);border-radius:7px;">
+                  <div style="font-size:12px;">📊</div>
+                  <div style="flex:1;font-size:11px;color:rgba(44,44,44,0.6);">Budget Tracker Q4.xlsx</div>
+                  <div style="font-size:9px;font-weight:700;background:rgba(121,140,94,0.15);color:#798C5E;padding:2px 7px;border-radius:4px;">Your Server</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ FEATURES ═══ -->
+<section class="usps-section features-section" id="features">
   <div class="usps-inner">
     <div class="usps-list">
       <div class="section-eyebrow reveal">How we fix it</div>
@@ -3692,698 +3820,7 @@ footer::before {
 </section>
 
 
-<!-- ═══════════════════════════════════════════ TESTIMONIALS ═══ -->
-<section class="testimonials-section">
-  <div class="section-eyebrow reveal">Client Stories</div>
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;">
-    <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:0;">Don't take our word for it.</h2>
-    <p style="font-size:14px;color:rgba(44,44,44,0.5);max-width:300px;" class="reveal reveal-delay-2">Real results from teams that made the switch from fragmented stacks to PTM.</p>
-  </div>
 
-  <div class="testimonials-grid">
-    <!-- Card Stack -->
-    <div class="testimonials-card-area">
-      <div class="card-stack">
-        <div class="testi-card card-back2" data-index="3">
-          <!-- back card 2 placeholder -->
-        </div>
-        <div class="testi-card card-back1" data-index="2">
-          <!-- back card 1 placeholder -->
-        </div>
-        <div class="testi-card card-active" id="active-card">
-          <div class="testi-metric" id="testi-metric">87%</div>
-          <div class="testi-metric-label" id="testi-metric-label">Meeting actions completed on time</div>
-          <div class="testi-divider"></div>
-          <p class="testi-quote" id="testi-quote">Before PTM, our MoMs were written in Word and forgotten by Thursday. Now every action point becomes a task with an owner and a deadline automatically. Our project delivery improved by 31% in the first quarter alone.</p>
-          <div class="testi-author">
-            <div class="testi-avatar" id="testi-avatar" style="background:#DA7756">RK</div>
-            <div>
-              <div class="testi-name" id="testi-name">Rahul Kapoor</div>
-              <div class="testi-role" id="testi-role">Project Director, Kalpataru Group</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testi-nav">
-        <div class="testi-dot active" data-testi="0"></div>
-        <div class="testi-dot" data-testi="1"></div>
-        <div class="testi-dot" data-testi="2"></div>
-        <div class="testi-dot" data-testi="3"></div>
-      </div>
-    </div>
-
-    <!-- Right Content -->
-    <div class="testi-right-content">
-      <div class="testi-section-label reveal">What clients say</div>
-      <h3 class="testi-headline reveal reveal-delay-1">Real impact.<br>Specific numbers.<br>Zero fluff.</h3>
-      <p class="testi-body reveal reveal-delay-2">Every testimony here names a specific problem, a specific PTM feature that solved it, and the measurable outcome. Because vague praise doesn't help you make a ₹15L decision.</p>
-      <div class="testi-trust-badges reveal reveal-delay-3">
-        <div class="trust-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#798C5E" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Data Sovereign
-        </div>
-        <div class="trust-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#798C5E" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          14-day Free Trial
-        </div>
-        <div class="trust-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#798C5E" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Onboarding Support
-        </div>
-        <div class="trust-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#798C5E" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          1000+ Teams Onboarded
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════ WALKTHROUGH ═══ -->
-<section class="walkthrough-section" id="walkthrough">
-  <div class="walkthrough-inner">
-    <div class="walkthrough-eyebrow">See it in action</div>
-    <h2 class="walkthrough-title">Every module. One platform.<br><span class="accent">Zero tab-switching.</span></h2>
-    <p class="walkthrough-sub">See exactly how your team would use each module, from sprint planning to salary automation, all inside one sovereign workspace.</p>
-
-    <!-- Feature Tabs -->
-    <div class="feature-tabs">
-      <button class="feature-tab active" data-feature="dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </button>
-      <button class="feature-tab" data-feature="kanban">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="11" rx="1"/><rect x="17" y="3" width="4" height="7" rx="1"/></svg>
-        Kanban
-      </button>
-      <button class="feature-tab" data-feature="sprints">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Sprints
-      </button>
-      <button class="feature-tab" data-feature="mom">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
-        MoM
-      </button>
-      <button class="feature-tab" data-feature="collab">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Channels
-      </button>
-      <button class="feature-tab" data-feature="task-analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-        Task Analytics
-      </button>
-      <button class="feature-tab" data-feature="project-analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        Project Analytics
-      </button>
-      <button class="feature-tab" data-feature="documents">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Documents
-      </button>
-    </div>
-
-    <!-- Feature Panels -->
-    <div id="feature-panels">
-
-      <!-- Dashboard -->
-      <div class="feature-panel active" data-panel="dashboard">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Real-time Analytics</div>
-            <h3 class="feature-name">Your entire company's health in one screen.</h3>
-            <p class="feature-desc">Eight live chart types per project. No more asking for status updates. No more Monday PPT prep. The dashboard is your weekly report, live, always accurate.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">Project completion % across all active projects</li>
-              <li class="feature-bullet">Assignee-wise task performance and delay patterns</li>
-              <li class="feature-bullet">Task dependency maps that surface blockers early</li>
-              <li class="feature-bullet">8 chart types including milestone progress and issues breakdown</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              See dashboard live
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div>
-              <div class="dot-yellow"></div>
-              <div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Project Analytics Dashboard</span>
-            </div>
-            <div class="feature-screen-body">
-              <div class="dash-row">
-                <div class="dash-stat">
-                  <div class="dash-stat-label">Completion</div>
-                  <div class="dash-stat-val">73%</div>
-                  <div class="dash-stat-sub pos">+12% vs last sprint</div>
-                </div>
-                <div class="dash-stat">
-                  <div class="dash-stat-label">On Time</div>
-                  <div class="dash-stat-val">79%</div>
-                  <div class="dash-stat-sub pos">+25pp baseline</div>
-                </div>
-                <div class="dash-stat">
-                  <div class="dash-stat-label">Open Issues</div>
-                  <div class="dash-stat-val">14</div>
-                  <div class="dash-stat-sub neg">3 critical</div>
-                </div>
-                <div class="dash-stat">
-                  <div class="dash-stat-label">Active Team</div>
-                  <div class="dash-stat-val">28</div>
-                  <div class="dash-stat-sub pos">All active</div>
-                </div>
-              </div>
-              <div class="dash-chart-area">
-                <div class="dash-chart-label">Sprint Velocity (Tasks Completed/Sprint)</div>
-                <div class="bar-chart">
-                  <div class="bar" style="height:45%;background:rgba(218,119,86,0.25)" data-val="42"></div>
-                  <div class="bar" style="height:52%;background:rgba(218,119,86,0.3)" data-val="49"></div>
-                  <div class="bar" style="height:48%;background:rgba(218,119,86,0.25)" data-val="45"></div>
-                  <div class="bar" style="height:60%;background:rgba(218,119,86,0.35)" data-val="57"></div>
-                  <div class="bar" style="height:70%;background:rgba(218,119,86,0.4)" data-val="66"></div>
-                  <div class="bar" style="height:65%;background:rgba(218,119,86,0.35)" data-val="61"></div>
-                  <div class="bar" style="height:80%;background:rgba(218,119,86,0.5)" data-val="76"></div>
-                  <div class="bar" style="height:88%;background:var(--primary)" data-val="83"></div>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <div class="assignee-row" style="flex:1;min-width:140px;">
-                  <div class="assignee-avatar" style="background:#DA7756">PR</div>
-                  <div class="assignee-name" style="color:rgba(255,255,255,0.6)">Priya R.</div>
-                  <div class="assignee-pct" style="color:#fff;">88%</div>
-                </div>
-                <div class="assignee-row" style="flex:1;min-width:140px;">
-                  <div class="assignee-avatar" style="background:#798C5E">AK</div>
-                  <div class="assignee-name" style="color:rgba(255,255,255,0.6)">Arjun K.</div>
-                  <div class="assignee-pct" style="color:#fff;">74%</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Kanban -->
-      <div class="feature-panel" data-panel="kanban">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Visual Workflow</div>
-            <h3 class="feature-name">Your sprint board, live. No status meetings needed.</h3>
-            <p class="feature-desc">Kanban for the team's sprint tasks. Eisenhower Matrix for each person's personal to-dos. Two views. Zero confusion. Every task has an owner, a status, and a deadline.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">Drag-and-drop across To Do, In Progress, On Hold, Done</li>
-              <li class="feature-bullet">Color-coded tags by team: Dev, Design, Ops, Marketing</li>
-              <li class="feature-bullet">Personal Eisenhower Matrix alongside team Kanban</li>
-              <li class="feature-bullet">Inline task creation from any chat message</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              Try the Kanban board
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Sprint 12 &mdash; Kanban Board</span>
-            </div>
-            <div class="feature-screen-body">
-              <div class="wk-kanban">
-                <div class="wk-col">
-                  <div class="wk-col-head">To Do (3)</div>
-                  <div class="wk-card"><div class="wk-card-tag tag-dev">Dev</div><div>Auth refactor</div></div>
-                  <div class="wk-card"><div class="wk-card-tag tag-design">Design</div><div>Dashboard v2</div></div>
-                  <div class="wk-card"><div class="wk-card-tag tag-ops">Ops</div><div>Deploy pipeline</div></div>
-                </div>
-                <div class="wk-col">
-                  <div class="wk-col-head">In Progress (4)</div>
-                  <div class="wk-card" style="border-left:2px solid #DA7756"><div class="wk-card-tag tag-dev">Dev</div><div>Payment gateway</div></div>
-                  <div class="wk-card" style="border-left:2px solid #EDC488"><div class="wk-card-tag tag-design">Design</div><div>Mobile mockups</div></div>
-                  <div class="wk-card" style="border-left:2px solid #DA7756"><div class="wk-card-tag tag-ops">Ops</div><div>API docs</div></div>
-                </div>
-                <div class="wk-col">
-                  <div class="wk-col-head">Done (5)</div>
-                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-design">Design</div><div>Landing page</div></div>
-                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-dev">Dev</div><div>CI/CD setup</div></div>
-                  <div class="wk-card" style="opacity:0.5"><div class="wk-card-tag tag-ops">Ops</div><div>DB migration</div></div>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;margin-top:8px;">
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;">
-                  <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:6px;">URGENT/IMPORTANT</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.6)">Payment gateway</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.6)">Client demo prep</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;">
-                  <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:6px;">PLAN/SCHEDULE</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.6)">Q4 roadmap</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,0.6)">Team retro</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sprints -->
-      <div class="feature-panel" data-panel="sprints">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Agile Management</div>
-            <h3 class="feature-name">Sprint planning that engineering teams actually use.</h3>
-            <p class="feature-desc">Connect sprint goals to milestone tasks. Track completion in real time. Assign story points. Every sprint has a clear scope, owner, and delivery date, visible to the entire company.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">Sprint planning with task-level linking and scope definition</li>
-              <li class="feature-bullet">Sprint start/end dates with automated escalation on delays</li>
-              <li class="feature-bullet">Issue register for client-reported bugs tied to sprints</li>
-              <li class="feature-bullet">Sprint retrospective MoM auto-converts to next sprint tasks</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              Plan your first sprint
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Sprint Management</span>
-            </div>
-            <div class="feature-screen-body">
-              <div class="sprint-header-row">
-                <div>
-                  <div class="sprint-name">Sprint 12 &mdash; Q4 Launch</div>
-                  <div class="sprint-dates">Mar 25 &rarr; Apr 7, 2026</div>
-                </div>
-                <div class="sprint-badge">In Progress</div>
-              </div>
-              <div class="sprint-task-row">
-                <div class="sprint-task-check done"><svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                <div class="sprint-task-name done">Authentication module refactor</div>
-                <div class="sprint-assignee">Priya R.</div>
-              </div>
-              <div class="sprint-task-row">
-                <div class="sprint-task-check done"><svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                <div class="sprint-task-name done">CI/CD pipeline setup</div>
-                <div class="sprint-assignee">Sahil M.</div>
-              </div>
-              <div class="sprint-task-row">
-                <div class="sprint-task-check"></div>
-                <div class="sprint-task-name">Payment gateway integration</div>
-                <div class="sprint-assignee">Arjun K.</div>
-              </div>
-              <div class="sprint-task-row">
-                <div class="sprint-task-check"></div>
-                <div class="sprint-task-name">Dashboard analytics v2</div>
-                <div class="sprint-assignee">Priya R.</div>
-              </div>
-              <div class="sprint-task-row">
-                <div class="sprint-task-check"></div>
-                <div class="sprint-task-name">Mobile responsive QA</div>
-                <div class="sprint-assignee">Nandita K.</div>
-              </div>
-              <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
-                <div style="font-size:10px;color:rgba(255,255,255,0.35)">Progress</div>
-                <div style="flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;">
-                  <div style="width:40%;height:100%;background:var(--primary);border-radius:2px;"></div>
-                </div>
-                <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;">2/5 done</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- MoM -->
-      <div class="feature-panel" data-panel="mom">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Meeting Intelligence</div>
-            <h3 class="feature-name">Meeting ends. Tasks begin. Automatically.</h3>
-            <p class="feature-desc">Record meeting notes directly in PTM. Every action point becomes an assigned task with a deadline and responsible person in one click. Action completion rate jumps from 28% to 87% in 60 days.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">9 structured fields per MoM: attendees, type, action items</li>
-              <li class="feature-bullet">One-click conversion of any action point to a tracked task</li>
-              <li class="feature-bullet">Document attachment support within MoM records</li>
-              <li class="feature-bullet">AI can auto-extract action items from meeting transcripts</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              See MoM in action
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Minutes of Meeting</span>
-            </div>
-            <div class="feature-screen-body">
-              <div class="mom-wk-card">
-                <div class="mom-wk-title">Q4 Strategy Review</div>
-                <div class="mom-wk-meta">
-                  <span>Mar 28, 2026</span>
-                  <span>Internal</span>
-                  <span>11 Attendees</span>
-                </div>
-                <div class="mom-wk-action">
-                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
-                  Finalize Q4 marketing budget &mdash; Riya S., Apr 4
-                  <span class="mom-arrow">&#8594;</span>
-                </div>
-                <div class="mom-wk-action">
-                  <div style="width:8px;height:8px;border-radius:50%;background:#9EC8BA;flex-shrink:0;"></div>
-                  Share competitor analysis &mdash; Dev T., Apr 2
-                  <span style="color:#9EC8BA;font-size:10px;font-weight:700;margin-left:auto;">&#10003; Task Created</span>
-                </div>
-                <div class="mom-wk-action">
-                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
-                  Prepare onboarding deck &mdash; Nandita K., Apr 7
-                  <span class="mom-arrow">&#8594;</span>
-                </div>
-                <div class="mom-wk-action">
-                  <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></div>
-                  Review vendor contracts &mdash; Legal, Apr 10
-                  <span class="mom-arrow">&#8594;</span>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:center;background:rgba(218,119,86,0.08);border:1px solid rgba(218,119,86,0.15);border-radius:8px;padding:10px 14px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DA7756" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span style="font-size:11px;color:rgba(255,255,255,0.5);">3 of 4 actions pending. <span style="color:var(--primary);font-weight:600;">Convert all to tasks in one click.</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Channels -->
-      <div class="feature-panel" data-panel="collab">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Team Collaboration</div>
-            <h3 class="feature-name">Stop WhatsApp. Start working in context.</h3>
-            <p class="feature-desc">Direct messages and group channels, fully embedded in your project context. Turn any message into a task with one click. All communication stored on your servers, searchable, and permanently on record.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">1-on-1 direct messages with inline task creation</li>
-              <li class="feature-bullet">Project-specific group channels tied to your workspace</li>
-              <li class="feature-bullet">Turn any message into a tracked task instantly</li>
-              <li class="feature-bullet">All chat data on your infrastructure, never ours</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              See channels in action
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">#product-sprint</span>
-            </div>
-            <div class="feature-screen-body">
-              <div class="collab-msgs">
-                <div class="msg-bubble">
-                  <div class="msg-avatar" style="background:#6B9BCC">AK</div>
-                  <div>
-                    <div class="msg-content">The payment gateway PR is ready for review. Can someone check before EOD?</div>
-                    <div class="msg-task-pill">
-                      <span class="msg-task-icon">+</span>
-                      Create task from this message
-                    </div>
-                  </div>
-                </div>
-                <div class="msg-bubble outgoing">
-                  <div class="msg-avatar" style="background:#DA7756">PR</div>
-                  <div>
-                    <div class="msg-content">On it. I'll review by 3pm and push feedback inline.</div>
-                  </div>
-                </div>
-                <div class="msg-bubble">
-                  <div class="msg-avatar" style="background:#798C5E">SM</div>
-                  <div>
-                    <div class="msg-content">Also flagging, the API docs task is blocked. Waiting for Arjun's schema finalization.</div>
-                    <div class="msg-task-pill" style="background:rgba(218,119,86,0.12);border-color:rgba(218,119,86,0.2)">
-                      <span class="msg-task-icon">&#9888;</span>
-                      Blocker: API docs &mdash; View task
-                    </div>
-                  </div>
-                </div>
-                <div class="msg-bubble outgoing">
-                  <div class="msg-avatar" style="background:#DA7756">PR</div>
-                  <div>
-                    <div class="msg-content">Arjun &mdash; assigning you the schema task now. Due today 5pm.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Task Analytics -->
-      <div class="feature-panel" data-panel="task-analytics">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Task Intelligence</div>
-            <h3 class="feature-name">Know who's delivering. Before it's too late.</h3>
-            <p class="feature-desc">A comprehensive 18-column task table with assignee-level performance visibility. Planned vs actual hours per person. Spot chronic delays before they become project failures.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">18-column task table: assignee, status, effort, predecessor, completion %</li>
-              <li class="feature-bullet">Planned vs actual hours comparison per team member</li>
-              <li class="feature-bullet">Task dependency map — see which tasks are blocking others</li>
-              <li class="feature-bullet">Assignee-wise delay patterns surfaced automatically</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              Explore task analytics
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Task Analytics — Assignee View</span>
-            </div>
-            <div class="feature-screen-body">
-              <div style="display:flex;gap:8px;margin-bottom:8px;">
-                <div style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;">
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Total Tasks</div>
-                  <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;">247</div>
-                  <div style="font-size:9px;color:#9EC8BA;margin-top:2px;">+18 this week</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;">
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">On Track</div>
-                  <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;">189</div>
-                  <div style="font-size:9px;color:#9EC8BA;margin-top:2px;">76% of total</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;">
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Overdue</div>
-                  <div style="font-size:26px;font-weight:800;color:#E7848E;letter-spacing:-0.5px;">14</div>
-                  <div style="font-size:9px;color:#E7848E;margin-top:2px;">Action needed</div>
-                </div>
-              </div>
-              <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;margin-bottom:8px;">
-                <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Planned vs Actual Hours</div>
-                <div style="display:flex;flex-direction:column;gap:8px;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:#DA7756;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">PR</div>
-                    <div style="flex:1;">
-                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(255,255,255,0.6);">Priya R.</span><span style="font-size:10px;color:#9EC8BA;font-weight:600;">32h / 28h</span></div>
-                      <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:88%;height:100%;background:#9EC8BA;border-radius:2px;"></div></div>
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:#798C5E;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AK</div>
-                    <div style="flex:1;">
-                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(255,255,255,0.6);">Arjun K.</span><span style="font-size:10px;color:#EDC488;font-weight:600;">40h / 52h</span></div>
-                      <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:75%;height:100%;background:#EDC488;border-radius:2px;"></div></div>
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:#6B9BCC;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">SM</div>
-                    <div style="flex:1;">
-                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:rgba(255,255,255,0.6);">Sahil M.</span><span style="font-size:10px;color:#E7848E;font-weight:600;">36h / 61h</span></div>
-                      <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:59%;height:100%;background:#E7848E;border-radius:2px;"></div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div style="background:rgba(218,119,86,0.07);border:1px solid rgba(218,119,86,0.15);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DA7756" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span style="font-size:11px;color:rgba(255,255,255,0.5);">Sahil M. is 25h over planned capacity this sprint. <span style="color:#DA7756;font-weight:600;">Redistribute?</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Project Analytics -->
-      <div class="feature-panel" data-panel="project-analytics">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Project Intelligence</div>
-            <h3 class="feature-name">Eight live charts. Zero Monday morning prep.</h3>
-            <p class="feature-desc">Project completion, milestone tracking, assignee workload, issue breakdown, task dependencies — all live, all on one dashboard. Leadership sees reality before the weekly call, not after.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">8 chart types per project: completion, milestone, dependency map</li>
-              <li class="feature-bullet">Cross-project portfolio view for CXOs and PMOs</li>
-              <li class="feature-bullet">Assignee-wise milestone progress with delay flags</li>
-              <li class="feature-bullet">Issue breakdown by type, priority, and responsible person</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              See live project analytics
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Project Analytics Dashboard</span>
-            </div>
-            <div class="feature-screen-body">
-              <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;margin-bottom:8px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                  <div style="font-size:12px;font-weight:700;color:#fff;">Project Alpha — Q4 Launch</div>
-                  <div style="font-size:10px;font-weight:700;background:rgba(237,196,136,0.2);color:#EDC488;padding:3px 10px;border-radius:5px;">In Progress</div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-                  <div>
-                    <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:4px;">Overall Completion</div>
-                    <div style="font-size:22px;font-weight:800;color:#fff;">73%</div>
-                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:4px;overflow:hidden;"><div style="width:73%;height:100%;background:#DA7756;border-radius:2px;"></div></div>
-                  </div>
-                  <div>
-                    <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:4px;">Milestone Progress</div>
-                    <div style="font-size:22px;font-weight:800;color:#fff;">4/7</div>
-                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:4px;overflow:hidden;"><div style="width:57%;height:100%;background:#9EC8BA;border-radius:2px;"></div></div>
-                  </div>
-                </div>
-                <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Milestone Breakdown</div>
-                <div style="display:flex;flex-direction:column;gap:5px;">
-                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
-                    <div style="width:8px;height:8px;border-radius:50%;background:#9EC8BA;flex-shrink:0;"></div>
-                    <span style="color:rgba(255,255,255,0.55);flex:1;">Design & Prototype</span>
-                    <span style="color:#9EC8BA;font-weight:600;">Done</span>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
-                    <div style="width:8px;height:8px;border-radius:50%;background:#EDC488;flex-shrink:0;"></div>
-                    <span style="color:rgba(255,255,255,0.55);flex:1;">Backend APIs</span>
-                    <span style="color:#EDC488;font-weight:600;">82%</span>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
-                    <div style="width:8px;height:8px;border-radius:50%;background:#DA7756;flex-shrink:0;"></div>
-                    <span style="color:rgba(255,255,255,0.55);flex:1;">QA & Testing</span>
-                    <span style="color:#DA7756;font-weight:600;">41%</span>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
-                    <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);flex-shrink:0;"></div>
-                    <span style="color:rgba(255,255,255,0.35);flex:1;">Launch & Deploy</span>
-                    <span style="color:rgba(255,255,255,0.3);font-weight:600;">Not started</span>
-                  </div>
-                </div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;">
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Open Issues</div>
-                  <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;">14</div>
-                  <div style="display:flex;gap:6px;">
-                    <span style="font-size:9px;font-weight:700;background:rgba(231,132,142,0.2);color:#E7848E;padding:2px 7px;border-radius:4px;">3 Critical</span>
-                    <span style="font-size:9px;font-weight:700;background:rgba(237,196,136,0.2);color:#EDC488;padding:2px 7px;border-radius:4px;">6 High</span>
-                  </div>
-                </div>
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;">
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Days to Deadline</div>
-                  <div style="font-size:22px;font-weight:800;color:#EDC488;margin-bottom:4px;">12</div>
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);">Apr 9, 2026</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Documents -->
-      <div class="feature-panel" data-panel="documents">
-        <div class="feature-content">
-          <div class="feature-info">
-            <div class="feature-tag">Document Suite</div>
-            <h3 class="feature-name">Write, collaborate, export. Your data stays yours.</h3>
-            <p class="feature-desc">Create Word docs, Excel sheets, PowerPoint decks, and PDFs directly inside PTM. Real-time collaborative editing. Export as official MS Office files. All stored on your servers — never ours. Cancel MS 365 for your team.</p>
-            <ul class="feature-bullets">
-              <li class="feature-bullet">Native Word, Excel, PPT, PDF creation — no MS 365 needed</li>
-              <li class="feature-bullet">Real-time multi-user collaborative editing like Google Docs</li>
-              <li class="feature-bullet">Export as official .docx, .xlsx, .pptx, .pdf for external sharing</li>
-              <li class="feature-bullet">All documents stored exclusively on your own infrastructure</li>
-            </ul>
-            <a href="#" class="feature-cta-link">
-              Try document creation
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-          <div class="feature-screen">
-            <div class="feature-screen-header">
-              <div class="dot-red"></div><div class="dot-yellow"></div><div class="dot-green"></div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:8px;">Document Drive</span>
-            </div>
-            <div class="feature-screen-body" style="gap:8px;">
-              <div style="display:flex;gap:6px;margin-bottom:2px;">
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center;">
-                  <div style="font-size:18px;margin-bottom:4px;">📄</div>
-                  <div style="font-size:10px;font-weight:700;color:#fff;">.docx</div>
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);">Word</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center;">
-                  <div style="font-size:18px;margin-bottom:4px;">📊</div>
-                  <div style="font-size:10px;font-weight:700;color:#fff;">.xlsx</div>
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);">Excel</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center;">
-                  <div style="font-size:18px;margin-bottom:4px;">📋</div>
-                  <div style="font-size:10px;font-weight:700;color:#fff;">.pptx</div>
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);">PowerPoint</div>
-                </div>
-                <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center;">
-                  <div style="font-size:18px;margin-bottom:4px;">📑</div>
-                  <div style="font-size:10px;font-weight:700;color:#fff;">.pdf</div>
-                  <div style="font-size:9px;color:rgba(255,255,255,0.35);">PDF</div>
-                </div>
-              </div>
-              <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                  <div style="font-size:12px;font-weight:700;color:#fff;">Q4 Investor Report.docx</div>
-                  <div style="display:flex;gap:6px;">
-                    <div style="width:20px;height:20px;border-radius:50%;background:#DA7756;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">PR</div>
-                    <div style="width:20px;height:20px;border-radius:50%;background:#798C5E;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">AK</div>
-                    <div style="font-size:10px;color:rgba(255,255,255,0.35);padding:0 4px;display:flex;align-items:center;">editing</div>
-                  </div>
-                </div>
-                <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px;">
-                  <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin-bottom:6px;width:85%;"></div>
-                  <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin-bottom:6px;width:70%;"></div>
-                  <div style="height:6px;background:rgba(218,119,86,0.3);border-radius:3px;margin-bottom:6px;width:55%;position:relative;">
-                    <div style="position:absolute;right:-2px;top:-2px;width:2px;height:10px;background:#DA7756;border-radius:1px;animation:blink 1s ease-in-out infinite;"></div>
-                  </div>
-                  <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;width:40%;"></div>
-                </div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:7px;">
-                  <div style="font-size:12px;">📄</div>
-                  <div style="flex:1;font-size:11px;color:rgba(255,255,255,0.55);">Client Proposal — Oberoi.docx</div>
-                  <div style="font-size:9px;font-weight:700;background:rgba(121,140,94,0.15);color:#798C5E;padding:2px 7px;border-radius:4px;">Your Server</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:7px;">
-                  <div style="font-size:12px;">📊</div>
-                  <div style="flex:1;font-size:11px;color:rgba(255,255,255,0.55);">Budget Tracker Q4.xlsx</div>
-                  <div style="font-size:9px;font-weight:700;background:rgba(121,140,94,0.15);color:#798C5E;padding:2px 7px;border-radius:4px;">Your Server</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 
 <script>
@@ -4493,102 +3930,6 @@ uspItems.forEach(item => {
     if (target) target.classList.add('visible');
   });
 });
-
-// ── TESTIMONIALS ──
-const testimonials = [
-  {
-    metric: '87%',
-    metricLabel: 'Meeting actions completed on time',
-    quote: "Before PTM, our MoMs were written in Word and forgotten by Thursday. Now every action point becomes a task with an owner and a deadline automatically. Our project delivery improved by 31% in the first quarter alone.",
-    name: 'Rahul Kapoor',
-    role: 'Project Director, Kalpataru Group',
-    initials: 'RK',
-    color: '#DA7756'
-  },
-  {
-    metric: '₹1.8Cr',
-    metricLabel: 'Annual SaaS cost saved',
-    quote: "We replaced MS 365, Asana, and Google Docs with PTM. The data sovereignty feature was the deal-closer, our client contracts and financial data now live exclusively on our own servers. The compliance team finally stopped worrying.",
-    name: 'Pooja Mehta',
-    role: 'COO, Panchshil Realty',
-    initials: 'PM',
-    color: '#798C5E'
-  },
-  {
-    metric: '42%',
-    metricLabel: 'Faster client issue resolution time',
-    quote: "Our client issues used to get lost in email threads for two weeks. With PTM's issue register and MoM-to-task workflow, nothing falls through the cracks. Resolution time dropped from 12 days to under 5, and our clients noticed.",
-    name: 'Vikram Nair',
-    role: 'COO, Runwal Group',
-    initials: 'VN',
-    color: '#6B9BCC'
-  },
-  {
-    metric: '22%',
-    metricLabel: 'More sprint tasks completed vs Jira',
-    quote: "Our engineering team was skeptical about leaving Jira. After one sprint on PTM, nobody wanted to go back. The Kanban board, the integrated channels, and the MoM to task conversion cut our sprint coordination overhead in half.",
-    name: 'Ananya Krishnan',
-    role: 'VP Engineering, Godrej Properties',
-    initials: 'AK',
-    color: '#9EC8BA'
-  }
-];
-
-let currentTesti = 0;
-let testiInterval;
-
-function showTestimonial(index, animate = true) {
-  const t = testimonials[index];
-  const card = document.getElementById('active-card');
-
-  if (animate) {
-    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(12px)';
-    setTimeout(() => {
-      updateCard(t);
-      card.style.opacity = '1';
-      card.style.transform = 'translateY(0)';
-    }, 300);
-  } else {
-    updateCard(t);
-  }
-
-  // Update dots
-  document.querySelectorAll('.testi-dot').forEach((dot, i) => {
-    dot.classList.toggle('active', i === index);
-  });
-}
-
-function updateCard(t) {
-  document.getElementById('testi-metric').textContent = t.metric;
-  document.getElementById('testi-metric-label').textContent = t.metricLabel;
-  document.getElementById('testi-quote').textContent = t.quote;
-  document.getElementById('testi-name').textContent = t.name;
-  document.getElementById('testi-role').textContent = t.role;
-  const avatar = document.getElementById('testi-avatar');
-  avatar.textContent = t.initials;
-  avatar.style.background = t.color;
-}
-
-function startTestimonialCycle() {
-  testiInterval = setInterval(() => {
-    currentTesti = (currentTesti + 1) % testimonials.length;
-    showTestimonial(currentTesti);
-  }, 5000);
-}
-
-// Dot click handlers
-document.querySelectorAll('.testi-dot').forEach(dot => {
-  dot.addEventListener('click', () => {
-    clearInterval(testiInterval);
-    currentTesti = parseInt(dot.dataset.testi);
-    showTestimonial(currentTesti);
-    startTestimonialCycle();
-  });
-});
-
-startTestimonialCycle();
 
 // ── FEATURE TABS ──
 const featureTabs = document.querySelectorAll('.feature-tab');
@@ -5636,7 +4977,7 @@ const barObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.3 });
 
-document.querySelectorAll('.team-visual-body, .end-banner').forEach(el => barObserver.observe(el));
+document.querySelectorAll('.team-visual-body, .end-banner, #cta-banner').forEach(el => barObserver.observe(el));
 
 // ── CONTACT FORM SUBMIT ──
 const submitBtn = document.querySelector('.form-submit');

@@ -28,14 +28,9 @@ const BACKDROP_FILTER_FIX_CSS = `
   backdrop-filter: blur(24px) !important;
 }
 
-/* Crisp rendering fix:
-   The original HTML uses scaled transforms for "depth" (e.g. testimonial stack).
-   On some GPUs/screens this reads as blur. Keep the layout/offset/rotation but
-   force scale(1) so text and UI stay sharp. */
-.patm-root .testi-card { transform: translateY(30px) scale(1) !important; }
-.patm-root .testi-card.card-active { transform: translateY(0) scale(1) !important; }
-.patm-root .testi-card.card-back1 { transform: translateY(12px) rotate(1deg) scale(1) !important; }
-.patm-root .testi-card.card-back2 { transform: translateY(22px) rotate(2.5deg) scale(1) !important; }
+.patm-root {
+  color-scheme: only light;
+}
 
 /* Hard-disable transform-based reveal helpers (prevents any residual soft rendering) */
 .patm-root .reveal,
@@ -212,120 +207,6 @@ export default function PATMLandingPage() {
       header.addEventListener('click', onClick)
       uspClickHandlers.push({ el: header, fn: onClick })
     })
-
-    // Testimonials
-    const testimonials = [
-      {
-        metric: '87%',
-        metricLabel: 'Meeting actions completed on time',
-        quote:
-          'Before PTM, our MoMs were written in Word and forgotten by Thursday. Now every action point becomes a task with an owner and a deadline automatically. Our project delivery improved by 31% in the first quarter alone.',
-        name: 'Rahul Kapoor',
-        role: 'Project Director, Kalpataru Group',
-        initials: 'RK',
-        color: '#DA7756',
-      },
-      {
-        metric: '₹1.8Cr',
-        metricLabel: 'Annual SaaS cost saved',
-        quote:
-          "We replaced MS 365, Asana, and Google Docs with PTM. The data sovereignty feature was the deal-closer, our client contracts and financial data now live exclusively on our own servers. The compliance team finally stopped worrying.",
-        name: 'Pooja Mehta',
-        role: 'COO, Panchshil Realty',
-        initials: 'PM',
-        color: '#798C5E',
-      },
-      {
-        metric: '42%',
-        metricLabel: 'Faster client issue resolution time',
-        quote:
-          "Our client issues used to get lost in email threads for two weeks. With PTM's issue register and MoM-to-task workflow, nothing falls through the cracks. Resolution time dropped from 12 days to under 5, and our clients noticed.",
-        name: 'Vikram Nair',
-        role: 'COO, Runwal Group',
-        initials: 'VN',
-        color: '#6B9BCC',
-      },
-      {
-        metric: '22%',
-        metricLabel: 'More sprint tasks completed vs Jira',
-        quote:
-          "Our engineering team was skeptical about leaving Jira. After one sprint on PTM, nobody wanted to go back. The Kanban board, the integrated channels, and the MoM to task conversion cut our sprint coordination overhead in half.",
-        name: 'Ananya Krishnan',
-        role: 'VP Engineering, Godrej Properties',
-        initials: 'AK',
-        color: '#9EC8BA',
-      },
-    ]
-
-    let currentTesti = 0
-    const activeCard = root.querySelector<HTMLElement>('#active-card')
-    const updateCard = (t: (typeof testimonials)[number]) => {
-      const metric = root.querySelector<HTMLElement>('#testi-metric')
-      const metricLabel = root.querySelector<HTMLElement>('#testi-metric-label')
-      const quote = root.querySelector<HTMLElement>('#testi-quote')
-      const name = root.querySelector<HTMLElement>('#testi-name')
-      const role = root.querySelector<HTMLElement>('#testi-role')
-      const avatar = root.querySelector<HTMLElement>('#testi-avatar')
-      if (metric) metric.textContent = t.metric
-      if (metricLabel) metricLabel.textContent = t.metricLabel
-      if (quote) quote.textContent = t.quote
-      if (name) name.textContent = t.name
-      if (role) role.textContent = t.role
-      if (avatar) {
-        avatar.textContent = t.initials
-        avatar.style.background = t.color
-      }
-    }
-
-    const testiDots = Array.from(root.querySelectorAll<HTMLElement>('.testi-dot'))
-    const showTestimonial = (index: number, animate = true) => {
-      const t = testimonials[index]
-      if (!t) return
-      if (activeCard && animate) {
-        activeCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
-        activeCard.style.opacity = '0'
-        activeCard.style.transform = 'translateY(12px)'
-        window.setTimeout(() => {
-          updateCard(t)
-          if (!activeCard) return
-          activeCard.style.opacity = '1'
-          activeCard.style.transform = 'translateY(0)'
-        }, 300)
-      } else {
-        updateCard(t)
-      }
-      testiDots.forEach((dot, i) => dot.classList.toggle('active', i === index))
-    }
-
-    const restartTestiCycle = (() => {
-      let timer: number | null = null
-      const start = () => {
-        timer = window.setInterval(() => {
-          currentTesti = (currentTesti + 1) % testimonials.length
-          showTestimonial(currentTesti)
-        }, 5000)
-      }
-      const stop = () => {
-        if (timer) window.clearInterval(timer)
-        timer = null
-      }
-      const getTimer = () => timer
-      return { start, stop, getTimer }
-    })()
-
-    const dotHandlers: Array<{ dot: HTMLElement; fn: () => void }> = []
-    testiDots.forEach((dot, i) => {
-      const fn = () => {
-        restartTestiCycle.stop()
-        currentTesti = i
-        showTestimonial(currentTesti)
-        restartTestiCycle.start()
-      }
-      dot.addEventListener('click', fn)
-      dotHandlers.push({ dot, fn })
-    })
-    showTestimonial(0, false)
-    restartTestiCycle.start()
 
     // Feature tabs
     const featureTabs = Array.from(root.querySelectorAll<HTMLElement>('.feature-tab'))
@@ -504,7 +385,9 @@ export default function PATMLandingPage() {
       },
       { threshold: 0.3 },
     )
-    root.querySelectorAll<HTMLElement>('.team-visual-body, .end-banner').forEach((el) => barObserver.observe(el))
+    root
+      .querySelectorAll<HTMLElement>('.team-visual-body, .end-banner, #cta-banner')
+      .forEach((el) => barObserver.observe(el))
 
     // Contact submit
     const submitBtn = root.querySelector<HTMLButtonElement>('.form-submit')
@@ -533,11 +416,8 @@ export default function PATMLandingPage() {
       progressObserver.disconnect()
       barObserver.disconnect()
       counterTimers.forEach((t) => window.clearInterval(t))
-      const testiTimer = restartTestiCycle.getTimer()
-      if (testiTimer) window.clearInterval(testiTimer)
 
       uspClickHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      dotHandlers.forEach(({ dot, fn }) => dot.removeEventListener('click', fn))
       featureHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       painHandlers.forEach(({ el, onMove, onLeave }) => {
         el.removeEventListener('mousemove', onMove)

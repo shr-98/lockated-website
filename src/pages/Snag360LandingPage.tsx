@@ -1,19 +1,131 @@
 import { useEffect, useRef, useState } from 'react'
 
+type Snag360Window = Window & typeof globalThis & {
+  toggleUSP?: (item: HTMLElement, idx: number) => void
+  switchTab?: (idx: number) => void
+  openModal?: (id: string) => void
+  closeModal?: (e: MouseEvent, id: string, force?: boolean) => void
+  switchTeam?: (idx: number) => void
+}
+
 /**
- * `public/snag-360.html` expects its own reveal animations and section layout.
- * The app has global styles that can unintentionally affect these landing pages
- * (e.g. global reveal blur/filter rules). We isolate Snag360 markup to keep the
- * HTML rendering identical to the standalone reference file.
+ * `public/snag-360.html` uses standalone reveal rules and section ordering.
+ * In-app we align the behavior with the Vendor Management integration pattern,
+ * keep the route fully light-mode, and remove sections that should not render.
  */
 const SNAG360_ISOLATION_CSS = `
-.snag360-root .reveal,
-.snag360-root .reveal.in-view {
+.snag360-root,
+.snag360-root * {
+  color-scheme: only light !important;
+}
+.snag360-root .reveal {
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
   filter: none !important;
   will-change: auto !important;
+  transition: opacity 0.6s ease, transform 0.6s ease !important;
+}
+.snag360-root .reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+.snag360-root h1,
+.snag360-root h2,
+.snag360-root h3,
+.snag360-root h4,
+.snag360-root h5,
+.snag360-root h6 {
+  font-family: var(--font, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.snag360-root .walkthrough-section,
+.snag360-root footer,
+.snag360-root .contact-section {
+  background: var(--cream, #F6F4EE) !important;
+}
+.snag360-root .walkthrough-title,
+.snag360-root .feature-name,
+.snag360-root .footer-logo-text,
+.snag360-root .footer-col-title,
+.snag360-root .footer-badge,
+.snag360-root .footer-copyright,
+.snag360-root .office-name,
+.snag360-root .office-label,
+.snag360-root .contact-form-wrap h3 {
+  color: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .walkthrough-sub,
+.snag360-root .feature-desc,
+.snag360-root .feature-bullets li,
+.snag360-root .footer-brand-desc,
+.snag360-root .footer-col-links a,
+.snag360-root .office-address,
+.snag360-root .form-group label {
+  color: rgba(44, 44, 44, 0.62) !important;
+}
+.snag360-root .feature-tabs {
+  border-bottom-color: rgba(44, 44, 44, 0.1) !important;
+}
+.snag360-root .feature-tab {
+  color: rgba(44, 44, 44, 0.45) !important;
+}
+.snag360-root .feature-tab:hover {
+  color: rgba(44, 44, 44, 0.72) !important;
+}
+.snag360-root .feature-tab.active {
+  color: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .feature-screen {
+  background: var(--surface, #F0EAE1) !important;
+  border: 1px solid rgba(196, 184, 157, 0.45) !important;
+  box-shadow: 0 20px 48px rgba(44, 44, 44, 0.09) !important;
+}
+.snag360-root .feature-screen-header {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-bottom: 1px solid rgba(196, 184, 157, 0.28) !important;
+}
+.snag360-root .feature-screen-header span,
+.snag360-root .feature-screen-body,
+.snag360-root .feature-screen-body * {
+  color: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .feature-screen-body {
+  background: transparent !important;
+}
+.snag360-root .feature-screen-body svg [stroke='white'] {
+  stroke: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .feature-screen-body svg [fill='white'] {
+  fill: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .wt-tag.open {
+  color: #E7848E !important;
+}
+.snag360-root .wt-tag.closed {
+  color: #798C5E !important;
+}
+.snag360-root .wt-tag.progress {
+  color: #BA7517 !important;
+}
+.snag360-root .end-banner {
+  background: var(--band, #E8E2D6) !important;
+}
+.snag360-root .btn-submit,
+.snag360-root .btn-primary-nav,
+.snag360-root .btn-hero-primary,
+.snag360-root .btn-banner-primary {
+  color: #F6F4EE !important;
+}
+.snag360-root .form-group input,
+.snag360-root .form-group select,
+.snag360-root .form-group textarea,
+.snag360-root .contact-form-wrap {
+  background-color: var(--surface, #F0EAE1) !important;
+  color: var(--dark, #2C2C2C) !important;
 }
 @media (prefers-reduced-motion: reduce) {
-  .snag360-root .reveal {
+  .snag360-root .reveal,
+  .snag360-root .reveal.visible {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -37,6 +149,54 @@ export default function Snag360LandingPage() {
 
         const text = await res.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
+        doc.querySelector('.clients-section')?.remove()
+        doc.querySelector('.testimonials-section')?.remove()
+        doc.querySelector('a[href="#testimonials"]')?.closest('li')?.remove()
+
+        const nav = doc.querySelector('#navbar')
+        const navLinks = nav?.querySelector('.nav-links')
+        if (navLinks) {
+          const painLink = navLinks.querySelector('a[href="#pain"]')?.closest('li')
+          const walkLink = navLinks.querySelector('a[href="#walkthrough"]')?.closest('li')
+          const featuresLink = navLinks.querySelector('a[href="#features"]')?.closest('li')
+          const teamsLink = doc.createElement('li')
+          teamsLink.innerHTML = '<a href="#teams">Teams</a>'
+          const useCasesLink = navLinks.querySelector('a[href="#usecases"]')?.closest('li')
+
+          navLinks.innerHTML = ''
+          ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink].forEach((item) => {
+            if (item) navLinks.appendChild(item)
+          })
+        }
+
+        const hero = doc.querySelector('.hero')
+        const pain = doc.querySelector('#pain')
+        const walkthrough = doc.querySelector('#walkthrough')
+        const features = doc.querySelector('#features')
+        const teams = doc.querySelector('#teams')
+        const useCases = doc.querySelector('#usecases')
+        const modals = Array.from(doc.querySelectorAll('.usecase-modal'))
+        const endingBanner = doc.querySelector('.end-banner')
+        const contact = doc.querySelector('#contact')
+        const footer = doc.querySelector('footer')
+
+        doc.body.innerHTML = ''
+        ;[
+          nav,
+          hero,
+          pain,
+          walkthrough,
+          features,
+          teams,
+          useCases,
+          ...modals,
+          endingBanner,
+          contact,
+          footer,
+        ].forEach((node) => {
+          if (node) doc.body.appendChild(node)
+        })
+
         const style = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')
           .join('\n')
@@ -66,6 +226,7 @@ export default function Snag360LandingPage() {
     const root = rootRef.current
     if (!root) return
     if (!bodyHtml) return
+    const snagWindow: Snag360Window = window
 
     // Navbar scroll
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -79,7 +240,7 @@ export default function Snag360LandingPage() {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
           const el = e.target as HTMLElement
-          el.classList.add('in-view')
+          el.classList.add('visible')
           el.classList.add('reveal--in')
           revealObs.unobserve(el)
         })
@@ -127,30 +288,6 @@ export default function Snag360LandingPage() {
     )
     if (heroMetrics) counterObs.observe(heroMetrics)
 
-    // Clients marquee
-    const track = root.querySelector<HTMLElement>('#clientsTrack')
-    if (track && track.childElementCount === 0) {
-      const clients = [
-        { n: 'Godrej Properties', i: 'GP' },
-        { n: "L&T Construction", i: 'LT' },
-        { n: 'Brigade Group', i: 'BG' },
-        { n: 'Tata Projects', i: 'TP' },
-        { n: 'Sobha Developers', i: 'SD' },
-        { n: 'Prestige Group', i: 'PG' },
-        { n: 'DLF Limited', i: 'DL' },
-        { n: 'NCC Limited', i: 'NC' },
-        { n: 'Shapoorji Pallonji', i: 'SP' },
-        { n: 'Lodha Group', i: 'LG' },
-      ]
-
-      ;[...clients, ...clients].forEach((c) => {
-        const chip = document.createElement('div')
-        chip.className = 'client-chip'
-        chip.innerHTML = `<div class="client-icon">${c.i}</div><div class="client-name">${c.n}</div>`
-        track.appendChild(chip)
-      })
-    }
-
     // Bento background cells
     const bg = root.querySelector<HTMLElement>('#bentoBg')
     if (bg && bg.childElementCount === 0) {
@@ -177,7 +314,7 @@ export default function Snag360LandingPage() {
         s.classList.toggle('visible', i === idx)
       })
     }
-    ;(window as any).toggleUSP = (item: HTMLElement, idx: number) => {
+    snagWindow.toggleUSP = (item: HTMLElement, idx: number) => {
       const isActive = item.classList.contains('active')
       root.querySelectorAll<HTMLElement>('.usp-item').forEach((i) => i.classList.remove('active'))
       if (!isActive) {
@@ -192,7 +329,7 @@ export default function Snag360LandingPage() {
     }
 
     // Walkthrough tabs (HTML uses inline onclick="switchTab(idx)")
-    ;(window as any).switchTab = (idx: number) => {
+    snagWindow.switchTab = (idx: number) => {
       root.querySelectorAll<HTMLElement>('.feature-tab').forEach((t, i) => {
         t.classList.toggle('active', i === idx)
       })
@@ -201,32 +338,14 @@ export default function Snag360LandingPage() {
       })
     }
 
-    // Testimonials card stack (HTML uses inline onclick="goToCard(idx)")
-    let currentCard = 0
-    const totalCards = 4
-    const goToCard = (idx: number) => {
-      currentCard = idx
-      const cards = root.querySelectorAll<HTMLElement>('.testi-card')
-      const dots = root.querySelectorAll<HTMLElement>('.testi-dot')
-      cards.forEach((c) => c.classList.remove('card-active', 'card-back1', 'card-back2'))
-      dots.forEach((d) => d.classList.remove('active'))
-      cards[idx]?.classList.add('card-active')
-      cards[(idx + 1) % totalCards]?.classList.add('card-back1')
-      cards[(idx + 2) % totalCards]?.classList.add('card-back2')
-      dots[idx]?.classList.add('active')
-    }
-    ;(window as any).goToCard = goToCard
-    goToCard(0)
-    const testiTimer = window.setInterval(() => goToCard((currentCard + 1) % totalCards), 4500)
-
     // Use case modals (HTML uses inline onclick="openModal('id')" and closeModal(...))
-    ;(window as any).openModal = (id: string) => {
+    snagWindow.openModal = (id: string) => {
       const modal = root.querySelector<HTMLElement>('#modal-' + id)
       if (!modal) return
       modal.classList.add('open')
       document.body.style.overflow = 'hidden'
     }
-    ;(window as any).closeModal = (e: MouseEvent, id: string, force?: boolean) => {
+    snagWindow.closeModal = (e: MouseEvent, id: string, force?: boolean) => {
       const modal = root.querySelector<HTMLElement>('#' + id)
       if (!modal) return
       const shouldClose = Boolean(force) || (e?.target && e.target === modal)
@@ -236,7 +355,7 @@ export default function Snag360LandingPage() {
     }
 
     // Team tabs (HTML uses inline onclick="switchTeam(idx)")
-    ;(window as any).switchTeam = (idx: number) => {
+    snagWindow.switchTeam = (idx: number) => {
       root.querySelectorAll<HTMLElement>('.team-tab').forEach((t, i) => {
         t.classList.toggle('active', i === idx)
       })
@@ -275,16 +394,14 @@ export default function Snag360LandingPage() {
       document.removeEventListener('keydown', onKeyDown)
       revealObs.disconnect()
       counterObs.disconnect()
-      window.clearInterval(testiTimer)
       window.clearInterval(bentoTimer)
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
-      delete (window as any).toggleUSP
-      delete (window as any).switchTab
-      delete (window as any).goToCard
-      delete (window as any).openModal
-      delete (window as any).closeModal
-      delete (window as any).switchTeam
+      delete snagWindow.toggleUSP
+      delete snagWindow.switchTab
+      delete snagWindow.openModal
+      delete snagWindow.closeModal
+      delete snagWindow.switchTeam
     }
   }, [bodyHtml])
 
