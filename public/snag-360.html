@@ -640,7 +640,7 @@
         align-items: stretch;
       }
       .pain-card {
-        background: #fff;
+        background: var(--cream);
         border: 1px solid rgba(196, 184, 157, 0.35);
         border-radius: 20px;
         padding: 40px 36px;
@@ -740,7 +740,7 @@
       /* ── USPs ── */
       .usps-section {
         padding: 100px 80px;
-        background: #fff;
+        background: var(--cream);
         position: relative;
         overflow: hidden;
       }
@@ -1389,6 +1389,52 @@
         gap: 9px;
       }
 
+      /* ── WALKTHROUGH SCREEN STYLES ── */
+      .wt-snag-header {
+        display: flex; align-items: center; justify-content: space-between;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px; padding: 12px 16px; margin-bottom: 8px;
+      }
+      .wt-snag-title { font-size: 13px; font-weight: 700; color: #fff; }
+      .wt-snag-count { font-size: 10px; background: rgba(218,119,86,0.2); color: #f8b99a; padding: 3px 9px; border-radius: 4px; font-weight: 700; }
+      .wt-row {
+        display: flex; align-items: center; gap: 9px;
+        padding: 9px 13px; background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; margin-bottom: 6px;
+      }
+      .wt-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+      .wt-text { font-size: 11.5px; color: rgba(255,255,255,0.65); flex: 1; }
+      .wt-tag { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+      .wt-tag.open { background: rgba(231,132,142,0.2); color: #f8b3b8; }
+      .wt-tag.progress { background: rgba(237,196,136,0.2); color: #f5d88a; }
+      .wt-tag.closed { background: rgba(158,200,186,0.2); color: #b4e4d9; }
+      .wt-stage {
+        display: flex; align-items: center; gap: 9px;
+        padding: 10px 14px; border-radius: 9px;
+        border: 1px solid rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.04); margin-bottom: 7px;
+      }
+      .wt-stage.done { background: rgba(158,200,186,0.08); border-color: rgba(158,200,186,0.2); }
+      .wt-stage.current { background: rgba(218,119,86,0.1); border-color: rgba(218,119,86,0.3); }
+      .wt-stage-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .wt-stage-name { font-size: 12px; font-weight: 600; flex: 1; }
+      .wt-stage.done .wt-stage-name { color: #b4e4d9; }
+      .wt-stage.current .wt-stage-name { color: #f8b99a; }
+      .wt-stage:not(.done):not(.current) .wt-stage-name { color: rgba(255,255,255,0.3); }
+      .wt-pct { font-size: 11px; font-weight: 700; }
+      .wt-pct.done { color: #b4e4d9; }
+      .wt-pct.go { color: #f8b99a; }
+      .wt-pct.locked { color: rgba(255,255,255,0.2); }
+      .wt-kpi-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+      .wt-kpi { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 11px; }
+      .wt-kpi-label { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+      .wt-kpi-val { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+      .wt-kpi-sub { font-size: 9px; margin-top: 2px; }
+      .wt-bar-area { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 9px; padding: 12px; }
+      .wt-bar-label { font-size: 9.5px; color: rgba(255,255,255,0.3); margin-bottom: 9px; }
+      .wt-bars { display: flex; align-items: flex-end; gap: 5px; height: 70px; }
+      .wt-bar { flex: 1; border-radius: 3px 3px 0 0; }
+
       /* ── TESTIMONIALS ── */
       .testimonials-section {
         padding: 100px 80px;
@@ -1417,7 +1463,7 @@
       .testi-card {
         position: absolute;
         width: calc(100% - 40px);
-        background: #fff;
+        background: var(--cream);
         border-radius: 20px;
         padding: 36px;
         border: 1px solid rgba(196, 184, 157, 0.35);
@@ -1530,7 +1576,7 @@
       /* ── USE CASES - INDUSTRY ── */
       .usecases-section {
         padding: 100px 80px;
-        background: #fff;
+        background: var(--cream);
       }
       .usecases-inner {
         max-width: 1400px;
@@ -1543,7 +1589,7 @@
         margin-top: 64px;
       }
       .usecase-card {
-        background: #fff;
+        background: var(--cream);
         border: 1px solid rgba(196, 184, 157, 0.35);
         border-radius: 20px;
         overflow: hidden;
@@ -1806,7 +1852,7 @@
         z-index: 10;
       }
       .modal-close:hover {
-        background: #fff;
+        background: var(--cream);
         transform: rotate(90deg);
       }
 
@@ -1953,7 +1999,7 @@
         background-size: 8px;
       }
       .team-visual {
-        background: #fff;
+        background: var(--cream);
         border-radius: 24px;
         overflow: hidden;
         border: 1px solid rgba(196, 184, 157, 0.4);
@@ -2139,7 +2185,7 @@
         font-size: 16px;
         font-weight: 700;
         color: var(--dark);
-        background: #fff;
+        background: var(--cream);
         border: none;
         cursor: pointer;
         padding: 16px 36px;
@@ -2199,7 +2245,7 @@
       /* ── CONTACT ── */
       .contact-section {
         padding: 100px 80px;
-        background: #fff;
+        background: var(--cream);
       }
       .contact-inner {
         max-width: 1400px;
@@ -2237,7 +2283,7 @@
         font-family: var(--font);
         font-size: 14px;
         color: var(--dark);
-        background: #fff;
+        background: var(--cream);
         border: 1.5px solid rgba(196, 184, 157, 0.5);
         border-radius: 10px;
         padding: 12px 16px;
@@ -3281,9 +3327,12 @@
                 <span style="font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px;">Project Configuration</span>
               </div>
               <div class="feature-screen-body">
-                <div style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6;">
-                  Demo screen placeholder (kept lightweight). Your original detailed mock screens can be pasted here if you want 1:1 parity.
-                </div>
+                <div class="wt-snag-header"><div class="wt-snag-title">Emerald Heights — Phase 2</div><div class="wt-snag-count">5 Stages</div></div>
+                <div class="wt-stage done"><div class="wt-stage-icon" style="background:rgba(158,200,186,0.15);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#b4e4d9" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="wt-stage-name">01 — Structure and Civil</div><div class="wt-pct done">100%</div></div>
+                <div class="wt-stage done"><div class="wt-stage-icon" style="background:rgba(158,200,186,0.15);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#b4e4d9" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="wt-stage-name">02 — MEP Rough-in</div><div class="wt-pct done">100%</div></div>
+                <div class="wt-stage current"><div class="wt-stage-icon" style="background:rgba(218,119,86,0.15);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="2.5" fill="#f8b99a" fill-opacity="0.5"/><circle cx="6.5" cy="6.5" r="4.5" stroke="#f8b99a" stroke-width="1.3"/></svg></div><div class="wt-stage-name">03 — Finishing and Plastering</div><div class="wt-pct go">74%</div></div>
+                <div class="wt-stage"><div class="wt-stage-icon" style="background:rgba(255,255,255,0.04);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="3" y="6" width="7" height="5" rx="1" stroke="rgba(255,255,255,0.2)" stroke-width="1.3"/><path d="M4.5 6V4.5C4.5 3.4 5.4 2.5 6.5 2.5C7.6 2.5 8.5 3.4 8.5 4.5V6" stroke="rgba(255,255,255,0.2)" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="wt-stage-name">04 — Pre-handover Inspection</div><div class="wt-pct locked">Locked</div></div>
+                <div class="wt-stage"><div class="wt-stage-icon" style="background:rgba(255,255,255,0.04);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="3" y="6" width="7" height="5" rx="1" stroke="rgba(255,255,255,0.2)" stroke-width="1.3"/><path d="M4.5 6V4.5C4.5 3.4 5.4 2.5 6.5 2.5C7.6 2.5 8.5 3.4 8.5 4.5V6" stroke="rgba(255,255,255,0.2)" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="wt-stage-name">05 — FM Handover Sign-off</div><div class="wt-pct locked">Locked</div></div>
               </div>
             </div>
           </div>
@@ -3316,9 +3365,11 @@
                 <span style="font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px;">Active Snag List — Tower A</span>
               </div>
               <div class="feature-screen-body">
-                <div style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6;">
-                  Demo screen placeholder.
-                </div>
+                <div class="wt-snag-header"><div class="wt-snag-title">Open Snags</div><div class="wt-snag-count">24 Open</div></div>
+                <div class="wt-row"><div class="wt-dot" style="background:#E7848E;"></div><div class="wt-text">Hairline crack — Column C4, Floor 3</div><div class="wt-tag open">Open</div></div>
+                <div class="wt-row"><div class="wt-dot" style="background:#EDC488;"></div><div class="wt-text">Uneven plaster — Bedroom 2, Unit 302</div><div class="wt-tag progress">In Progress</div></div>
+                <div class="wt-row"><div class="wt-dot" style="background:#9EC8BA;"></div><div class="wt-text">Paint bleed at window frame, Unit 101</div><div class="wt-tag closed">Closed</div></div>
+                <div class="wt-row"><div class="wt-dot" style="background:#E7848E;"></div><div class="wt-text">Electrical conduit misaligned — MEP Zone B</div><div class="wt-tag open">Open</div></div>
               </div>
             </div>
           </div>
@@ -3350,9 +3401,12 @@
                 <span style="font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px;">Checklist: Finishing Stage</span>
               </div>
               <div class="feature-screen-body">
-                <div style="color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6;">
-                  Demo screen placeholder.
-                </div>
+                <div class="wt-snag-header"><div class="wt-snag-title">Finishing — Level 1</div><div class="wt-snag-count">12 / 18 Done</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text" style="text-decoration:line-through;opacity:0.5;">Surface flatness — all walls</div><div class="wt-tag closed">+4pts</div></div>
+                <div class="wt-row" style="background:rgba(158,200,186,0.08);border-color:rgba(158,200,186,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5L5 9.5L11 3.5" stroke="#9EC8BA" stroke-width="1.8" stroke-linecap="round"/></svg><div class="wt-text" style="text-decoration:line-through;opacity:0.5;">Corner finish — all edges</div><div class="wt-tag closed">+4pts</div></div>
+                <div class="wt-row" style="background:rgba(218,119,86,0.08);border-color:rgba(218,119,86,0.2);"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#f8b99a" stroke-width="1.3"/></svg><div class="wt-text">Paint readiness check</div><div class="wt-tag progress">Active</div></div>
+                <div class="wt-row" style="opacity:0.4;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="2.5" y="5.5" width="8" height="6" rx="1" stroke="rgba(255,255,255,0.2)" stroke-width="1.3"/></svg><div class="wt-text">Tile alignment — bathroom</div><div class="wt-tag" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);">Locked</div></div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06);"><span style="font-size:10.5px;color:rgba(255,255,255,0.3);">Current score: </span><span style="font-size:14px;font-weight:800;color:var(--primary);">+26 pts</span><span style="font-size:10px;color:rgba(255,255,255,0.2);margin-left:auto;">Threshold: +20</span></div>
               </div>
             </div>
           </div>
