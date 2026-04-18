@@ -2,18 +2,39 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
-const VENDOR_MGMT_RENDER_FIX_CSS = `
-/* Vendor Management integration fix:
-   Prevent transform-based reveal states from rendering soft/blurred. */
+/**
+ * Standalone `Vendor management-landing.html` uses `.reveal` + `.reveal.visible` with
+ * no blur. The app shell's `index.css` adds a global `.reveal { filter: blur(...) }`
+ * meant for other pages — scope overrides so this route matches the file pixel-for-pixel.
+ */
+const VENDOR_MGMT_ISOLATION_CSS = `
 .vendor-mgmt-root .reveal {
-  opacity: 1 !important;
-  transform: none !important;
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
   filter: none !important;
-  transition: none !important;
+  will-change: auto !important;
+  transition: opacity 0.6s ease, transform 0.6s ease !important;
 }
 .vendor-mgmt-root .reveal.visible {
   opacity: 1 !important;
-  transform: none !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+.vendor-mgmt-root h1,
+.vendor-mgmt-root h2,
+.vendor-mgmt-root h3,
+.vendor-mgmt-root h4,
+.vendor-mgmt-root h5,
+.vendor-mgmt-root h6 {
+  font-family: var(--font), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vendor-mgmt-root .reveal,
+  .vendor-mgmt-root .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 `
 
@@ -53,7 +74,7 @@ export default function VendorManagementLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${VENDOR_MGMT_RENDER_FIX_CSS}`)
+        setCssText(`${styles}\n${VENDOR_MGMT_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -387,7 +408,7 @@ export default function VendorManagementLandingPage() {
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef} className="vendor-mgmt-root">
+    <div ref={rootRef} className="vendor-mgmt-root min-h-dvh bg-[#F6F4EE]">
       {headLinks.map((l) => (
         <link
           key={`${l.rel}:${l.href}`}
