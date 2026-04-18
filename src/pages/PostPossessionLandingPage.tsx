@@ -156,12 +156,16 @@ export default function PostPossessionLandingPage() {
     ;(window as any).selectWtTab = (idx: number) => setWt(Number(idx) || 0)
     setWt(0)
 
-    // Team tabs (if present)
+    // Team tabs — HTML uses onclick="selectTeam(n)"; inline <script> in the fetched file does not run when injected via innerHTML
     const setTeam = (idx: number) => {
-      root.querySelectorAll<HTMLElement>('.team-tab').forEach((t, i) => t.classList.toggle('active', i === idx))
-      root.querySelectorAll<HTMLElement>('.team-panel').forEach((p, i) => p.classList.toggle('active', i === idx))
+      const i = Math.max(0, Math.floor(Number(idx) || 0))
+      root.querySelectorAll<HTMLElement>('.team-tab').forEach((t, j) => t.classList.toggle('active', j === i))
+      root.querySelectorAll<HTMLElement>('.team-panel').forEach((p, j) => p.classList.toggle('active', j === i))
     }
-    ;(window as any).selectTeamTab = (idx: number) => setTeam(Number(idx) || 0)
+    const selectTeam = (idx: number) => setTeam(idx)
+    ;(window as any).selectTeam = selectTeam
+    ;(window as any).selectTeamTab = selectTeam
+    setTeam(0)
 
     // Smooth anchors
     const anchorHandlers: Array<{ a: HTMLAnchorElement; onClick: (e: MouseEvent) => void }> = []
@@ -188,6 +192,7 @@ export default function PostPossessionLandingPage() {
       delete (window as any).openUsp
       delete (window as any).goTesti
       delete (window as any).selectWtTab
+      delete (window as any).selectTeam
       delete (window as any).selectTeamTab
     }
   }, [bodyHtml])
