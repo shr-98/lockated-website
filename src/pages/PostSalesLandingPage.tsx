@@ -111,27 +111,6 @@ export default function PostSalesLandingPage() {
     ;(window as any).openUsp = openUsp
     openUsp(0)
 
-    // Testimonials (goTesti)
-    const testiCards = Array.from(root.querySelectorAll<HTMLElement>('.testi-card'))
-    const testiNavDots = Array.from(root.querySelectorAll<HTMLElement>('#testiDots .testi-dot'))
-    let testiIndex = 0
-    const goTesti = (idx: number) => {
-      if (!testiCards.length) return
-      const nextIdx = ((idx % testiCards.length) + testiCards.length) % testiCards.length
-      testiCards.forEach((c, i) => {
-        c.classList.remove('active', 'prev', 'next')
-        const diff = i - nextIdx
-        if (diff === 0) c.classList.add('active')
-        else if (diff === -1 || diff === testiCards.length - 1) c.classList.add('prev')
-        else if (diff === 1 || diff === -(testiCards.length - 1)) c.classList.add('next')
-      })
-      testiNavDots.forEach((d, i) => d.classList.toggle('active', i === nextIdx))
-      testiIndex = nextIdx
-    }
-    ;(window as any).goTesti = goTesti
-    goTesti(0)
-    const testiTimer = testiCards.length ? window.setInterval(() => goTesti(testiIndex + 1), 4500) : null
-
     // Hero subtext carousel
     const heroSlides = Array.from(root.querySelectorAll<HTMLElement>('.hero-sub-slide'))
     let heroSlideIdx = 0
@@ -145,7 +124,7 @@ export default function PostSalesLandingPage() {
         : null
 
     // Walkthrough tabs (selectWtTab)
-    const wtTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.wt-tab'))
+    const wtTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('#wtTabs .wt-tab'))
     const featPanels = Array.from(root.querySelectorAll<HTMLElement>('.feat-panel'))
     const wtScreenTitle = root.querySelector<HTMLElement>('#wtScreenTitle')
     const wtInfoLabel = root.querySelector<HTMLElement>('#wtInfoLabel')
@@ -386,30 +365,41 @@ ${chipSvgs}
     })
 
     const selectWtTab = (idx: number) => {
-      wtTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
-      featPanels.forEach((p, i) => p.classList.toggle('visible', i === idx))
-      const d = wtData[idx]
+      if (!wtData.length) return
+      const i = Math.max(0, Math.min(wtData.length - 1, Math.floor(Number(idx) || 0)))
+      wtTabs.forEach((t, j) => t.classList.toggle('active', j === i))
+      featPanels.forEach((p, j) => p.classList.toggle('visible', j === i))
+      const d = wtData[i]
       if (wtScreenTitle) wtScreenTitle.textContent = d.label
       if (wtInfoLabel) wtInfoLabel.textContent = d.featureNum
       if (wtInfoTitle) wtInfoTitle.textContent = d.title
       if (wtInfoDesc) wtInfoDesc.textContent = d.desc
       if (wtFeatList) {
         wtFeatList.innerHTML = d.feats
-          .map((f) => `<div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>${f}</span></div>`)
+          .map((f) => {
+            const safe = f.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            return `<div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>${safe}</span></div>`
+          })
           .join('')
       }
     }
     ;(window as any).selectWtTab = selectWtTab
-    if (wtTabs.length) selectWtTab(wtTabs.findIndex((t) => t.classList.contains('active')) || 0)
+    if (wtTabs.length) {
+      const initial = wtTabs.findIndex((t) => t.classList.contains('active'))
+      selectWtTab(initial >= 0 ? initial : 0)
+    }
 
     // Team tabs (selectTeam)
     const teamTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-panel'))
     const selectTeam = (idx: number) => {
-      teamTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
-      teamPanels.forEach((p, i) => p.classList.toggle('active', i === idx))
+      if (!teamTabs.length) return
+      const i = Math.max(0, Math.min(teamTabs.length - 1, Math.floor(Number(idx) || 0)))
+      teamTabs.forEach((t, j) => t.classList.toggle('active', j === i))
+      teamPanels.forEach((p, j) => p.classList.toggle('active', j === i))
     }
     ;(window as any).selectTeam = selectTeam
+    ;(window as any).selectTeamTab = selectTeam
     if (teamTabs.length) selectTeam(teamTabs.findIndex((t) => t.classList.contains('active')) || 0)
 
     return () => {
@@ -417,12 +407,11 @@ ${chipSvgs}
       fadeObserver.disconnect()
       window.clearTimeout(onLoadStartCounters)
       counterTimers.forEach((t) => window.clearInterval(t))
-      if (testiTimer) window.clearInterval(testiTimer)
       if (heroSlideTimer) window.clearInterval(heroSlideTimer)
       delete (window as any).openUsp
-      delete (window as any).goTesti
       delete (window as any).selectWtTab
       delete (window as any).selectTeam
+      delete (window as any).selectTeamTab
     }
   }, [bodyHtml])
 

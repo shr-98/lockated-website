@@ -2,6 +2,88 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Mirrors `wtData` in `public/post-possession.html` — walkthrough tab copy (scripts in injected HTML do not run). */
+const WT_DATA: { label: string; num: string; title: string; desc: string; feats: string[] }[] = [
+  {
+    label: 'postpossession.app · Home',
+    num: 'Module 1 of 6',
+    title: 'A home screen that runs their day.',
+    desc: "The resident's command centre — visitor approvals, maintenance tickets, notices, billing, and community updates in one branded screen. Rolling developer banners keep your new launches front and centre.",
+    feats: [
+      'One-tap visitor approval from anywhere',
+      'Live maintenance ticket status at a glance',
+      'Personalised community announcements',
+      'Developer banners for new project launches',
+      'Quick access to payments, bookings, and services',
+    ],
+  },
+  {
+    label: 'postpossession.app · My Club',
+    num: 'Module 2 of 6',
+    title: 'Amenity booking. No phone calls.',
+    desc: 'Residents book clubhouse, gym, pool, courts, and sub-facilities directly from the app. Every slot managed, every booking billed automatically. Club memberships tracked with auto-expiry alerts.',
+    feats: [
+      'Self-service facility booking with instant confirmation',
+      'Sub-facility management (courts, lanes, rooms)',
+      'Club membership with expiry alerts and auto-renewal',
+      'Automated usage-based billing per session',
+      'Unique resident QR code for contactless access',
+    ],
+  },
+  {
+    label: 'postpossession.app · Visitors',
+    num: 'Module 3 of 6',
+    title: 'Gate security that never sleeps.',
+    desc: '25+ visitor management features replacing every paper register, phone call, and manual process at your gate. Pre-authorised entry to child safety alerts — all real time, all digital.',
+    feats: [
+      'Pre-authorise guests, cabs, and deliveries in advance',
+      'OTP and IVR approval for unexpected visitors from anywhere',
+      'Child safety alerts and exit pre-approvals',
+      'Guard app with offline mode for low-connectivity zones',
+      'e-Intercom HD video call from gate to resident phone',
+    ],
+  },
+  {
+    label: 'postpossession.app · Loyalty',
+    num: 'Module 4 of 6',
+    title: 'Turn residents into your sales channel.',
+    desc: 'The referral and loyalty engine that makes your happiest residents your most effective salespeople. Every referral tracked, every reward automated, every conversion attributed.',
+    feats: [
+      'One-click referral sharing via WhatsApp and social',
+      'Real-time referral tracking for residents and developer CRM',
+      'Automated UPI payout when referral converts to booking',
+      'Points, rewards, and loyalty tiers for engagement',
+      'New project launches pushed as warm leads to community',
+    ],
+  },
+  {
+    label: 'postpossession.app · Services',
+    num: 'Module 5 of 6',
+    title: 'A curated marketplace in every community.',
+    desc: 'Residents book approved on-premise services without leaving your app. Deep cleaning, laundry, pest control, salons — all vetted by you, billed by you, revenue tracked by you.',
+    feats: [
+      'Category-wise curated on-premise service marketplace',
+      'Slot scheduling based on staff bandwidth',
+      'In-app payment with auto-generated invoice',
+      'Zero unauthorised third-party vendors or apps',
+      'Revenue share configurable per service category',
+    ],
+  },
+  {
+    label: 'postpossession.app · Events',
+    num: 'Module 6 of 6',
+    title: 'Community that feels alive.',
+    desc: 'Events, wellness sessions, polls, and announcements that turn neighbours into a community. Higher engagement means higher NPS, more referrals, and a brand residents are proud to advocate.',
+    feats: [
+      'Developer-published events with RSVP and waitlist management',
+      'Wellness webinars with doctors, dieticians, yoga instructors',
+      'Polls and announcements with delivery read receipts',
+      'Community gallery — residents share and celebrate',
+      'Offers and coupons to drive on-premise service adoption',
+    ],
+  },
+]
+
 export default function PostPossessionLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -128,30 +210,29 @@ export default function PostPossessionLandingPage() {
     ;(window as any).openUsp = (idx: number) => setUsp(Number(idx) || 0)
     setUsp(0)
 
-    // Testimonials (inline onclick="goTesti(idx)")
-    let currentTesti = 0
-    const setTesti = (idx: number) => {
-      const cards = Array.from(root.querySelectorAll<HTMLElement>('#testiStack .testi-card'))
-      const dots = Array.from(root.querySelectorAll<HTMLElement>('#testiDots .testi-dot'))
-      if (!cards.length) return
-      const n = cards.length
-      currentTesti = ((idx % n) + n) % n
-      cards.forEach((c, i) => {
-        c.classList.remove('active', 'prev', 'next')
-        if (i === currentTesti) c.classList.add('active')
-        if (i === (currentTesti - 1 + n) % n) c.classList.add('prev')
-        if (i === (currentTesti + 1) % n) c.classList.add('next')
-      })
-      dots.forEach((d, i) => d.classList.toggle('active', i === currentTesti))
-    }
-    ;(window as any).goTesti = (idx: number) => setTesti(Number(idx) || 0)
-    setTesti(0)
-    const testiTimer = window.setInterval(() => setTesti(currentTesti + 1), 5200)
-
     // Walkthrough tabs (inline onclick="selectWtTab(idx)")
     const setWt = (idx: number) => {
-      root.querySelectorAll<HTMLElement>('#wtTabs .wt-tab').forEach((t, i) => t.classList.toggle('active', i === idx))
-      root.querySelectorAll<HTMLElement>('.feat-panel').forEach((p, i) => p.classList.toggle('visible', i === idx))
+      const i = Math.max(0, Math.min(WT_DATA.length - 1, Math.floor(Number(idx) || 0)))
+      root.querySelectorAll<HTMLElement>('#wtTabs .wt-tab').forEach((t, j) => t.classList.toggle('active', j === i))
+      root.querySelectorAll<HTMLElement>('.feat-panel').forEach((p, j) => p.classList.toggle('visible', j === i))
+      const d = WT_DATA[i]
+      const screenTitle = root.querySelector('#wtScreenTitle')
+      const infoLabel = root.querySelector('#wtInfoLabel')
+      const infoTitle = root.querySelector('#wtInfoTitle')
+      const infoDesc = root.querySelector('#wtInfoDesc')
+      const featList = root.querySelector('#wtFeatList')
+      if (screenTitle) screenTitle.textContent = d.label
+      if (infoLabel) infoLabel.textContent = d.num
+      if (infoTitle) infoTitle.textContent = d.title
+      if (infoDesc) infoDesc.textContent = d.desc
+      if (featList) {
+        featList.innerHTML = d.feats
+          .map(
+            (f) =>
+              `<div class="wt-feat-row"><i class="fa-solid fa-check-circle"></i><span>${f.replace(/</g, '&lt;')}</span></div>`,
+          )
+          .join('')
+      }
     }
     ;(window as any).selectWtTab = (idx: number) => setWt(Number(idx) || 0)
     setWt(0)
@@ -186,11 +267,9 @@ export default function PostPossessionLandingPage() {
       window.removeEventListener('scroll', onScroll)
       fadeObs.disconnect()
       counterObs.disconnect()
-      window.clearInterval(testiTimer)
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
       delete (window as any).openUsp
-      delete (window as any).goTesti
       delete (window as any).selectWtTab
       delete (window as any).selectTeam
       delete (window as any).selectTeamTab

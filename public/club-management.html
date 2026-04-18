@@ -27,7 +27,10 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  color-scheme: only light;
+}
 
 body {
   font-family: var(--font);
@@ -35,6 +38,7 @@ body {
   color: var(--dark);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  color-scheme: only light;
 }
 
 /* GRAIN OVERLAY */
@@ -1349,9 +1353,90 @@ nav.scrolled {
 .ops-card-val { font-size:20px;font-weight:800;color:var(--dark);letter-spacing:-0.5px; }
 
 /* ═══════════════════════════════════════ */
+/* END BANNER (vendor-style CTA)          */
+/* ═══════════════════════════════════════ */
+#end-banner {
+  padding: 100px 80px;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(196,184,157,0.3);
+}
+.end-banner-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(218,119,86,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.end-banner-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(218,119,86,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(218,119,86,0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  pointer-events: none;
+}
+.end-banner-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.end-banner-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(218,119,86,0.35);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 24px;
+}
+.end-banner-title {
+  font-family: var(--font);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  line-height: 1.12;
+  color: var(--dark);
+  margin-bottom: 18px;
+}
+.end-banner-title span { color: var(--primary); }
+.end-banner-sub {
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(44,44,44,0.55);
+  margin-bottom: 36px;
+}
+.end-banner-ctas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.end-banner-note {
+  margin-top: 22px;
+  font-size: 13px;
+  color: rgba(44,44,44,0.45);
+}
+.end-banner-note svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: -2px;
+  margin-right: 6px;
+  stroke: var(--primary);
+}
+
+/* ═══════════════════════════════════════ */
 /* CONTACT SECTION                         */
 /* ═══════════════════════════════════════ */
-.contact-section { padding: 100px 80px; background: #fff; }
+.contact-section { padding: 100px 80px; background: var(--cream); border-top: 1px solid rgba(196,184,157,0.25); }
 .contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
 .contact-form-wrap { display: flex; flex-direction: column; gap: 20px; }
 .form-group { display: flex; flex-direction: column; gap: 7px; }
@@ -1386,34 +1471,61 @@ textarea.form-input { resize: vertical; min-height: 120px; }
 .social-btn:hover { background: var(--dark); border-color: var(--dark); color: #fff; transform: translateY(-2px); }
 
 /* ═══════════════════════════════════════ */
-/* FOOTER                                  */
+/* FOOTER (light — vendor reference)       */
 /* ═══════════════════════════════════════ */
-footer { background: var(--dark); padding: 64px 80px 32px; position: relative; overflow: hidden; }
-footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(218,119,86,0.4), transparent); }
+footer {
+  background: #fff;
+  padding: 56px 80px 36px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(196,184,157,0.35);
+}
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(218,119,86,0.35), transparent);
+}
 .footer-inner { max-width: 1400px; margin: 0 auto; }
-.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 56px; }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
 .footer-brand { display: flex; flex-direction: column; gap: 0; }
 .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; text-decoration: none; }
 .footer-logo-mark { width: 34px; height: 34px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-.footer-logo-text { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+.footer-logo-text { font-size: 17px; font-weight: 700; color: var(--dark); letter-spacing: -0.2px; }
 .footer-logo-text span { color: var(--primary); }
-.footer-tagline { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.35); margin-bottom: 24px; max-width: 280px; }
-.footer-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(218,119,86,0.1); border: 1px solid rgba(218,119,86,0.2); border-radius: 8px; padding: 8px 14px; margin-bottom: 20px; font-size: 12px; font-weight: 600; color: var(--primary); }
+.footer-tagline { font-size: 13.5px; line-height: 1.65; color: rgba(44,44,44,0.55); margin-bottom: 24px; max-width: 300px; }
+.footer-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(218,119,86,0.1); border: 1px solid rgba(218,119,86,0.22); border-radius: 8px; padding: 8px 14px; margin-bottom: 20px; font-size: 12px; font-weight: 600; color: var(--primary); }
 .footer-social { display: flex; gap: 8px; }
-.footer-social-btn { width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: rgba(255,255,255,0.4); }
+.footer-social-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--cream);
+  border: 1px solid rgba(196,184,157,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: rgba(44,44,44,0.45);
+}
 .footer-social-btn svg { width: 16px; height: 16px; }
 .footer-social-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; transform: translateY(-2px); }
-.footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+.footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(44,44,44,0.45); margin-bottom: 20px; }
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
-.footer-links a:hover { color: rgba(255,255,255,0.85); }
-.footer-divider { height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 28px; }
+.footer-links a { font-size: 13.5px; color: rgba(44,44,44,0.62); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--primary); }
+.footer-divider { height: 1px; background: rgba(196,184,157,0.35); margin-bottom: 28px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-bottom-left { font-size: 12.5px; color: rgba(255,255,255,0.25); }
-.footer-bottom-left .highlight { color: rgba(255,255,255,0.5); }
-.footer-bottom-right { display: flex; gap: 24px; }
-.footer-bottom-right a { font-size: 12.5px; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s; }
-.footer-bottom-right a:hover { color: rgba(255,255,255,0.55); }
+.footer-bottom-left { font-size: 12.5px; color: rgba(44,44,44,0.42); }
+.footer-bottom-left .highlight { color: rgba(44,44,44,0.65); }
+.footer-bottom-right { display: flex; gap: 24px; flex-wrap: wrap; }
+.footer-bottom-right a { font-size: 12.5px; color: rgba(44,44,44,0.42); text-decoration: none; transition: color 0.2s; }
+.footer-bottom-right a:hover { color: var(--primary); }
 
 
 </style>
@@ -1431,11 +1543,11 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="#pain-points">Problems</a></li>
-      <li><a href="#walkthrough">How It Works</a></li>
+      <li><a href="#pain">Problems</a></li>
+      <li><a href="#walkthrough">Walkthrough</a></li>
       <li><a href="#features">Features</a></li>
       <li><a href="#teams">Teams</a></li>
-      <li><a href="#use-cases">Use Cases</a></li>
+      <li><a href="#usecases">Use Cases</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -1452,7 +1564,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
 
@@ -1533,7 +1645,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
 
 
 <!-- PAIN POINTS -->
-<section class="section" id="pain-points">
+<section class="section" id="pain">
   <div class="reveal">
     <div class="section-eyebrow">The Problem</div>
     <h2 class="section-title">Your club runs on <span class="accent">chaos</span>. It doesn't have to.</h2>
@@ -1593,7 +1705,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
 <!-- WALKTHROUGH -->
 <section class="walkthrough-section" id="walkthrough">
   <div class="walkthrough-inner">
-    <div class="walkthrough-eyebrow">How It Works</div>
+    <div class="walkthrough-eyebrow">Walkthrough</div>
     <h2 class="walkthrough-title">From onboarding to <span class="accent">full operation</span></h2>
     <p class="walkthrough-sub">One platform. All your data stays on your own infrastructure. Click any tab to see how it works.</p>
 
@@ -3038,7 +3150,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
 </section>
 
 <!-- ═══════════════════════════════════════════ USE CASES ═══ -->
-<section class="usecases-section" id="use-cases">
+<section class="usecases-section" id="usecases">
   <div class="usecases-inner">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:56px;">
       <div>
@@ -3285,6 +3397,31 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════ END BANNER ═══ -->
+<section id="end-banner" aria-label="Get started with Club Management">
+  <div class="end-banner-glow"></div>
+  <div class="end-banner-grid"></div>
+  <div class="end-banner-inner reveal">
+    <div class="end-banner-tag">Built for Indian clubs &amp; academies</div>
+    <h2 class="end-banner-title">Own your data. <span>Run every revenue line.</span> One platform.</h2>
+    <p class="end-banner-sub">Book a walkthrough of memberships, bookings, F&amp;B, accounting, and AI retention — deployed on infrastructure you control.</p>
+    <div class="end-banner-ctas">
+      <a href="#contact" class="btn-primary">
+        <span>Book a Demo</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#features" class="btn-ghost">
+        <span>Explore Features</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      </a>
+    </div>
+    <p class="end-banner-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Data-sovereign architecture &nbsp;&middot;&nbsp; 18 integrated modules &nbsp;&middot;&nbsp; White-label ready
+    </p>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════ CONTACT ═══ -->
 <section class="contact-section" id="contact">
   <div class="contact-inner">
@@ -3454,12 +3591,12 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
       <div>
         <div class="footer-col-title">Product</div>
         <ul class="footer-links">
-          <li><a href="#features">Features Overview</a></li>
-          <li><a href="#walkthrough">How It Works</a></li>
-          <li><a href="#use-cases">Use Cases</a></li>
-          <li><a href="#">Pricing</a></li>
-          <li><a href="#">Integrations</a></li>
-          <li><a href="#">Security</a></li>
+          <li><a href="#pain">Problems</a></li>
+          <li><a href="#walkthrough">Walkthrough</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#teams">Teams</a></li>
+          <li><a href="#usecases">Use Cases</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
 

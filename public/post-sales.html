@@ -35,13 +35,17 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  color-scheme: only light;
+}
 body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
   cursor: default;
+  color-scheme: only light;
 }
 
 /* ── UTILITY ── */
@@ -453,9 +457,9 @@ nav.scrolled {
 }
 
 /* ── SOLUTIONS / USPs ── */
-#solutions {
+#features {
   padding: 120px 0;
-  background: var(--bg-mid);
+  background: var(--bg);
 }
 .usp-layout {
   display: grid;
@@ -813,7 +817,7 @@ nav.scrolled {
 /* ── WALKTHROUGH ── */
 #walkthrough {
   padding: 120px 0;
-  background: #fdfbf7;
+  background: var(--bg-mid);
 }
 .wt-tabs {
   display: flex;
@@ -1056,84 +1060,55 @@ nav.scrolled {
 }
 .tv-label { font-family: var(--font-mono); font-size: 10px; color: var(--brand); letter-spacing: 0.15em; text-transform: uppercase; }
 
-/* ── USE CASES ── */
+/* ── USE CASES (vendor-style light band) ── */
 #usecases {
   padding: 120px 0;
   background: var(--bg-mid);
+  border-top: 1px solid var(--border-soft);
 }
 .uc-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-top: 60px;
+  margin-top: 8px;
 }
-.uc-grid .uc-card:first-child { grid-column: span 2; }
 .uc-card {
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
+  padding: 28px 24px;
   box-shadow: 0 2px 12px rgba(44,44,44,0.05);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .uc-card:hover {
-  border-color: rgba(218,119,86,0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 24px 60px rgba(44,44,44,0.1);
+  transform: translateY(-3px);
+  border-color: rgba(218,119,86,0.28);
+  box-shadow: 0 12px 32px rgba(44,44,44,0.08);
 }
-.uc-card-inner { padding: 32px; }
-.uc-icon-wrap {
-  width: 52px; height: 52px;
-  border-radius: 14px;
-  margin-bottom: 20px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+.uc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(218,119,86,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  font-size: 16px;
+  margin-bottom: 14px;
 }
-.uc-industry {
+.uc-title {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 10px;
-}
-.uc-impact {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--brand);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .uc-desc {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.65;
 }
-.uc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-.uc-tag {
-  padding: 4px 10px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border-soft);
-  border-radius: 100px;
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-.uc-card .uc-arrow {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: rgba(218,119,86,0.1);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--brand);
-  font-size: 11px;
-  transition: all 0.25s;
-}
-.uc-card:hover .uc-arrow { background: var(--brand); color: #FFFFFF; }
 
 /* ── END BANNER ── */
 #end-banner {
@@ -1346,12 +1321,14 @@ footer {
 @media (max-width: 900px) {
   .bento-3, .usp-layout, .testi-layout, .wt-layout, .team-panel.active, .contact-layout { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr 1fr; }
-  .uc-grid { grid-template-columns: 1fr; }
-  .uc-grid .uc-card:first-child { grid-column: span 1; }
+  .uc-grid { grid-template-columns: 1fr 1fr; }
   .hero-metrics { gap: 30px; }
   .metric-sep { display: none; }
   .usp-visual-wrap { display: none; }
   .testi-stack { height: 300px; }
+}
+@media (max-width: 520px) {
+  .uc-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1369,11 +1346,12 @@ footer {
       <span class="logo-name">Post<span>Sales</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#solutions">Solutions</a></li>
+      <li><a href="#pain">Problems</a></li>
       <li><a href="#walkthrough">Walkthrough</a></li>
+      <li><a href="#features">Features</a></li>
       <li><a href="#teams">Teams</a></li>
-      <li><a href="#contact">Pricing</a></li>
-      <li><a href="#contact">About</a></li>
+      <li><a href="#usecases">Use Cases</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
       <a href="#contact" class="nav-cta-text">Sign In</a>
@@ -1429,39 +1407,6 @@ footer {
   </div>
 </section>
 
-<!-- ───────── CLIENTS ───────── -->
-<div id="clients">
-  <div class="ticker-label">Trusted by</div>
-  <div class="ticker-fade-right"></div>
-  <div class="ticker-track" id="ticker">
-    <span class="ticker-item"><span class="ticker-dot"></span>Kalpataru</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Oberoi Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Panchshil Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Godrej Properties</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Runwal Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Lodha Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Shapoorji Pallonji</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Mahindra Lifespaces</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Sobha Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Prestige Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Brigade Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Puravankara</span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item"><span class="ticker-dot"></span>Kalpataru</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Oberoi Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Panchshil Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Godrej Properties</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Runwal Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Lodha Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Shapoorji Pallonji</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Mahindra Lifespaces</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Sobha Realty</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Prestige Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Brigade Group</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Puravankara</span>
-  </div>
-</div>
-
 <!-- ───────── PAIN POINTS ───────── -->
 <section id="pain">
   <div class="container">
@@ -1496,13 +1441,79 @@ footer {
   </div>
 </section>
 
-<!-- ───────── SOLUTIONS / USPs ───────── -->
-<section id="solutions">
+<!-- ───────── WALKTHROUGH ───────── -->
+<section id="walkthrough">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="section-eyebrow">Product Walkthrough</div>
+      <h2 class="section-title">See it <span class="brand-text">in action.</span></h2>
+      <p class="section-sub">From buyer referral to home loan commission — explore every feature of Post Sales.</p>
+    </div>
+    <div class="wt-tabs fade-in" id="wtTabs">
+      <button class="wt-tab active" onclick="selectWtTab(0)"><i class="fa-solid fa-house"></i> Home</button>
+      <button class="wt-tab" onclick="selectWtTab(1)"><i class="fa-solid fa-compass"></i> Journey</button>
+      <button class="wt-tab" onclick="selectWtTab(2)"><i class="fa-solid fa-headset"></i> Support</button>
+      <button class="wt-tab" onclick="selectWtTab(3)"><i class="fa-solid fa-gift"></i> Referral</button>
+      <button class="wt-tab" onclick="selectWtTab(4)"><i class="fa-solid fa-indian-rupee-sign"></i> Payments</button>
+      <button class="wt-tab" onclick="selectWtTab(5)"><i class="fa-solid fa-hard-hat"></i> Construction</button>
+      <button class="wt-tab" onclick="selectWtTab(6)"><i class="fa-solid fa-user-circle"></i> My Account</button>
+    </div>
+    <div class="wt-layout fade-in">
+      <div class="wt-screen" id="wtScreen">
+        <div class="wt-screen-content img-panel" id="wtScreenContent">
+          <!-- Panel 0: Home -->
+          <div class="feat-panel visible" id="wt-panel-0">
+            <img src="/post-sales-walkthrough/home.png" alt="Post Sales home screen" class="wt-app-img" width="900" height="1800" loading="eager" decoding="async">
+          </div>
+          <!-- Panel 1: Journey -->
+          <div class="feat-panel" id="wt-panel-1">
+            <img src="/post-sales-walkthrough/journey.png" alt="Customer journey dashboard" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+          <!-- Panel 2: Support -->
+          <div class="feat-panel" id="wt-panel-2">
+            <img src="/post-sales-walkthrough/support.png" alt="Support and case management" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+          <!-- Panel 3: Referral -->
+          <div class="feat-panel" id="wt-panel-3">
+            <img src="/post-sales-walkthrough/referral.png" alt="Referral hub" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+          <!-- Panel 4: Payments -->
+          <div class="feat-panel" id="wt-panel-4">
+            <img src="/post-sales-walkthrough/payments.webp" alt="Payments and schedule" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+          <!-- Panel 5: Construction -->
+          <div class="feat-panel" id="wt-panel-5">
+            <img src="/post-sales-walkthrough/construction.webp" alt="Construction updates" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+          <!-- Panel 6: My Account -->
+          <div class="feat-panel" id="wt-panel-6">
+            <img src="/post-sales-walkthrough/my-account.png" alt="My account overview" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </div>
+      <div class="wt-info" id="wtInfo">
+        <div class="wt-info-label" id="wtInfoLabel">Feature 1 of 7</div>
+        <h3 class="wt-info-title" id="wtInfoTitle">Everything a buyer needs. Right on the home screen.</h3>
+        <p class="wt-info-desc" id="wtInfoDesc">The Home screen gives buyers instant access to their unit, account, documents, support, loan assistance, and loyalty program — all from a single personalised dashboard with their property project front and centre.</p>
+        <div class="wt-features-list" id="wtFeatList">
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Personalised welcome with unit and project details</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Quick-access tiles: My Account, My Unit, Support, Loan Assistance, Documents, Loyalty</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Payment Milestone summary with View All shortcut</span></div>
+          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Property carousel with new launch highlights</span></div>
+        </div>
+        <a href="#contact" class="btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── FEATURES (USPs) ───────── -->
+<section id="features">
   <div class="container">
     <div class="usp-layout">
       <div>
         <div class="sec-header fade-in">
-          <div class="section-eyebrow">Solutions</div>
+          <div class="section-eyebrow">Features</div>
           <h2 class="section-title">One platform.<br>Every revenue lever. <span class="brand-text">Activated.</span></h2>
           <p class="section-sub">Post Sales turns every satisfied homebuyer into a revenue-generating brand advocate through referrals, loyalty, and home loan commissions.</p>
         </div>
@@ -1682,153 +1693,6 @@ footer {
   </div>
 </section>
 
-<!-- ───────── TESTIMONIALS ───────── -->
-<section id="testimonials">
-  <div class="container">
-    <div class="testi-layout">
-      <div class="testi-left fade-in">
-        <div class="testi-stack" id="testiStack">
-          <div class="testi-card active">
-            <div class="testi-stars">★★★★★</div>
-            <div class="testi-metric">18% bookings from referrals</div>
-            <div class="testi-quote">"In 6 months of using Post Sales, 18% of our new bookings came from existing homebuyer referrals. These leads convert at 3x the rate of broker leads. Our cost of sales dropped from 4.5% to 1.8% of revenue."</div>
-            <div class="testi-author">
-              <div class="testi-av">RK</div>
-              <div>
-                <div class="testi-name">Rajesh Kumar</div>
-                <div class="testi-role">VP Sales, Kalpataru Group</div>
-              </div>
-            </div>
-          </div>
-          <div class="testi-card next">
-            <div class="testi-stars">★★★★★</div>
-            <div class="testi-metric">1.1 Cr in home loan commissions</div>
-            <div class="testi-quote">"Our home loans team was casually referring buyers to banks for years with zero revenue tracking. Post Sales structured this into a commission pipeline. In Year 1, we generated 1.1 Cr in home loan commissions. A revenue line that did not exist before."</div>
-            <div class="testi-author">
-              <div class="testi-av">AD</div>
-              <div>
-                <div class="testi-name">Amit Desai</div>
-                <div class="testi-role">CFO, Runwal Group</div>
-              </div>
-            </div>
-          </div>
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <div class="testi-metric">NPS jumped from 32 to 54</div>
-            <div class="testi-quote">"When buyers can see their journey, track payments, and access documents in one app, trust goes up. Our NPS jumped 22 points in 6 months. High-NPS buyers refer at 3x the rate. The referral flywheel is real."</div>
-            <div class="testi-author">
-              <div class="testi-av">PM</div>
-              <div>
-                <div class="testi-name">Priya Menon</div>
-                <div class="testi-role">Head of Loyalty, Panchshil Realty</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-dots" id="testiDots">
-          <div class="testi-dot active" onclick="goTesti(0)"></div>
-          <div class="testi-dot" onclick="goTesti(1)"></div>
-          <div class="testi-dot" onclick="goTesti(2)"></div>
-        </div>
-      </div>
-      <div class="testi-right fade-in">
-        <div class="testi-badge"><i class="fa-solid fa-star"></i> Proven Results</div>
-        <h2 class="testi-title">Revenue impact you can measure.</h2>
-        <p class="testi-sub">Every metric is from real deployments with India's leading developers. Not projections.</p>
-        <div class="trust-stats">
-          <div class="trust-row">
-            <div class="trust-icon"><i class="fa-solid fa-building-columns"></i></div>
-            <div>
-              <div class="trust-stat-num">120+</div>
-              <div class="trust-stat-label">Projects managed on platform</div>
-            </div>
-          </div>
-          <div class="trust-row">
-            <div class="trust-icon"><i class="fa-solid fa-house-chimney"></i></div>
-            <div>
-              <div class="trust-stat-num">45,000+</div>
-              <div class="trust-stat-label">Homebuyers on platform</div>
-            </div>
-          </div>
-          <div class="trust-row">
-            <div class="trust-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <div>
-              <div class="trust-stat-num">300%</div>
-              <div class="trust-stat-label">Average referral rate increase</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ───────── WALKTHROUGH ───────── -->
-<section id="walkthrough">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="section-eyebrow">Product Walkthrough</div>
-      <h2 class="section-title">See it <span class="brand-text">in action.</span></h2>
-      <p class="section-sub">From buyer referral to home loan commission — explore every feature of Post Sales.</p>
-    </div>
-    <div class="wt-tabs fade-in" id="wtTabs">
-      <button class="wt-tab active" onclick="selectWtTab(0)"><i class="fa-solid fa-house"></i> Home</button>
-      <button class="wt-tab" onclick="selectWtTab(1)"><i class="fa-solid fa-compass"></i> Journey</button>
-      <button class="wt-tab" onclick="selectWtTab(2)"><i class="fa-solid fa-headset"></i> Support</button>
-      <button class="wt-tab" onclick="selectWtTab(3)"><i class="fa-solid fa-gift"></i> Referral</button>
-      <button class="wt-tab" onclick="selectWtTab(4)"><i class="fa-solid fa-indian-rupee-sign"></i> Payments</button>
-      <button class="wt-tab" onclick="selectWtTab(5)"><i class="fa-solid fa-hard-hat"></i> Construction</button>
-      <button class="wt-tab" onclick="selectWtTab(6)"><i class="fa-solid fa-user-circle"></i> My Account</button>
-    </div>
-    <div class="wt-layout fade-in">
-      <div class="wt-screen" id="wtScreen">
-        <div class="wt-screen-content img-panel" id="wtScreenContent">
-          <!-- Panel 0: Home -->
-          <div class="feat-panel visible" id="wt-panel-0">
-            <img src="/post-sales-walkthrough/home.png" alt="Post Sales home screen" class="wt-app-img" width="900" height="1800" loading="eager" decoding="async">
-          </div>
-          <!-- Panel 1: Journey -->
-          <div class="feat-panel" id="wt-panel-1">
-            <img src="/post-sales-walkthrough/journey.png" alt="Customer journey dashboard" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-          <!-- Panel 2: Support -->
-          <div class="feat-panel" id="wt-panel-2">
-            <img src="/post-sales-walkthrough/support.png" alt="Support and case management" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-          <!-- Panel 3: Referral -->
-          <div class="feat-panel" id="wt-panel-3">
-            <img src="/post-sales-walkthrough/referral.png" alt="Referral hub" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-          <!-- Panel 4: Payments -->
-          <div class="feat-panel" id="wt-panel-4">
-            <img src="/post-sales-walkthrough/payments.webp" alt="Payments and schedule" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-          <!-- Panel 5: Construction -->
-          <div class="feat-panel" id="wt-panel-5">
-            <img src="/post-sales-walkthrough/construction.webp" alt="Construction updates" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-          <!-- Panel 6: My Account -->
-          <div class="feat-panel" id="wt-panel-6">
-            <img src="/post-sales-walkthrough/my-account.png" alt="My account overview" class="wt-app-img" width="900" height="1800" loading="lazy" decoding="async">
-          </div>
-        </div>
-      </div>
-      <div class="wt-info" id="wtInfo">
-        <div class="wt-info-label" id="wtInfoLabel">Feature 1 of 7</div>
-        <h3 class="wt-info-title" id="wtInfoTitle">Everything a buyer needs. Right on the home screen.</h3>
-        <p class="wt-info-desc" id="wtInfoDesc">The Home screen gives buyers instant access to their unit, account, documents, support, loan assistance, and loyalty program — all from a single personalised dashboard with their property project front and centre.</p>
-        <div class="wt-features-list" id="wtFeatList">
-          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Personalised welcome with unit and project details</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Quick-access tiles: My Account, My Unit, Support, Loan Assistance, Documents, Loyalty</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Payment Milestone summary with View All shortcut</span></div>
-          <div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>Property carousel with new launch highlights</span></div>
-        </div>
-        <a href="#contact" class="btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ───────── TARGETED TEAMS ───────── -->
 <section id="teams">
   <div class="container">
@@ -1977,6 +1841,45 @@ footer {
   </div>
 </section>
 
+<!-- ───────── USE CASES ───────── -->
+<section id="usecases">
+  <div class="container">
+    <div class="sec-header center fade-in">
+      <div class="section-eyebrow" style="justify-content:center;">Where it works</div>
+      <h2 class="section-title">Built for <span class="brand-text">your sales motion.</span></h2>
+      <p class="section-sub" style="margin:0 auto;">From launch sell-through to post-booking loyalty — one white-labelled buyer app with modules you phase by project maturity.</p>
+    </div>
+    <div class="uc-grid fade-in">
+      <div class="uc-card"><div class="uc-icon"><i class="fa-solid fa-rocket"></i></div><h3 class="uc-title">New launches</h3><p class="uc-desc">Referral-led velocity, campaign studio, and buyer journeys that keep momentum between site visits and booking.</p></div>
+      <div class="uc-card"><div class="uc-icon"><i class="fa-solid fa-building"></i></div><h3 class="uc-title">Mid-construction</h3><p class="uc-desc">Construction transparency, support ticketing, and payment clarity that protect NPS before possession handover.</p></div>
+      <div class="uc-card"><div class="uc-icon"><i class="fa-solid fa-handshake"></i></div><h3 class="uc-title">Home loan desk</h3><p class="uc-desc">Structured enquiries, bank partner tracking, and commission dashboards that turn informal referrals into revenue.</p></div>
+      <div class="uc-card"><div class="uc-icon"><i class="fa-solid fa-chart-line"></i></div><h3 class="uc-title">Portfolio scale</h3><p class="uc-desc">Multi-project rollouts with consistent branding, leadership analytics, and team workflows across CRM, CX, and delivery.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── END BANNER ───────── -->
+<section id="end-banner">
+  <div class="banner-glow"></div>
+  <div class="banner-grid"></div>
+  <div class="container">
+    <div class="banner-inner fade-in">
+      <div class="banner-tag"><i class="fa-solid fa-circle-dot"></i> Built for Indian real estate developers</div>
+      <h2 class="banner-title">Turn buyers into <span>advocates.</span> Turn advocacy into bookings.</h2>
+      <p class="banner-sub">Deploy Post Sales to compound referrals, lift NPS, and capture home loan commissions — with a buyer experience your next launch can be sold on.</p>
+      <div class="banner-ctas">
+        <a href="#contact" class="btn-primary" style="font-size:16px;padding:16px 36px;">
+          <i class="fa-solid fa-rocket"></i> Book a Demo
+        </a>
+        <a href="#features" class="btn-outline" style="font-size:16px;padding:16px 32px;">
+          <i class="fa-solid fa-play"></i> Explore Features
+        </a>
+      </div>
+      <p class="banner-note"><i class="fa-solid fa-shield-halved"></i> RERA-aligned journeys &nbsp;&middot;&nbsp; White-label deployment &nbsp;&middot;&nbsp; Dedicated implementation team</p>
+    </div>
+  </div>
+</section>
+
 <!-- ───────── CONTACT ───────── -->
 <section id="contact">
   <div class="container">
@@ -2081,21 +1984,22 @@ footer {
       <div>
         <div class="footer-col-title">Product</div>
         <ul class="footer-links">
-          <li><a href="#solutions">Features</a></li>
+          <li><a href="#pain">Problems</a></li>
           <li><a href="#walkthrough">Walkthrough</a></li>
-          <li><a href="#contact">Pricing</a></li>
-          <li><a href="#">Roadmap</a></li>
-          <li><a href="#">Changelog</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#teams">Teams</a></li>
+          <li><a href="#usecases">Use Cases</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div>
         <div class="footer-col-title">Solutions</div>
         <ul class="footer-links">
-          <li><a href="#solutions">Referral Engine</a></li>
-          <li><a href="#solutions">Home Loan Commissions</a></li>
-          <li><a href="#solutions">Campaign Studio</a></li>
-          <li><a href="#solutions">Loyalty Program</a></li>
-          <li><a href="#solutions">Developer Analytics</a></li>
+          <li><a href="#features">Referral Engine</a></li>
+          <li><a href="#features">Home Loan Commissions</a></li>
+          <li><a href="#features">Campaign Studio</a></li>
+          <li><a href="#features">Loyalty Program</a></li>
+          <li><a href="#features">Developer Analytics</a></li>
         </ul>
       </div>
       <div>
@@ -2174,26 +2078,6 @@ function openUsp(idx) {
     dot.classList.toggle('active', i === idx);
   });
 }
-
-// ── TESTIMONIALS ──
-let testiIdx = 0;
-const testiCards = document.querySelectorAll('.testi-card');
-const testiDots = document.querySelectorAll('#testiDots .testi-dot');
-
-function goTesti(idx) {
-  testiCards.forEach((c, i) => {
-    c.classList.remove('active', 'prev', 'next');
-    const diff = i - idx;
-    if (diff === 0) c.classList.add('active');
-    else if (diff === -1 || diff === testiCards.length - 1) c.classList.add('prev');
-    else if (diff === 1 || diff === -(testiCards.length - 1)) c.classList.add('next');
-  });
-  testiDots.forEach((d, i) => d.classList.toggle('active', i === idx));
-  testiIdx = idx;
-}
-
-setInterval(() => goTesti((testiIdx + 1) % testiCards.length), 4500);
-goTesti(0);
 
 // ── HERO SUBTEXT CAROUSEL ──
 (function() {
