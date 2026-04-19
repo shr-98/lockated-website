@@ -9,7 +9,18 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
  */
 const LEASE_ISOLATION_CSS = `
 .lease-management-root {
+  /* Ensure tokens exist even if :root is not applied as expected */
+  --primary: #DA7756;
+  --primary-15: rgba(218,119,86,0.15);
+  --primary-8: rgba(218,119,86,0.08);
+  --cream: #F6F4EE;
+  --band: #E8E2D6;
+  --surface: #F0EAE1;
+  --dark: #2C2C2C;
+  --border: #C4B89D;
   --on-primary: #F6F4EE;
+  color-scheme: only light;
+  background-color: var(--cream) !important;
 }
 .lease-management-root .reveal {
   opacity: 0 !important;
@@ -51,11 +62,19 @@ const LEASE_ISOLATION_CSS = `
 .lease-management-root footer {
   background-color: var(--cream) !important;
 }
+.lease-management-root .section {
+  background-color: var(--cream) !important;
+}
 .lease-management-root .walkthrough-section {
   background-color: var(--band) !important;
 }
 .lease-management-root .wt-tabs {
   background-color: var(--band) !important;
+}
+.lease-management-root .wt-layout,
+.lease-management-root .teams-layout,
+.lease-management-root .usps-layout {
+  background-color: transparent !important;
 }
 .lease-management-root .wt-tab {
   background-color: transparent !important;
@@ -69,9 +88,25 @@ const LEASE_ISOLATION_CSS = `
 .lease-management-root .banner-section {
   background-color: var(--band) !important;
 }
+.lease-management-root .teams-tabs,
+.lease-management-root .wt-tabs {
+  box-shadow: none !important;
+}
 .lease-management-root .team-tab {
   background-color: transparent !important;
   background-image: none !important;
+}
+.lease-management-root .usp-tabs,
+.lease-management-root .role-switch {
+  background-color: var(--band) !important;
+}
+.lease-management-root .usp-tab {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+.lease-management-root .usp-tab.active,
+.lease-management-root .usp-tab:hover {
+  background-color: var(--primary-8) !important;
 }
 .lease-management-root button.role-btn {
   font-family: inherit !important;
@@ -115,6 +150,13 @@ const LEASE_ISOLATION_CSS = `
 }
 /* Panels / mocks: preflight or UA must not read as printer-white */
 .lease-management-root .pain-card:hover {
+  background-color: var(--surface) !important;
+}
+.lease-management-root .pain-card,
+.lease-management-root .uc-card,
+.lease-management-root .team-panel-screen,
+.lease-management-root .usp-panel-card,
+.lease-management-root .uc-modal-inner {
   background-color: var(--surface) !important;
 }
 .lease-management-root .usp-panel-card,
