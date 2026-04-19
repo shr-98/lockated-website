@@ -45,6 +45,33 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
 .cp-management-root .f-sub {
   color: var(--on-primary, #F6F4EE) !important;
 }
+.cp-management-root button.wtab {
+  font-family: 'Poppins', sans-serif !important;
+  background-color: var(--surface) !important;
+}
+.cp-management-root button.wtab.on {
+  background-color: var(--accent) !important;
+  color: var(--on-primary) !important;
+}
+.cp-management-root .fg input,
+.cp-management-root .fg select,
+.cp-management-root .fg textarea {
+  background-color: var(--surface) !important;
+  color: var(--txt) !important;
+}
+.cp-management-root .fg input:-webkit-autofill,
+.cp-management-root .fg input:-webkit-autofill:hover,
+.cp-management-root .fg input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--txt) !important;
+}
+.cp-management-root .hero-pills,
+.cp-management-root .modal,
+.cp-management-root .ucc,
+.cp-management-root .ui.on {
+  background-color: var(--surface) !important;
+}
 `
 
 type ModalDatum = {
@@ -60,6 +87,17 @@ export default function CpManagementLandingPage() {
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2A'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -290,7 +328,7 @@ export default function CpManagementLandingPage() {
   return (
     <div ref={rootRef} className="cp-management-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"

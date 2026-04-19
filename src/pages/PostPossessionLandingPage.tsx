@@ -2,6 +2,66 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Tailwind preflight + global heading fonts — keep panels/tabs aligned with warm tokens in `post-possession.html`. */
+const POST_POSSESSION_ISOLATION_CSS = `
+.post-possession-root h1,
+.post-possession-root h2,
+.post-possession-root h3,
+.post-possession-root h4,
+.post-possession-root h5,
+.post-possession-root h6 {
+  font-family: var(--font-display, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.post-possession-root button.wt-tab,
+.post-possession-root button.team-tab {
+  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.post-possession-root button.wt-tab {
+  background: transparent !important;
+}
+.post-possession-root button.wt-tab:hover {
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
+}
+.post-possession-root button.wt-tab.active {
+  background: rgba(218, 119, 86, 0.1) !important;
+  color: var(--brand) !important;
+}
+.post-possession-root button.team-tab {
+  background: transparent !important;
+}
+.post-possession-root button.team-tab:hover {
+  background: var(--bg-card) !important;
+}
+.post-possession-root button.team-tab.active {
+  background: var(--brand) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--brand) !important;
+}
+.post-possession-root .form-input,
+.post-possession-root select.form-input,
+.post-possession-root textarea.form-input {
+  background-color: var(--bg-alt) !important;
+  color: var(--text) !important;
+}
+.post-possession-root .form-input:focus {
+  background-color: var(--bg-card) !important;
+}
+.post-possession-root .btn-primary {
+  color: var(--on-primary) !important;
+}
+.post-possession-root .pain-card,
+.post-possession-root .testi-card,
+.post-possession-root .usp-visual,
+.post-possession-root .wt-screen,
+.post-possession-root .tf-row,
+.post-possession-root .team-visual,
+.post-possession-root .uc-card,
+.post-possession-root .contact-form-card {
+  background-color: var(--bg-card) !important;
+}
+`
+
 /** Mirrors `wtData` in `public/post-possession.html` — walkthrough tab copy (scripts in injected HTML do not run). */
 const WT_DATA: { label: string; num: string; title: string; desc: string; feats: string[] }[] = [
   {
@@ -92,6 +152,17 @@ export default function PostPossessionLandingPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
+
+  useEffect(() => {
     let cancelled = false
 
     async function load() {
@@ -120,7 +191,7 @@ export default function PostPossessionLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(styles)
+        setCssText(`${styles}\n${POST_POSSESSION_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -277,7 +348,7 @@ export default function PostPossessionLandingPage() {
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="post-possession-root min-h-dvh bg-[#F6F4EE]">
       {/* Ensure same external assets as the provided HTML */}
       {headLinks.map((l) => (
         <link

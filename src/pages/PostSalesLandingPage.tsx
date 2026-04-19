@@ -2,12 +2,84 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Warm tokens in `post-sales.html` + Tailwind preflight — match Post Possession / Snag integration. */
+const POST_SALES_ISOLATION_CSS = `
+.post-sales-root h1,
+.post-sales-root h2,
+.post-sales-root h3,
+.post-sales-root h4,
+.post-sales-root h5,
+.post-sales-root h6 {
+  font-family: var(--font-display, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.post-sales-root button.wt-tab,
+.post-sales-root button.team-tab {
+  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.post-sales-root button.wt-tab {
+  background: transparent !important;
+}
+.post-sales-root button.wt-tab:hover {
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
+}
+.post-sales-root button.wt-tab.active {
+  background: rgba(218, 119, 86, 0.1) !important;
+  color: var(--brand) !important;
+}
+.post-sales-root button.team-tab {
+  background: transparent !important;
+}
+.post-sales-root button.team-tab:hover {
+  background: var(--bg-card) !important;
+}
+.post-sales-root button.team-tab.active {
+  background: var(--brand) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--brand) !important;
+}
+.post-sales-root .form-input,
+.post-sales-root select.form-input,
+.post-sales-root textarea.form-input {
+  background-color: var(--bg-alt) !important;
+  color: var(--text) !important;
+}
+.post-sales-root .form-input:focus {
+  background-color: var(--bg-card) !important;
+}
+.post-sales-root .btn-primary {
+  color: var(--on-primary) !important;
+}
+.post-sales-root .pain-card,
+.post-sales-root .testi-card,
+.post-sales-root .usp-visual,
+.post-sales-root .wt-screen,
+.post-sales-root .tf-row,
+.post-sales-root .team-visual,
+.post-sales-root .uc-card,
+.post-sales-root .contact-form-card,
+.post-sales-root .trust-row {
+  background-color: var(--bg-card) !important;
+}
+`
+
 export default function PostSalesLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
   const [headLinks, setHeadLinks] = useState<HeadLinks>([])
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -38,7 +110,7 @@ export default function PostSalesLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(styles)
+        setCssText(`${styles}\n${POST_SALES_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -244,8 +316,8 @@ export default function PostSalesLandingPage() {
         .map((c, i) => {
           const x = 180 + i * 178
           return `
-  <rect x="${x}" y="380" width="160" height="44" rx="22" fill="#f8fafc" stroke="#e5e7eb" stroke-width="2"/>
-  <text x="${x + 80}" y="409" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="700" fill="#111827">${escapeXml(c)}</text>`
+  <rect x="${x}" y="380" width="160" height="44" rx="22" fill="#F0EAE1" stroke="#C4B89D" stroke-width="2"/>
+  <text x="${x + 80}" y="409" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="700" fill="#2C2C2C">${escapeXml(c)}</text>`
         })
         .join('\n')
 
@@ -264,7 +336,7 @@ export default function PostSalesLandingPage() {
   <!-- Transparent canvas so no white edges -->
   <rect x="0" y="0" width="900" height="1800" fill="transparent"/>
   <rect x="90" y="120" width="720" height="1560" rx="90" fill="url(#shell)" stroke="#0b0d13" stroke-width="10"/>
-  <rect x="130" y="200" width="640" height="1400" rx="58" fill="#ffffff" stroke="#d7dbe7" stroke-width="4"/>
+  <rect x="130" y="200" width="640" height="1400" rx="58" fill="#F6F4EE" stroke="#C4B89D" stroke-width="4"/>
   <rect x="320" y="150" width="260" height="34" rx="17" fill="#0b0d13" opacity="0.9"/>
   <circle cx="450" cy="168" r="10" fill="#2b2f3a"/>
 
@@ -281,15 +353,15 @@ ${chipSvgs}
   <text x="210" y="540" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Arial" font-size="18" fill="#6b7280">${escapeXml(cfg.guidelineText)}</text>
 
   <!-- list skeleton -->
-  <rect x="180" y="630" width="540" height="88" rx="18" fill="#f8fafc" stroke="#e5e7eb" stroke-width="3"/>
-  <rect x="180" y="740" width="540" height="88" rx="18" fill="#f8fafc" stroke="#e5e7eb" stroke-width="3"/>
-  <rect x="180" y="850" width="540" height="88" rx="18" fill="#f8fafc" stroke="#e5e7eb" stroke-width="3"/>
-  <rect x="180" y="960" width="360" height="88" rx="18" fill="#f8fafc" stroke="#e5e7eb" stroke-width="3"/>
-  <rect x="560" y="960" width="160" height="88" rx="18" fill="#f8fafc" stroke="#e5e7eb" stroke-width="3"/>
+  <rect x="180" y="630" width="540" height="88" rx="18" fill="#F0EAE1" stroke="#C4B89D" stroke-width="3"/>
+  <rect x="180" y="740" width="540" height="88" rx="18" fill="#F0EAE1" stroke="#C4B89D" stroke-width="3"/>
+  <rect x="180" y="850" width="540" height="88" rx="18" fill="#F0EAE1" stroke="#C4B89D" stroke-width="3"/>
+  <rect x="180" y="960" width="360" height="88" rx="18" fill="#F0EAE1" stroke="#C4B89D" stroke-width="3"/>
+  <rect x="560" y="960" width="160" height="88" rx="18" fill="#F0EAE1" stroke="#C4B89D" stroke-width="3"/>
 
   <!-- CTA -->
   <rect x="240" y="1105" width="420" height="96" rx="28" fill="url(#brand)"/>
-  <text x="450" y="1168" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Arial" font-size="28" font-weight="800" fill="#111827">View screen</text>
+  <text x="450" y="1168" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Arial" font-size="28" font-weight="800" fill="#F6F4EE">View screen</text>
 </svg>`
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
     }
@@ -416,7 +488,7 @@ ${chipSvgs}
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef} className="post-sales-root">
+    <div ref={rootRef} className="post-sales-root min-h-dvh bg-[#F6F4EE]">
       {headLinks.map((l) => (
         <link
           key={`${l.rel}:${l.href}`}

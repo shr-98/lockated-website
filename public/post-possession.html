@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Post Possession — Community Platform by Lockated</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -17,7 +18,9 @@
   --secondary-2: #9EC8BA;
   --bg: #F6F4EE;
   --bg-mid: #EEEBE3;
-  --bg-card: #FFFFFF;
+  --band: #E8E2D6;
+  --bg-card: #F0EAE1;
+  --on-primary: #F6F4EE;
   --bg-alt: #F0EDE6;
   --text: #2C2C2C;
   --text-muted: #7A7060;
@@ -39,6 +42,7 @@
 html {
   scroll-behavior: smooth;
   color-scheme: only light;
+  background: var(--bg);
 }
 body {
   font-family: var(--font-body);
@@ -80,7 +84,7 @@ body {
   align-items: center;
   gap: 10px;
   background: var(--brand);
-  color: #FFFFFF;
+  color: var(--on-primary);
   padding: 14px 28px;
   border-radius: 8px;
   font-family: var(--font-display);
@@ -146,7 +150,7 @@ nav.scrolled {
   border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
 }
-.logo-mark svg { width:20px; height:20px; fill:#FFF; }
+.logo-mark svg { width:20px; height:20px; fill:var(--on-primary); }
 .logo-name { font-family:var(--font-display); font-weight:700; font-size:17px; color:var(--text); }
 .logo-name span { color:var(--brand); }
 .nav-links {
@@ -187,6 +191,7 @@ nav.scrolled {
   position: relative;
   overflow: hidden;
   padding: 120px 32px 80px;
+  background: var(--bg);
 }
 .hero-grid-bg {
   position: absolute;
@@ -462,7 +467,7 @@ nav.scrolled {
 .usp-item.active .usp-toggle {
   background: var(--brand);
   border-color: var(--brand);
-  color: #FFF;
+  color: var(--on-primary);
   transform: rotate(45deg);
 }
 .usp-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
@@ -534,7 +539,7 @@ nav.scrolled {
   width:28px; height:28px; border-radius:50%; flex-shrink:0;
   display:flex; align-items:center; justify-content:center; font-size:11px;
 }
-.chat-av.brand { background:var(--brand); color:#FFF; }
+.chat-av.brand { background:var(--brand); color:var(--on-primary); }
 .chat-av.user { background:rgba(107,155,204,0.25); color:#3A6090; }
 .chat-bubble {
   padding:9px 14px; border-radius:12px; font-size:12px;
@@ -575,7 +580,7 @@ nav.scrolled {
   width:44px; height:44px; border-radius:50%;
   background: linear-gradient(135deg, var(--brand-dark), var(--brand));
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-display); font-weight:700; font-size:16px; color:#FFF; flex-shrink:0;
+  font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--on-primary); flex-shrink:0;
 }
 .testi-name { font-size:14px; font-weight:600; color:var(--text); }
 .testi-role { font-size:12px; color:var(--text-muted); margin-top:2px; }
@@ -687,7 +692,7 @@ nav.scrolled {
 }
 .team-tab i { font-size:13px; }
 .team-tab:hover { color:var(--text); border-color:rgba(44,44,44,0.2); background:var(--bg-card); }
-.team-tab.active { background:var(--brand); border-color:var(--brand); color:#FFF; font-weight:700; }
+.team-tab.active { background:var(--brand); border-color:var(--brand); color:var(--on-primary); font-weight:700; }
 .team-panel { display:none; }
 .team-panel.active { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
 .team-name { font-family:var(--font-display); font-size:clamp(24px,3vw,38px); font-weight:700; color:var(--text); margin-bottom:16px; }

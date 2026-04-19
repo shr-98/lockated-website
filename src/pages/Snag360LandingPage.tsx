@@ -81,8 +81,14 @@ const SNAG360_ISOLATION_CSS = `
   box-shadow: 0 20px 48px rgba(44, 44, 44, 0.09) !important;
 }
 .snag360-root .feature-screen-header {
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: rgba(240, 234, 225, 0.88) !important;
   border-bottom: 1px solid rgba(196, 184, 157, 0.28) !important;
+}
+.snag360-root .usp-visual-header {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.snag360-root .screen-base {
+  background: var(--surface, #f0eae1) !important;
 }
 .snag360-root .feature-screen-header span,
 .snag360-root .feature-screen-body,
@@ -138,6 +144,17 @@ export default function Snag360LandingPage() {
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -408,7 +425,7 @@ export default function Snag360LandingPage() {
   return (
     <div ref={rootRef} className="snag360-root min-h-dvh bg-[#F6F4EE]">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"

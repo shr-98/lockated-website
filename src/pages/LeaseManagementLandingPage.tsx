@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 
-/** Scoped overrides: global `index.css` `.reveal` uses blur; this page uses `.visible`. */
+type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
+
+/**
+ * Standalone `lease-management.html` matches Vendor Management tokens (cream / band / surface).
+ * The app shell's `index.css` adds global `.reveal` blur and Tailwind preflight resets buttons/inputs —
+ * mirror `VendorManagementLandingPage` scoping so the route matches the warm theme.
+ */
 const LEASE_ISOLATION_CSS = `
+.lease-management-root {
+  --on-primary: #F6F4EE;
+}
 .lease-management-root .reveal {
   opacity: 0 !important;
   transform: translateY(28px) !important;
@@ -15,6 +24,14 @@ const LEASE_ISOLATION_CSS = `
   transform: translateY(0) !important;
   filter: none !important;
 }
+.lease-management-root h1,
+.lease-management-root h2,
+.lease-management-root h3,
+.lease-management-root h4,
+.lease-management-root h5,
+.lease-management-root h6 {
+  font-family: var(--font), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
 @media (prefers-reduced-motion: reduce) {
   .lease-management-root .reveal,
   .lease-management-root .reveal.visible,
@@ -24,22 +41,89 @@ const LEASE_ISOLATION_CSS = `
     transition: none !important;
   }
 }
+.lease-management-root .hero {
+  background-color: var(--cream) !important;
+}
 .lease-management-root .pain-section,
 .lease-management-root .usps-section,
 .lease-management-root .usecase-section,
-.lease-management-root .contact-section {
+.lease-management-root .contact-section,
+.lease-management-root footer {
   background-color: var(--cream) !important;
 }
-.lease-management-root .walkthrough-section,
+.lease-management-root .walkthrough-section {
+  background-color: var(--band) !important;
+}
+.lease-management-root .wt-tabs {
+  background-color: var(--band) !important;
+}
+.lease-management-root .wt-tab {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+.lease-management-root .wt-tab.active {
+  background-color: rgba(218,119,86,0.12) !important;
+}
 .lease-management-root .teams-section,
+.lease-management-root .teams-tabs,
 .lease-management-root .banner-section {
   background-color: var(--band) !important;
+}
+.lease-management-root .team-tab {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+.lease-management-root button.role-btn {
+  font-family: inherit !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+}
+.lease-management-root button.role-btn.active {
+  background-color: var(--surface) !important;
+  color: var(--dark) !important;
+}
+.lease-management-root .btn-primary,
+.lease-management-root .btn-hero-primary,
+.lease-management-root .btn-banner-primary,
+.lease-management-root .hero-cta-primary,
+.lease-management-root .banner-cta-primary,
+.lease-management-root .form-submit {
+  color: var(--on-primary) !important;
+}
+.lease-management-root a.btn-ghost,
+.lease-management-root .btn-ghost,
+.lease-management-root .hero-cta-secondary,
+.lease-management-root .banner-cta-ghost {
+  background-color: transparent !important;
 }
 .lease-management-root .form-group input,
 .lease-management-root .form-group select,
 .lease-management-root .form-group textarea {
-  background-color: #fff !important;
+  background-color: var(--surface) !important;
   color: var(--dark) !important;
+}
+.lease-management-root .form-group input:-webkit-autofill,
+.lease-management-root .form-group input:-webkit-autofill:hover,
+.lease-management-root .form-group input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--dark) !important;
+}
+.lease-management-root .contact-map {
+  background-color: var(--surface) !important;
+}
+/* Panels / mocks: preflight or UA must not read as printer-white */
+.lease-management-root .pain-card:hover {
+  background-color: var(--surface) !important;
+}
+.lease-management-root .usp-panel-card,
+.lease-management-root .mock-kpi,
+.lease-management-root .mock-list-item,
+.lease-management-root .mock-kanban-card,
+.lease-management-root .wt-screen,
+.lease-management-root .uc-modal-stat {
+  background-color: var(--surface) !important;
 }
 `
 
@@ -47,7 +131,19 @@ export default function LeaseManagementLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
+  const [headLinks, setHeadLinks] = useState<HeadLinks>([])
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -59,16 +155,28 @@ export default function LeaseManagementLandingPage() {
 
         const text = await res.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
-        const style = doc.querySelector('style')?.textContent ?? ''
+
+        const styles = Array.from(doc.querySelectorAll('style'))
+          .map((s) => s.textContent ?? '')
+          .join('\n')
         const body = doc.body?.innerHTML ?? ''
 
-        if (!style.trim() || !body.trim()) {
+        if (!styles.trim() || !body.trim()) {
           throw new Error('`public/lease-management.html` must contain <style> and full <body> markup.')
         }
 
+        const links: HeadLinks = Array.from(doc.head?.querySelectorAll('link[rel]') ?? [])
+          .map((l) => ({
+            href: l.getAttribute('href') ?? '',
+            rel: l.getAttribute('rel') ?? '',
+            crossOrigin: l.getAttribute('crossorigin'),
+          }))
+          .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
+
         if (cancelled) return
-        setCssText(`${style}\n${LEASE_ISOLATION_CSS}`)
+        setCssText(`${styles}\n${LEASE_ISOLATION_CSS}`)
         setBodyHtml(body)
+        setHeadLinks(links)
         setLoadError(null)
       } catch (e) {
         if (cancelled) return
@@ -254,11 +362,20 @@ export default function LeaseManagementLandingPage() {
 
   return (
     <div ref={rootRef} className="lease-management-root min-h-dvh bg-[#F6F4EE]">
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-      />
+      {headLinks.map((l) => (
+        <link
+          key={`${l.rel}:${l.href}`}
+          rel={l.rel}
+          href={l.href}
+          crossOrigin={
+            l.crossOrigin === 'anonymous'
+              ? 'anonymous'
+              : l.crossOrigin === 'use-credentials'
+                ? 'use-credentials'
+                : undefined
+          }
+        />
+      ))}
 
       <style dangerouslySetInnerHTML={{ __html: cssText }} />
 

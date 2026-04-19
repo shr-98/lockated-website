@@ -2,24 +2,135 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Scoped only inside the Club route — avoids wiping blur/filters for the rest of the app. */
 const CLUB_MGMT_NO_BLUR_CSS = `
-/* Club Management: user requested no blur/backdrop-filter anywhere */
-/* Global kill-switches for all blur styles */
-*,
-*::before,
-*::after {
-  backdrop-filter: none !important;
+.club-mgmt-root,
+.club-mgmt-root *::before,
+.club-mgmt-root *::after {
   -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
-
-/* In case any blur is applied via filter */
-* {
+.club-mgmt-root * {
   filter: none !important;
 }
-
-/* Keep drop-shadow icons working (not blur) */
-.img-icon-uc {
+.club-mgmt-root .img-icon-uc {
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) !important;
+}
+`
+
+const CLUB_MANAGEMENT_ISOLATION_CSS = `
+.club-mgmt-root,
+.club-mgmt-root * {
+  color-scheme: only light !important;
+}
+.club-mgmt-root h1,
+.club-mgmt-root h2,
+.club-mgmt-root h3,
+.club-mgmt-root h4,
+.club-mgmt-root h5,
+.club-mgmt-root h6 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.club-mgmt-root nav {
+  background: rgba(246, 244, 238, 0.92) !important;
+}
+.club-mgmt-root nav.scrolled {
+  background: rgba(246, 244, 238, 0.97) !important;
+}
+.club-mgmt-root .hero,
+.club-mgmt-root .walkthrough-section,
+.club-mgmt-root .teams-section,
+.club-mgmt-root .usps-section,
+.club-mgmt-root .contact-section,
+.club-mgmt-root footer {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .section#pain {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root .usecases-section {
+  background-color: var(--band, #E8E2D6) !important;
+}
+.club-mgmt-root #end-banner {
+  background-color: var(--band, #E8E2D6) !important;
+}
+.club-mgmt-root .usp-visual {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .usp-visual-header {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.club-mgmt-root .screen-fnb,
+.club-mgmt-root .screen-loyalty {
+  background: rgba(240, 234, 225, 0.96) !important;
+}
+.club-mgmt-root .feature-screen {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root .feature-screen-header {
+  background: rgba(240, 234, 225, 0.88) !important;
+}
+.club-mgmt-root .feature-screen-body {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .team-visual-header {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.club-mgmt-root .hero-float-card {
+  background: rgba(240, 234, 225, 0.88) !important;
+}
+.club-mgmt-root .modal-inner-uc {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root .modal-close-uc {
+  background: rgba(240, 234, 225, 0.96) !important;
+}
+.club-mgmt-root .modal-close-uc:hover {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root button.feature-tab,
+.club-mgmt-root button.team-tab {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .feature-tabs {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .teams-tabs {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .btn-primary,
+.club-mgmt-root .btn-hero-primary,
+.club-mgmt-root .form-submit,
+.club-mgmt-root .cp-invite-btn {
+  color: var(--on-primary, #F6F4EE) !important;
+}
+.club-mgmt-root .form-input,
+.club-mgmt-root .form-select,
+.club-mgmt-root textarea.form-input {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root .form-input:focus,
+.club-mgmt-root textarea.form-input:focus {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.club-mgmt-root .form-input:-webkit-autofill,
+.club-mgmt-root .form-input:-webkit-autofill:hover,
+.club-mgmt-root .form-input:-webkit-autofill:focus,
+.club-mgmt-root .form-select:-webkit-autofill,
+.club-mgmt-root .form-select:-webkit-autofill:hover,
+.club-mgmt-root .form-select:-webkit-autofill:focus,
+.club-mgmt-root textarea.form-input:-webkit-autofill,
+.club-mgmt-root textarea.form-input:-webkit-autofill:hover,
+.club-mgmt-root textarea.form-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface, #F0EAE1) inset !important;
+  box-shadow: 0 0 0 1000px var(--surface, #F0EAE1) inset !important;
+  -webkit-text-fill-color: var(--dark, #2C2C2C) !important;
+}
+.club-mgmt-root .pain-card {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.club-mgmt-root .usecase-card {
+  background-color: var(--cream, #F6F4EE) !important;
 }
 `
 
@@ -29,6 +140,17 @@ export default function ClubManagementLandingPage() {
   const [bodyHtml, setBodyHtml] = useState('')
   const [headLinks, setHeadLinks] = useState<HeadLinks>([])
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -59,7 +181,7 @@ export default function ClubManagementLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${CLUB_MGMT_NO_BLUR_CSS}`)
+        setCssText(`${styles}\n${CLUB_MGMT_NO_BLUR_CSS}\n${CLUB_MANAGEMENT_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -288,7 +410,7 @@ export default function ClubManagementLandingPage() {
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef}>
+    <div ref={rootRef} className="club-mgmt-root min-h-dvh bg-[#F6F4EE]">
       {headLinks.map((l) => (
         <link
           key={`${l.rel}:${l.href}`}

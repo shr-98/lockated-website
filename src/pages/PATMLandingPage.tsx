@@ -2,6 +2,136 @@ import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Scoped overrides so app Tailwind / global styles do not force white shells, buttons, or forms. */
+const PATM_ISOLATION_CSS = `
+.patm-root,
+.patm-root * {
+  color-scheme: only light !important;
+}
+.patm-root h1,
+.patm-root h2,
+.patm-root h3,
+.patm-root h4,
+.patm-root h5,
+.patm-root h6 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+.patm-root nav {
+  background: rgba(246, 244, 238, 0.92) !important;
+}
+.patm-root nav.scrolled {
+  background: rgba(246, 244, 238, 0.97) !important;
+}
+.patm-root .hero,
+.patm-root .walkthrough-section,
+.patm-root .teams-section,
+.patm-root .usps-section,
+.patm-root .contact-section,
+.patm-root footer {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .section#pain {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .usecases-section {
+  background-color: var(--band, #E8E2D6) !important;
+}
+.patm-root .clients-section {
+  background: rgba(232, 226, 214, 0.55) !important;
+}
+.patm-root .usp-visual {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .usp-visual-header {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.patm-root .screen-sovereignty,
+.patm-root .screen-tasks,
+.patm-root .screen-analytics,
+.patm-root .screen-mom,
+.patm-root .screen-kanban,
+.patm-root .screen-allinone {
+  background: rgba(240, 234, 225, 0.96) !important;
+}
+.patm-root .feature-screen {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .feature-screen-header {
+  background: rgba(240, 234, 225, 0.88) !important;
+}
+.patm-root .feature-screen-body {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .team-visual-header {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.patm-root .float-card {
+  background: rgba(240, 234, 225, 0.94) !important;
+}
+.patm-root .modal-inner {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .modal-close {
+  background: rgba(240, 234, 225, 0.96) !important;
+}
+.patm-root .modal-close:hover {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .end-banner {
+  background-color: var(--band, #E8E2D6) !important;
+}
+.patm-root .pain-card {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .trust-badge {
+  background: rgba(240, 234, 225, 0.92) !important;
+}
+.patm-root .usecase-card {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .glass {
+  background: rgba(246, 244, 238, 0.72) !important;
+  border-color: rgba(196, 184, 157, 0.45) !important;
+}
+.patm-root button.feature-tab,
+.patm-root button.team-tab {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .feature-tabs {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .teams-tabs {
+  background-color: var(--cream, #F6F4EE) !important;
+}
+.patm-root .btn-primary,
+.patm-root .btn-hero-primary,
+.patm-root .form-submit {
+  color: var(--on-primary, #F6F4EE) !important;
+}
+.patm-root .form-input,
+.patm-root .form-select,
+.patm-root textarea.form-input {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .form-input:focus,
+.patm-root textarea.form-input:focus {
+  background-color: var(--surface, #F0EAE1) !important;
+}
+.patm-root .form-input:-webkit-autofill,
+.patm-root .form-input:-webkit-autofill:hover,
+.patm-root .form-input:-webkit-autofill:focus,
+.patm-root .form-select:-webkit-autofill,
+.patm-root .form-select:-webkit-autofill:hover,
+.patm-root .form-select:-webkit-autofill:focus,
+.patm-root textarea.form-input:-webkit-autofill,
+.patm-root textarea.form-input:-webkit-autofill:hover,
+.patm-root textarea.form-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface, #F0EAE1) inset !important;
+  box-shadow: 0 0 0 1000px var(--surface, #F0EAE1) inset !important;
+  -webkit-text-fill-color: var(--dark, #2C2C2C) !important;
+}
+`
+
 const BACKDROP_FILTER_FIX_CSS = `
 /* PATM integration fix:
    Some browsers/pages can end up with unintended backdrop-filter layers
@@ -51,6 +181,17 @@ export default function PATMLandingPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
+    const prevBodyBg = document.body.style.backgroundColor
+    const prevBodyColor = document.body.style.color
+    document.body.style.backgroundColor = '#F6F4EE'
+    document.body.style.color = '#2C2C2C'
+    return () => {
+      document.body.style.backgroundColor = prevBodyBg
+      document.body.style.color = prevBodyColor
+    }
+  }, [])
+
+  useEffect(() => {
     let cancelled = false
 
     async function load() {
@@ -79,7 +220,7 @@ export default function PATMLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${BACKDROP_FILTER_FIX_CSS}`)
+        setCssText(`${styles}\n${BACKDROP_FILTER_FIX_CSS}\n${PATM_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -233,10 +374,10 @@ export default function PATMLandingPage() {
         const rect = card.getBoundingClientRect()
         const x = ((e.clientX - rect.left) / rect.width) * 100
         const y = ((e.clientY - rect.top) / rect.height) * 100
-        card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(218,119,86,0.04) 0%, #fff 60%)`
+        card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(218,119,86,0.04) 0%, #F0EAE1 60%)`
       }
       const onLeave = () => {
-        card.style.background = '#fff'
+        card.style.background = ''
       }
       card.addEventListener('mousemove', onMove)
       card.addEventListener('mouseleave', onLeave)
@@ -436,7 +577,7 @@ export default function PATMLandingPage() {
   }, [bodyHtml])
 
   return (
-    <div ref={rootRef} className="patm-root">
+    <div ref={rootRef} className="patm-root min-h-dvh bg-[#F6F4EE]">
       {headLinks.map((l) => (
         <link
           key={`${l.rel}:${l.href}`}
