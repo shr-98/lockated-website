@@ -15,7 +15,6 @@ const CLIENT_TYPES = [
 const PROPERTY_TYPES = ['Commercial Property', 'Residential Property'] as const
 
 const PRODUCTS_TYPES = [
-  'Customer App',
   'Lease Management',
   'FM Matrix',
   'Loyality Rule',
@@ -42,7 +41,6 @@ const PROPERTY_TYPE_LINKS: Record<(typeof PROPERTY_TYPES)[number], string> = {
 }
 
 const PRODUCTS_TYPE_LINKS: Record<(typeof PRODUCTS_TYPES)[number], string> = {
-  'Customer App': '/customer-app',
   'Lease Management': '/lease-management',
   'FM Matrix': '/fm-matrix',
   'Loyality Rule': '/loyalty-rule-engine',
