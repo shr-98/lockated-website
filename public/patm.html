@@ -180,7 +180,7 @@
     font-size: 14px;
     font-weight: 600;
     color: var(--on-primary);
-    background: var(--dark);
+    background: var(--primary);
     border: none;
     cursor: pointer;
     padding: 10px 22px;
@@ -192,19 +192,21 @@
     gap: 8px;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
   }
 
   .btn-primary::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--primary);
+    background: rgba(0, 0, 0, 0.12);
+    z-index: -1;
     opacity: 0;
     transition: opacity 0.25s;
   }
 
   .btn-primary:hover::before { opacity: 1; }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(218,119,86,0.3); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(218,119,86,0.3); filter: brightness(0.97); }
   .btn-primary span { position: relative; z-index: 1; }
 
   /* ── HERO ── */
@@ -353,7 +355,7 @@
     font-size: 15px;
     font-weight: 600;
     color: var(--on-primary);
-    background: var(--dark);
+    background: var(--primary);
     border: none;
     cursor: pointer;
     padding: 14px 28px;
@@ -371,7 +373,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--primary);
+    background: rgba(0, 0, 0, 0.12);
     opacity: 0;
     transition: opacity 0.25s;
   }
@@ -1937,18 +1939,19 @@ svg { display: block; }
 /* ── BUTTONS ── */
 .btn-primary {
   font-family: var(--font); font-size: 14px; font-weight: 600;
-  color: var(--on-primary); background: var(--dark); border: none;
+  color: var(--on-primary); background: var(--primary); border: none;
   cursor: pointer; padding: 12px 24px; border-radius: 9px;
   transition: all 0.25s ease; text-decoration: none;
   display: inline-flex; align-items: center; gap: 8px;
   position: relative; overflow: hidden;
+  isolation: isolate;
 }
 .btn-primary::before {
   content: ''; position: absolute; inset: 0;
-  background: var(--primary); opacity: 0; transition: opacity 0.25s;
+  background: rgba(0, 0, 0, 0.12); z-index: -1; opacity: 0; transition: opacity 0.25s;
 }
 .btn-primary:hover::before { opacity: 1; }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(218,119,86,0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(218,119,86,0.3); filter: brightness(0.97); }
 .btn-primary > * { position: relative; z-index: 1; }
 
 .btn-outline {
@@ -2558,18 +2561,18 @@ textarea.form-input { resize: vertical; min-height: 120px; }
 
 .form-submit {
   font-family: var(--font); font-size: 15px; font-weight: 600;
-  color: var(--on-primary); background: var(--dark); border: none;
+  color: var(--on-primary); background: var(--primary); border: none;
   cursor: pointer; padding: 15px 32px; border-radius: 10px;
   transition: all 0.25s ease; width: 100%;
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; isolation: isolate;
 }
 .form-submit::before {
   content: ''; position: absolute; inset: 0;
-  background: var(--primary); opacity: 0; transition: opacity 0.25s;
+  background: rgba(0, 0, 0, 0.12); z-index: -1; opacity: 0; transition: opacity 0.25s;
 }
 .form-submit:hover::before { opacity: 1; }
-.form-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(218,119,86,0.3); }
+.form-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(218,119,86,0.3); filter: brightness(0.97); }
 .form-submit > * { position: relative; z-index: 1; }
 
 .form-note { font-size: 11.5px; color: rgba(44,44,44,0.4); text-align: center; margin-top: 6px; }
@@ -4748,7 +4751,7 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
       <div style="margin-bottom:40px;">
         <div class="section-eyebrow reveal" style="margin-bottom:16px;">Company Details</div>
         <h3 class="contact-headline reveal reveal-delay-1">We're building the future of<br>sovereign <span class="accent">work management.</span></h3>
-        <p class="contact-desc reveal reveal-delay-2">Lockated is headquartered in Mumbai with teams across India and the UAE. We work directly with companies deploying PTM across India and GCC markets.</p>
+        <p class="contact-desc reveal reveal-delay-2">Lockated is headquartered in Mumbai with teams across India. We work directly with companies deploying PTM across India and GCC markets.</p>
       </div>
 
       <div class="contact-details reveal reveal-delay-3">
@@ -4758,7 +4761,7 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
           </div>
           <div>
             <div class="contact-detail-label">Headquarters</div>
-            <div class="contact-detail-val">Mumbai, India &amp; Dubai, UAE</div>
+            <div class="contact-detail-val">Mumbai, India</div>
           </div>
         </div>
         <div class="contact-detail">
@@ -4999,7 +5002,7 @@ if (submitBtn) {
     submitBtn.style.background = '#798C5E';
     setTimeout(() => {
       span.textContent = 'Send Message';
-      submitBtn.style.background = '';
+      submitBtn.style.background = 'var(--primary)';
     }, 3000);
   });
 }

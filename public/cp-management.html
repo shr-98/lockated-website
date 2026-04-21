@@ -315,10 +315,9 @@ section{padding:108px 0;}
 
 /* ── USE CASES ── */
 #uc{background:var(--bg);}
-.uc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.uc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;grid-auto-rows:1fr;}
 .ucc{border-radius:var(--r2);overflow:hidden;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all .45s var(--ease);position:relative;}
-.ucc:nth-child(1){grid-row:1/3;}
-.ucc:nth-child(4){grid-column:2/4;}
+.ucc{height:100%;}
 .ucc:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--accent);}
 .ucc-in{padding:32px;height:100%;display:flex;flex-direction:column;}
 .ucc-ico{width:48px;height:48px;border-radius:13px;margin-bottom:18px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;}
@@ -867,7 +866,7 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
         <div class="ct-ds">
           <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ct-d-lbl">Email</div><div class="ct-d-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9deefcf1f8eeddfeedf0fcf3fcfaf8f0f8f3e9b3f4f2">[email&#160;protected]</a></div></div></div>
           <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-phone"></i></div><div><div class="ct-d-lbl">Phone</div><div class="ct-d-val">+91 98200 00000</div></div></div>
-          <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ct-d-lbl">Offices</div><div class="ct-d-val">Mumbai, India &amp; Dubai, UAE</div></div></div>
+          <div class="ct-d"><div class="ct-d-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ct-d-lbl">Offices</div><div class="ct-d-val">Mumbai, India</div></div></div>
         </div>
         <p style="font-size:11px;font-weight:700;color:var(--txt-3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.12em">Follow Us</p>
         <div class="soc">
@@ -978,7 +977,7 @@ const MD={
     body:`<h5>How commercial developers use CP Management</h5><p>Commercial developers manage fewer CPs but with significantly larger deal sizes. A single brokerage error on an INR 5Cr+ transaction is a financial and legal liability. CP Management gives full booking-level visibility, precise brokerage calculation, and a direct audit trail into SAP.</p><h5>Key use cases</h5><ul><li>Track high-value lease and sale transactions with CP-level brokerage breakdown</li><li>Manage NRI/OS transaction brokerage with different rate structures accurately</li><li>Provide brokers real-time invoice status on long-duration commercial deals</li><li>Generate analytics on CP performance by asset class and geography</li></ul><h5>Profile</h5><p>Mid to large commercial developer or REIT with 50–500 CPs. Deal values INR 5Cr+ per transaction. India metros and GCC.</p>`},
   luxury:{ico:'fa-gem',ttl:'Luxury & Ultra-Luxury Residential',sub:'Premium CP relationships demand premium recognition',
     imps:[{v:'Gold',l:'Airport lounge access'},{v:'20–150',l:'Curated CP network'},{v:'+35%',l:'Top CP retention'}],
-    body:`<h5>Why luxury developers need CP Management</h5><p>Luxury developers lose top CPs to competitors offering structured recognition programs. A broker generating crore-level commissions with no formal reward structure feels undervalued — and acts accordingly. CP Management changes that dynamic.</p><h5>Key use cases</h5><ul><li>Gold-tier CPs unlock airport lounge access, international experiences, and curated travel</li><li>Personalised collateral ensures brand consistency — no blurry WhatsApp screenshots of premium properties</li><li>Analytics enable CP segmentation by buyer profile — NRI, HNI, investor — for targeted outreach</li><li>Tier-based reward structure formally recognises the top 20% driving 80% of revenue</li></ul><h5>Profile</h5><p>Ultra-luxury developer with ASPs above INR 5Cr per unit. 20–150 active CPs. Mumbai, Delhi NCR, Dubai, Abu Dhabi.</p>`},
+    body:`<h5>Why luxury developers need CP Management</h5><p>Luxury developers lose top CPs to competitors offering structured recognition programs. A broker generating crore-level commissions with no formal reward structure feels undervalued — and acts accordingly. CP Management changes that dynamic.</p><h5>Key use cases</h5><ul><li>Gold-tier CPs unlock airport lounge access, international experiences, curated travel, and premium recognition</li><li>Personalised collateral ensures brand consistency — no blurry WhatsApp screenshots of premium properties</li><li>Analytics enable CP segmentation by buyer profile — NRI, HNI, investor — for targeted outreach</li><li>Tier-based reward structure formally recognises the top 20% driving 80% of revenue</li></ul><h5>Profile</h5><p>Ultra-luxury developer with ASPs above INR 5Cr per unit. 20–150 active CPs. Mumbai, Delhi NCR.</p>`},
   affordable:{ico:'fa-house',ttl:'Affordable Housing at Scale',sub:'High volume, fast activation, zero lead loss',
     imps:[{v:'5,000+',l:'CP network capacity'},{v:'2 hrs',l:'Temp reg to first lead'},{v:'3×',l:'Invoice throughput vs manual'}],
     body:`<h5>How affordable housing developers use CP Management</h5><p>Affordable housing requires rapid CP activation at scale. With 500–5,000 CPs across Tier 1 and Tier 2 cities, manual onboarding is impossible to sustain. Temporary registration eliminates lead loss during the registration lag.</p><h5>Key use cases</h5><ul><li>Temporary registration lets walk-in CPs capture leads before RERA verification completes</li><li>Ladder schemes incentivise volume-based brokers — more bookings, higher tier, better rewards</li><li>Invoice automation handles high transaction throughput without increasing finance headcount</li><li>Broadcast notifications push new scheme updates to the entire CP network instantly</li></ul><h5>Profile</h5><p>Government-backed or private affordable developer. 5,000–50,000 units per year. 500–5,000 CPs. Tier 1 and Tier 2 Indian cities.</p>`},

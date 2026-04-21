@@ -74,6 +74,8 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
 }
 `
 
+type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
+
 type ModalDatum = {
   ico: string
   ttl: string
@@ -86,6 +88,7 @@ export default function CpManagementLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
+  const [headLinks, setHeadLinks] = useState<HeadLinks>([])
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -118,9 +121,18 @@ export default function CpManagementLandingPage() {
           throw new Error('`public/cp-management.html` must contain <style> and full <body> markup.')
         }
 
+        const links: HeadLinks = Array.from(doc.head?.querySelectorAll('link[rel]') ?? [])
+          .map((l) => ({
+            href: l.getAttribute('href') ?? '',
+            rel: l.getAttribute('rel') ?? '',
+            crossOrigin: l.getAttribute('crossorigin'),
+          }))
+          .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
+
         if (cancelled) return
         setCssText(`${styles}\n${CP_MANAGEMENT_ISOLATION_CSS}`)
         setBodyHtml(body)
+        setHeadLinks(links)
         setLoadError(null)
       } catch (e) {
         if (cancelled) return
@@ -327,16 +339,20 @@ export default function CpManagementLandingPage() {
 
   return (
     <div ref={rootRef} className="cp-management-root min-h-dvh bg-[#F6F4EE]">
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      />
+      {headLinks.map((l) => (
+        <link
+          key={`${l.rel}:${l.href}`}
+          rel={l.rel}
+          href={l.href}
+          crossOrigin={
+            l.crossOrigin === 'anonymous'
+              ? 'anonymous'
+              : l.crossOrigin === 'use-credentials'
+                ? 'use-credentials'
+                : undefined
+          }
+        />
+      ))}
 
       <style dangerouslySetInnerHTML={{ __html: cssText }} />
 

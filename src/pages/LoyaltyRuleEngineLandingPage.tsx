@@ -20,6 +20,9 @@ const LOYALTY_RULE_ISOLATION_CSS = `
 .loyalty-rule-root * {
   color-scheme: only light !important;
 }
+.loyalty-rule-root {
+  color: #000 !important;
+}
 .loyalty-rule-root .reveal {
   opacity: 0 !important;
   transform: translateY(24px) !important;
@@ -62,6 +65,8 @@ const LOYALTY_RULE_ISOLATION_CSS = `
 .loyalty-rule-root .feature-bullet span,
 .loyalty-rule-root .section-sub,
 .loyalty-rule-root .cta-sub,
+.loyalty-rule-root .hero-sub,
+.loyalty-rule-root .cta-subtext,
 .loyalty-rule-root .footer-brand-desc,
 .loyalty-rule-root .footer-link,
 .loyalty-rule-root .footer-legal a,
@@ -69,13 +74,44 @@ const LOYALTY_RULE_ISOLATION_CSS = `
 .loyalty-rule-root .office-address,
 .loyalty-rule-root .form-sub,
 .loyalty-rule-root .form-label {
-  color: rgba(44, 44, 44, 0.62) !important;
+  color: #000 !important;
+}
+.loyalty-rule-root .cta-subtext {
+  opacity: 1 !important;
+}
+.loyalty-rule-root .hero-bento-card {
+  opacity: 1 !important;
+  background: var(--surface, #F0EAE1) !important;
+  border-color: rgba(196, 184, 157, 0.55) !important;
+  box-shadow: 0 14px 34px rgba(44, 44, 44, 0.08) !important;
+}
+.loyalty-rule-root .bento-mini-label,
+.loyalty-rule-root .bento-mini-sub,
+.loyalty-rule-root .client-name,
+.loyalty-rule-root .countdown-label {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+.loyalty-rule-root .bento-mini-label,
+.loyalty-rule-root .countdown-label {
+  color: rgba(0, 0, 0, 0.78) !important;
+}
+.loyalty-rule-root .client-name {
+  color: rgba(0, 0, 0, 0.78) !important;
+}
+.loyalty-rule-root .hero-eyebrow,
+.loyalty-rule-root .hero-headline,
+.loyalty-rule-root .hero-sub,
+.loyalty-rule-root .hero-ctas,
+.loyalty-rule-root .hero-countdown {
+  opacity: 1 !important;
+  transform: none !important;
 }
 .loyalty-rule-root .feature-tabs {
   border-bottom-color: rgba(44, 44, 44, 0.1) !important;
 }
 .loyalty-rule-root .feature-tab {
-  color: rgba(44, 44, 44, 0.45) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
 }
 .loyalty-rule-root .feature-tab.active {
   color: var(--dark, #2C2C2C) !important;
@@ -121,12 +157,38 @@ const LOYALTY_RULE_ISOLATION_CSS = `
 .loyalty-rule-root .btn-hero-primary,
 .loyalty-rule-root .btn-cta-primary,
 .loyalty-rule-root .btn-form-submit {
-  color: var(--cream, #F6F4EE) !important;
+  background: var(--primary, #DA7756) !important;
+  border-color: var(--primary, #DA7756) !important;
+  color: #fff !important;
+}
+.loyalty-rule-root .btn-primary:hover,
+.loyalty-rule-root .btn-hero-primary:hover,
+.loyalty-rule-root .btn-cta-primary:hover,
+.loyalty-rule-root .btn-form-submit:hover {
+  filter: brightness(0.95) !important;
 }
 .loyalty-rule-root .btn-ghost,
 .loyalty-rule-root .btn-hero-outline,
 .loyalty-rule-root .btn-cta-outline {
   background: transparent !important;
+}
+.loyalty-rule-root .btn-cta-outline {
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  color: #000 !important;
+  opacity: 1 !important;
+}
+.loyalty-rule-root .btn-cta-outline:hover {
+  background: #fff !important;
+  filter: brightness(0.96) !important;
+}
+.loyalty-rule-root .cta-feature-item {
+  background: var(--surface, #F0EAE1) !important;
+  border-color: rgba(196, 184, 157, 0.55) !important;
+}
+.loyalty-rule-root .cta-feature-text {
+  color: rgba(0, 0, 0, 0.86) !important;
+  opacity: 1 !important;
 }
 .loyalty-rule-root .contact-form-area,
 .loyalty-rule-root .form-input,

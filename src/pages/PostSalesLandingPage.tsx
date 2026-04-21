@@ -86,7 +86,7 @@ export default function PostSalesLandingPage() {
 
     async function load() {
       try {
-        const res = await fetch('/post-sales.html', { cache: 'no-cache' })
+        const res = await fetch(`/post-sales.html?ts=${Date.now()}`, { cache: 'no-store' })
         if (!res.ok) throw new Error(`Failed to load /post-sales.html (${res.status})`)
 
         const text = await res.text()

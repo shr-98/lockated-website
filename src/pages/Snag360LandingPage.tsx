@@ -18,6 +18,9 @@ const SNAG360_ISOLATION_CSS = `
 .snag360-root * {
   color-scheme: only light !important;
 }
+.snag360-root {
+  color: #2C2C2C !important;
+}
 .snag360-root .reveal {
   opacity: 0 !important;
   transform: translateY(24px) !important;
@@ -116,11 +119,80 @@ const SNAG360_ISOLATION_CSS = `
 .snag360-root .end-banner {
   background: var(--band, #E8E2D6) !important;
 }
+.snag360-root .hero-eyebrow,
+.snag360-root .hero-headline,
+.snag360-root .hero-sub,
+.snag360-root .hero-ctas,
+.snag360-root .hero-metrics,
+.snag360-root .banner-title,
+.snag360-root .banner-sub {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+.snag360-root .banner-title {
+  color: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .banner-sub,
+.snag360-root .banner-proof {
+  color: rgba(44, 44, 44, 0.82) !important;
+  opacity: 1 !important;
+}
+.snag360-root .end-banner .banner-grid {
+  background-image:
+    linear-gradient(rgba(44, 44, 44, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44, 44, 44, 0.04) 1px, transparent 1px) !important;
+}
+.snag360-root .end-banner .banner-bg::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(246, 244, 238, 0.74) !important;
+  pointer-events: none !important;
+}
+.snag360-root .hero-sub,
+.snag360-root .cta-subtext,
+.snag360-root .metric-label,
+.snag360-root .metric-sublabel,
+.snag360-root .section-sub {
+  color: rgba(44, 44, 44, 0.82) !important;
+  opacity: 1 !important;
+}
+.snag360-root .hero-bento-bg {
+  opacity: 0.9 !important;
+}
 .snag360-root .btn-submit,
 .snag360-root .btn-primary-nav,
 .snag360-root .btn-hero-primary,
 .snag360-root .btn-banner-primary {
   color: #F6F4EE !important;
+}
+.snag360-root .btn-primary-nav,
+.snag360-root .btn-hero-primary,
+.snag360-root .btn-banner-primary,
+.snag360-root .btn-submit {
+  background: var(--primary, #DA7756) !important;
+  border-color: var(--primary, #DA7756) !important;
+}
+.snag360-root .btn-primary-nav::before,
+.snag360-root .btn-hero-primary::before,
+.snag360-root .btn-submit::before {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+.snag360-root .btn-ghost-nav,
+.snag360-root .btn-hero-outline,
+.snag360-root .btn-banner-ghost {
+  background: transparent !important;
+  border-color: rgba(44, 44, 44, 0.28) !important;
+  color: rgba(44, 44, 44, 0.9) !important;
+  opacity: 1 !important;
+}
+.snag360-root .btn-ghost-nav:hover,
+.snag360-root .btn-hero-outline:hover,
+.snag360-root .btn-banner-ghost:hover {
+  background: rgba(218, 119, 86, 0.08) !important;
+  border-color: var(--primary, #DA7756) !important;
+  color: var(--primary, #DA7756) !important;
 }
 .snag360-root .form-group input,
 .snag360-root .form-group select,
