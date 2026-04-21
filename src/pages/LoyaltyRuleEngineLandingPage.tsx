@@ -173,13 +173,13 @@ const LOYALTY_RULE_ISOLATION_CSS = `
   background: transparent !important;
 }
 .loyalty-rule-root .btn-cta-outline {
-  background: #fff !important;
-  border-color: rgba(0, 0, 0, 0.18) !important;
-  color: #000 !important;
+  background: var(--surface, #F0EAE1) !important;
+  border-color: rgba(196, 184, 157, 0.75) !important;
+  color: var(--dark, #2C2C2C) !important;
   opacity: 1 !important;
 }
 .loyalty-rule-root .btn-cta-outline:hover {
-  background: #fff !important;
+  background: var(--surface, #F0EAE1) !important;
   filter: brightness(0.96) !important;
 }
 .loyalty-rule-root .cta-feature-item {
