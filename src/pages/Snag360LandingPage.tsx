@@ -21,6 +21,28 @@ const SNAG360_ISOLATION_CSS = `
 .snag360-root {
   color: #2C2C2C !important;
 }
+.snag360-root .usecase-card {
+  background: var(--cream, #F6F4EE) !important;
+}
+.snag360-root .usecase-card-body {
+  background: transparent !important;
+}
+.snag360-root .usecase-title,
+.snag360-root .modal-title,
+.snag360-root .modal-industry {
+  color: var(--dark, #2C2C2C) !important;
+}
+.snag360-root .usecase-impact,
+.snag360-root .usecase-industry-tag,
+.snag360-root .usecase-link {
+  color: var(--primary, #DA7756) !important;
+}
+.snag360-root .usecase-desc,
+.snag360-root .usecase-impact-label,
+.snag360-root .modal-body,
+.snag360-root .modal-content {
+  color: rgba(44, 44, 44, 0.62) !important;
+}
 .snag360-root .reveal {
   opacity: 0 !important;
   transform: translateY(24px) !important;

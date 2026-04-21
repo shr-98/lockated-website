@@ -1751,6 +1751,9 @@
         max-width: 760px;
         width: 100%;
         overflow: hidden;
+        /* Ensure long modal content (incl. "The outcome") is reachable on short viewports */
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
         box-shadow: 0 40px 100px rgba(44, 44, 44, 0.25);
         animation: slideUp 0.35s cubic-bezier(0.23, 1, 0.32, 1);
       }
@@ -3735,9 +3738,33 @@
         </div>
         <div class="modal-body">
           <div class="modal-industry">Residential Real Estate Development</div>
-          <div class="modal-title">RERA-compliant pre-handover inspection</div>
+          <div class="modal-title">RERA-compliant pre-handover inspection for apartment projects</div>
+          <div class="modal-impact-row">
+            <div class="modal-stat">
+              <div class="modal-stat-val">60%</div>
+              <div class="modal-stat-label">Rework reduction</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">Zero</div>
+              <div class="modal-stat-label">RERA complaints</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">1-click</div>
+              <div class="modal-stat-label">Handover docs</div>
+            </div>
+          </div>
           <div class="modal-content">
-            <p>Stage gates block handover clearance until all snags are closed and quality scores meet thresholds.</p>
+            <p>India's residential developers face a dual pressure: deliver defect-free units within RERA timelines while managing hundreds of inspection points across multiple towers with a limited QC team.</p>
+            <h4>How teams use Snag 360</h4>
+            <ul>
+              <li>Quality Head configures pre-handover stage and unit-specific checklists in the web portal before inspection begins</li>
+              <li>Inspector conducts room-by-room walkthrough on mobile, marking each checkpoint pass or fail in real time</li>
+              <li>Any failure automatically raises a snag with annotated photo, assigned to the repair team with a due date</li>
+              <li>Stage gate blocks handover clearance until all snags are closed and quality score meets threshold</li>
+              <li>Digital handover certificate generated instantly with full evidence package for RERA documentation</li>
+            </ul>
+            <h4>The outcome</h4>
+            <p>One residential developer in Pune reduced rework rates by over 60% in the first project cycle. Customer walkthrough scores improved significantly. Their legal team now has a complete digital audit trail for every unit delivered, removing their RERA liability exposure.</p>
           </div>
         </div>
       </div>
@@ -3756,9 +3783,35 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="modal-industry">EPC Contractors</div>
-          <div class="modal-title">Multi-site quality monitoring</div>
-          <div class="modal-content"><p>DPRs auto-generate; closures track across zones with a full evidence trail.</p></div>
+          <div class="modal-industry">EPC Contractors and Infrastructure Firms</div>
+          <div class="modal-title">Multi-site quality monitoring across highway and infrastructure projects</div>
+          <div class="modal-impact-row">
+            <div class="modal-stat">
+              <div class="modal-stat-val">4x</div>
+              <div class="modal-stat-label">faster closure</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">Auto</div>
+              <div class="modal-stat-label">DPR to PMC</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">100%</div>
+              <div class="modal-stat-label">audit trail</div>
+            </div>
+          </div>
+          <div class="modal-content">
+            <p>EPC projects span hundreds of kilometres and multiple inspector teams. Without a structured system, quality data gets fragmented, stage submissions get disputed, and rework is discovered only at client review.</p>
+            <h4>How teams use Snag 360</h4>
+            <ul>
+              <li>Project Director configures stages: Earthwork, Foundation, Structure, MEP, Finishing</li>
+              <li>Inspector teams log snags and complete checklists from field using mobile app across all zones simultaneously</li>
+              <li>Supervisors monitor cross-zone dashboard for open snags and stage completion percentages</li>
+              <li>DPR auto-generated daily and emailed to client PMC as compliance evidence</li>
+              <li>Stage gates require PMC sign-off before government billing milestones are triggered</li>
+            </ul>
+            <h4>The outcome</h4>
+            <p>EPC teams using Snag 360 report a 4x improvement in snag closure rate and a complete elimination of manual DPR preparation. Government billing milestones are supported by a verified digital audit trail that stands up to third-party review.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -3777,8 +3830,29 @@
         </div>
         <div class="modal-body">
           <div class="modal-industry">Commercial Real Estate</div>
-          <div class="modal-title">Pre-occupancy snagging</div>
-          <div class="modal-content"><p>Block clearance until critical defects are resolved with evidence.</p></div>
+          <div class="modal-title">Pre-occupancy snagging for Grade A offices and retail fit-outs</div>
+          <div class="modal-impact-row">
+            <div class="modal-stat">
+              <div class="modal-stat-val">Zero</div>
+              <div class="modal-stat-label">Critical snags at handover</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">SLA</div>
+              <div class="modal-stat-label">Compliance documented</div>
+            </div>
+          </div>
+          <div class="modal-content">
+            <p>Corporate tenants expect Grade A quality at occupancy. A single critical defect at handover damages the developer-tenant relationship and creates warranty disputes. Snag 360 ensures every zone meets quality standards before clearance is issued.</p>
+            <h4>How teams use Snag 360</h4>
+            <ul>
+              <li>Project Manager configures fit-out stages: MEP rough-in, Ceiling, Flooring, Partitions, Final Clean</li>
+              <li>Positive and negative scoring tracks quality score per zone against tenant SLA minimum</li>
+              <li>FM Handover Support package prepared before tenant walkthrough</li>
+              <li>Critical open snags automatically block handover clearance</li>
+            </ul>
+            <h4>The outcome</h4>
+            <p>Commercial projects using Snag 360 reduce tenant handover escalations by enforcing closure before clearance. Leasing and FM teams get a clean evidence-backed handover pack, and SLA compliance is documented zone-by-zone—preventing warranty disputes later.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -3797,9 +3871,28 @@
         </div>
         <div class="modal-body">
           <div class="modal-industry">Industrial and Warehousing</div>
-          <div class="modal-title">MEP and civil quality inspection for logistics parks before occupancy</div>
+          <div class="modal-title">MEP and civil QC for logistics parks before tenant possession</div>
+          <div class="modal-impact-row">
+            <div class="modal-stat">
+              <div class="modal-stat-val">Zero</div>
+              <div class="modal-stat-label">Tenant complaints at possession</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">Day 1</div>
+              <div class="modal-stat-label">Warranty data available</div>
+            </div>
+          </div>
           <div class="modal-content">
-            <p>Capture MEP, civil, and finishing defects with photo evidence and owner-wise accountability before handover. Stage gates enforce closure before occupancy sign-off.</p>
+            <p>Warehouse and logistics park developers must deliver across multiple bays simultaneously. MEP non-conformances, civil slab issues, and safety equipment gaps discovered post-possession create warranty disputes with tenants who are already operational.</p>
+            <h4>How teams use Snag 360</h4>
+            <ul>
+              <li>Quality Manager configures warehouse checklist: civil slab, dock levelers, fire suppression, electrical, CCTV, HVAC</li>
+              <li>Inspector completes checklist per bay and raises snags for non-conformances</li>
+              <li>Ad-hoc logging captures defects like cracked panels not covered by standard checklist</li>
+              <li>Pre-handover stage confirms all bays are defect-free before tenant possession</li>
+            </ul>
+            <h4>The outcome</h4>
+            <p>Industrial handovers become predictable: bays are cleared only when critical snags are closed and re-verified. Tenants receive a complete day‑1 defect and warranty trail, reducing post-possession disputes and speeding up occupancy sign-off.</p>
           </div>
         </div>
       </div>
@@ -3818,10 +3911,28 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="modal-industry">Government and Public Works</div>
-          <div class="modal-title">Third-party audit documentation for PWD and NHAI projects</div>
+          <div class="modal-industry">Government and Public Infrastructure</div>
+          <div class="modal-title">Third-party quality audit documentation for PWD and NHAI projects</div>
+          <div class="modal-impact-row">
+            <div class="modal-stat">
+              <div class="modal-stat-val">100%</div>
+              <div class="modal-stat-label">Digital audit trail</div>
+            </div>
+            <div class="modal-stat">
+              <div class="modal-stat-val">Milestone</div>
+              <div class="modal-stat-label">Billing backed by evidence</div>
+            </div>
+          </div>
           <div class="modal-content">
-            <p>Create a complete digital audit trail for stage-wise certification and billing milestones. PMC sign-off and evidence capture are logged against every inspection and defect closure.</p>
+            <p>Government infrastructure projects require verified quality documentation for every billing milestone. Manual records are easily disputed. Snag 360 creates an unbroken digital chain of inspection evidence from earthwork to commissioning.</p>
+            <h4>How teams use Snag 360</h4>
+            <ul>
+              <li>PMC inspector team configured with read-only access for independent third-party audit role</li>
+              <li>Stage gates require PMC digital sign-off before government billing milestone triggers</li>
+              <li>Audit trail exported as evidence for government review and payment certification</li>
+            </ul>
+            <h4>The outcome</h4>
+            <p>Billing milestones are defended by a complete, timestamped evidence trail. Disputes reduce, certifications move faster, and third‑party audits become straightforward because every inspection and closure is digitally verifiable.</p>
           </div>
         </div>
       </div>
