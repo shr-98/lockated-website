@@ -190,6 +190,14 @@ const LOYALTY_RULE_ISOLATION_CSS = `
   color: rgba(0, 0, 0, 0.86) !important;
   opacity: 1 !important;
 }
+.loyalty-rule-root .cta-feature-check {
+  background: rgba(218, 119, 86, 0.14) !important;
+  border: 1px solid rgba(218, 119, 86, 0.28) !important;
+}
+.loyalty-rule-root .cta-feature-check svg,
+.loyalty-rule-root .cta-feature-check svg * {
+  stroke: var(--primary, #DA7756) !important;
+}
 .loyalty-rule-root .contact-form-area,
 .loyalty-rule-root .form-input,
 .loyalty-rule-root .form-select,
