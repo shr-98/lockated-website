@@ -79,6 +79,21 @@ html:has(.snag360-root) {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+.snag360-root .teams-story-progress {
+  width: 100%;
+  flex-shrink: 0;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+.snag360-root #teamsStoryProgress {
+  box-sizing: border-box;
+}
+.snag360-root .teams-tabs {
+  flex-shrink: 0;
+  align-self: stretch;
 }
 .snag360-root .pin-spacer {
   background: var(--cream, #F6F4EE) !important;
@@ -543,15 +558,38 @@ export default function Snag360LandingPage() {
       document.body.style.overflow = ''
     }
 
-    // Team tabs (HTML uses inline onclick="switchTeam(idx)") + vendor-style pinned story on scroll
+    // Team tabs (HTML uses inline onclick="switchTeam(idx)") + pinned story on scroll.
+    // Tab clicks must scroll to the matching segment — otherwise #teamsStoryProgress stays at the old scaleX(scroll).
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
+    const progressFillEl = root.querySelector<HTMLElement>('#teamsStoryProgress')
     const switchTeamAt = (idx: number, _tabEl?: HTMLElement) => {
       teamTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
       teamPanels.forEach((c, i) => c.classList.toggle('active', i === idx))
     }
-    snagWindow.switchTeam = (idx: number) => switchTeamAt(idx)
-    const teamsStoryTrigger = initSnagTeamsGsap(root, { teamTabs, switchTeamAt })
+    let teamsStoryTrigger: ScrollTrigger | null = null
+    const scrollToTeamIndex = (idx: number) => {
+      const n = teamTabs.length
+      if (!Number.isFinite(idx) || idx < 0 || idx >= n) return
+      if (!teamsStoryTrigger) {
+        switchTeamAt(idx)
+        if (progressFillEl) {
+          progressFillEl.style.transform =
+            n <= 1 ? 'scaleX(1)' : `scaleX(${idx / (n - 1)})`
+        }
+        return
+      }
+      const st = teamsStoryTrigger
+      if (n <= 1) {
+        switchTeamAt(0)
+        return
+      }
+      const p = idx / (n - 1)
+      const y = st.start + p * (st.end - st.start)
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+    teamsStoryTrigger = initSnagTeamsGsap(root, { teamTabs, switchTeamAt })
+    snagWindow.switchTeam = (idx: number) => scrollToTeamIndex(idx)
 
     // Smooth in-page anchors inside this landing page (with fixed-nav offset).
     const anchorHandlers: Array<{
@@ -588,6 +626,7 @@ export default function Snag360LandingPage() {
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
       teamsStoryTrigger?.kill(true)
+      teamsStoryTrigger = null
       delete snagWindow.toggleUSP
       delete snagWindow.switchTab
       delete snagWindow.openModal
