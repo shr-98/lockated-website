@@ -1873,6 +1873,21 @@
         position: relative;
         overflow: hidden;
       }
+      .teams-story-progress {
+        height: 3px;
+        background: rgba(44, 44, 44, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 18px;
+        margin-bottom: 18px;
+      }
+      #teamsStoryProgress {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, var(--primary), rgba(218, 119, 86, 0.3));
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
       .teams-section::before {
         content: '';
         position: absolute;
@@ -1942,7 +1957,7 @@
         display: grid;
         grid-template-columns: 1fr 1.3fr;
         gap: 80px;
-        align-items: center;
+        align-items: stretch;
       }
       .team-info {
         display: flex;
@@ -3940,7 +3955,7 @@
 
     <!-- TEAMS -->
     <section class="teams-section" id="teams">
-      <div class="teams-inner">
+      <div class="teams-inner" id="teamsStoryPin">
         <div class="section-eyebrow reveal">Use Cases by Team</div>
         <h2 class="section-title reveal reveal-delay-1">
           Every team that touches<br /><span class="accent">quality uses Snag 360.</span>
@@ -3948,6 +3963,7 @@
         <p class="section-sub reveal reveal-delay-2">
           Different roles. Different needs. One platform that speaks each team's language without friction.
         </p>
+        <div class="teams-story-progress" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
 
         <div class="teams-tabs reveal">
           <button class="team-tab active" onclick="switchTeam(0)">
