@@ -727,6 +727,22 @@ nav.scrolled {
 }
 .tv-label { font-family:var(--font-mono); font-size:10px; color:var(--brand); letter-spacing:0.15em; text-transform:uppercase; }
 
+/* TEAM USE CASES — scroll pin + progress (GSAP in SPA route; static file: tabs only) */
+#teams.teams-section .teams-story-pin {
+  position: relative;
+  will-change: transform;
+  background: var(--bg);
+}
+.teams-story-progress { margin-top: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+@media (max-width: 767px) { .teams-story-progress { display: none; } }
+.teams-story-progress-track {
+  height: 4px; border-radius: 100px; background: rgba(44,44,44,0.12); overflow: hidden;
+}
+.teams-story-progress-fill {
+  height: 100%; width: 100%; background: var(--brand); border-radius: 100px;
+  transform: scaleX(0); transform-origin: left center; will-change: transform;
+}
+
 /* ── USE CASES (vendor-style light band) ── */
 #usecases { padding:120px 0; background:var(--bg-mid); border-top:1px solid var(--border-soft); }
 .uc-grid {
@@ -1223,8 +1239,9 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
   </div>
 </section>
 
-<!-- ── TARGETED TEAMS ── -->
-<section id="teams">
+<!-- ── TARGETED TEAMS (scroll-pinned story + progress in SPA; tabs work in static file) ── -->
+<section id="teams" class="teams-section" data-teams-story="1">
+  <div class="teams-story-pin" id="teamsStoryPin">
   <div class="container">
     <div class="sec-header center fade-in">
       <div class="section-eyebrow" style="justify-content:center;">Built for Every Team</div>
@@ -1232,10 +1249,10 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
       <p class="section-sub" style="margin:0 auto;">CRM, Sales, Loyalty, and FM — each team gets the exact tools they need. All from one platform. All on one screen.</p>
     </div>
     <div class="teams-tabs fade-in">
-      <button class="team-tab active" onclick="selectTeam(0)"><i class="fa-solid fa-handshake"></i> CRM Team</button>
-      <button class="team-tab" onclick="selectTeam(1)"><i class="fa-solid fa-chart-line"></i> Sales Team</button>
-      <button class="team-tab" onclick="selectTeam(2)"><i class="fa-solid fa-star"></i> Loyalty Team</button>
-      <button class="team-tab" onclick="selectTeam(3)"><i class="fa-solid fa-helmet-safety"></i> Facility Management</button>
+      <button type="button" class="team-tab active"><i class="fa-solid fa-handshake"></i> CRM Team</button>
+      <button type="button" class="team-tab"><i class="fa-solid fa-chart-line"></i> Sales Team</button>
+      <button type="button" class="team-tab"><i class="fa-solid fa-star"></i> Loyalty Team</button>
+      <button type="button" class="team-tab"><i class="fa-solid fa-helmet-safety"></i> Facility Management</button>
     </div>
 
     <!-- Team 0: CRM -->
@@ -1347,6 +1364,13 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
       </div>
     </div>
 
+    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+      <div class="teams-story-progress-track">
+        <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+      </div>
+    </div>
+
+  </div>
   </div>
 </section>
 
@@ -1628,6 +1652,9 @@ function selectTeam(idx) {
   document.querySelectorAll('.team-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
   document.querySelectorAll('.team-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
 }
+document.querySelectorAll('.teams-tabs .team-tab').forEach((btn, i) => {
+  btn.addEventListener('click', () => selectTeam(i));
+});
 </script>
 </body>
 </html>
