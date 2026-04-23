@@ -35,6 +35,12 @@
   --radius: 16px;
   --radius-sm: 10px;
   --radius-lg: 24px;
+  /* align with vendor-management team use case tokens */
+  --primary: var(--brand);
+  --dark: var(--text);
+  --surface: var(--bg-card);
+  --divider: var(--border-soft);
+  --card-border: var(--border-soft);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -972,43 +978,89 @@ nav.scrolled {
 .cons-stage.active { background: rgba(218,119,86,0.12); color: var(--brand); }
 .cons-stage.todo { background: var(--bg-alt); color: var(--text-muted); }
 
-/* ── TARGETED TEAMS ── */
-#teams {
-  padding: 120px 0;
+/* ── TARGETED TEAMS (layout matches vendor-management Team Use Cases) ── */
+.teams-section { padding: 120px 0; background: var(--bg); }
+.teams-section .teams-story-pin {
+  position: relative;
+  will-change: transform;
   background: var(--bg);
+  max-width: 100%;
+  box-sizing: border-box;
 }
-.teams-tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 48px;
+.teams-story-progress { margin-top: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+@media (max-width: 767px) { .teams-story-progress { display: none; } }
+.teams-story-progress-track {
+  height: 4px; border-radius: 100px; background: rgba(44,44,44,0.12); overflow: hidden;
 }
-.team-tab {
+.teams-story-progress-fill {
+  height: 100%; width: 100%; background: var(--primary); border-radius: 100px;
+  transform: scaleX(0); transform-origin: left center; will-change: transform;
+}
+.teams-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  gap: 40px;
+  margin-top: 52px;
+  align-items: start;
+  min-width: 0;
+  /* Let the right column shrink so the preview card isn’t clipped (body is overflow-x: hidden) */
+}
+.teams-layout > div:last-child {
+  min-width: 0;
+}
+.teams-tabs { display: flex; flex-direction: column; gap: 4px; }
+.teams-section .team-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 100px;
-  border: 1px solid var(--border-soft);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: var(--font-body);
+  gap: 14px;
+  padding: 16px 18px; border-radius: 12px;
+  cursor: pointer; border: 1.5px solid transparent;
+  background: var(--surface); transition: all 0.2s ease;
+  font-size: 14px; font-weight: 500; font-family: var(--font-body);
+  color: inherit;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
 }
-.team-tab i { font-size: 13px; }
-.team-tab:hover { color: var(--text); border-color: rgba(44,44,44,0.2); background: var(--bg-card); }
-.team-tab.active {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: var(--on-primary);
-  font-weight: 700;
+.teams-section .team-tab:hover { border-color: var(--card-border); }
+.teams-section .team-tab.active { border-color: var(--primary); background: rgba(218,119,86,0.05); }
+.teams-section .team-tab-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border: 1px solid var(--divider);
 }
-.team-panel { display: none; }
-.team-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.teams-section .team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
+.teams-section .team-tab.active .team-tab-icon svg { color: var(--on-primary); }
+.teams-section .team-tab-icon svg { color: rgba(44,44,44,0.5); width: 18px; height: 18px; }
+.teams-section .team-tab-icon i { font-size: 16px; color: rgba(44,44,44,0.5); }
+.teams-section .team-tab.active .team-tab-icon i { color: var(--on-primary); }
+.teams-section .team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
+.teams-section .team-tab.active .team-tab-text { color: var(--dark); }
+.teams-panel { display: none; }
+.teams-panel.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.teams-section .team-info {
+  min-width: 0;
+}
+.teams-section .team-visual {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.teams-section .tf-text {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+@media (max-width: 767px) {
+  .teams-layout { grid-template-columns: 1fr; margin-top: 32px; gap: 20px; }
+  .teams-panel.active { grid-template-columns: 1fr; gap: 32px; }
+}
 .team-name {
   font-family: var(--font-display);
   font-size: clamp(24px, 3vw, 38px);
@@ -1324,7 +1376,7 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  .bento-3, .usp-layout, .testi-layout, .wt-layout, .team-panel.active, .contact-layout { grid-template-columns: 1fr; }
+  .bento-3, .usp-layout, .testi-layout, .wt-layout, .teams-panel.active, .contact-layout { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr 1fr; }
   .uc-grid { grid-template-columns: 1fr 1fr; }
   .hero-metrics { gap: 30px; }
@@ -1698,23 +1750,43 @@ footer {
   </div>
 </section>
 
-<!-- ───────── TARGETED TEAMS ───────── -->
-<section id="teams">
+<!-- ───────── TARGETED TEAMS (scroll-pinned: vendor-management team use cases pattern) ───────── -->
+<section class="teams-section" id="teams" data-teams-story="1">
+  <div class="teams-story-pin" id="teamsStoryPin">
   <div class="container">
     <div class="sec-header center fade-in">
       <div class="section-eyebrow" style="justify-content:center;">Built for Every Team</div>
       <h2 class="section-title">One platform. <span class="brand-text">Every team aligned.</span></h2>
       <p class="section-sub" style="margin:0 auto;">From loyalty and home loans to CRM and leadership — Post Sales gives every internal team a digital workflow.</p>
     </div>
+  </div>
+  <div class="container">
+    <div class="teams-layout">
     <div class="teams-tabs fade-in">
-      <button class="team-tab active" onclick="selectTeam(0)"><i class="fa-solid fa-headset"></i> CRM &amp; RM</button>
-      <button class="team-tab" onclick="selectTeam(1)"><i class="fa-solid fa-helmet-safety"></i> Construction</button>
-      <button class="team-tab" onclick="selectTeam(2)"><i class="fa-solid fa-trophy"></i> Loyalty &amp; CX</button>
-      <button class="team-tab" onclick="selectTeam(3)"><i class="fa-solid fa-indian-rupee-sign"></i> Home Loans</button>
-      <button class="team-tab" onclick="selectTeam(4)"><i class="fa-solid fa-briefcase"></i> Leadership</button>
+      <div class="team-tab active" role="button" tabindex="0" onclick="switchTeam(this, 'crm')">
+        <div class="team-tab-icon"><i class="fa-solid fa-headset"></i></div>
+        <span class="team-tab-text">CRM &amp; RM</span>
+      </div>
+      <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'construction')">
+        <div class="team-tab-icon"><i class="fa-solid fa-helmet-safety"></i></div>
+        <span class="team-tab-text">Construction</span>
+      </div>
+      <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'loyalty')">
+        <div class="team-tab-icon"><i class="fa-solid fa-trophy"></i></div>
+        <span class="team-tab-text">Loyalty &amp; CX</span>
+      </div>
+      <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'homeloans')">
+        <div class="team-tab-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <span class="team-tab-text">Home Loans</span>
+      </div>
+      <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'leadership')">
+        <div class="team-tab-icon"><i class="fa-solid fa-briefcase"></i></div>
+        <span class="team-tab-text">Leadership</span>
+      </div>
     </div>
-    <!-- Team 0: CRM & RM -->
-    <div class="team-panel active fade-in" id="team-0">
+    <div>
+    <!-- Team: CRM & RM -->
+    <div class="teams-panel active fade-in" id="team-crm">
       <div class="team-info">
         <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:100px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.25);font-family:var(--font-mono);font-size:11px;color:var(--brand);margin-bottom:16px;">Relationship builders, not call center agents.</div>
         <h3 class="team-name">CRM &amp; Relationship Managers</h3>
@@ -1740,7 +1812,7 @@ footer {
       </div>
     </div>
     <!-- Team 1: Construction -->
-    <div class="team-panel" id="team-1">
+    <div class="teams-panel" id="team-construction">
       <div class="team-info">
         <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:100px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.25);font-family:var(--font-mono);font-size:11px;color:var(--brand);margin-bottom:16px;">Structured updates. Zero WhatsApp groups.</div>
         <h3 class="team-name">Construction &amp; Delivery Team</h3>
@@ -1766,7 +1838,7 @@ footer {
       </div>
     </div>
     <!-- Team 2: Loyalty & CX -->
-    <div class="team-panel" id="team-2">
+    <div class="teams-panel" id="team-loyalty">
       <div class="team-info">
         <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:100px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.25);font-family:var(--font-mono);font-size:11px;color:var(--brand);margin-bottom:16px;">Primary power user. Owns the platform.</div>
         <h3 class="team-name">Loyalty &amp; CX Team</h3>
@@ -1792,7 +1864,7 @@ footer {
       </div>
     </div>
     <!-- Team 3: Home Loans -->
-    <div class="team-panel" id="team-3">
+    <div class="teams-panel" id="team-homeloans">
       <div class="team-info">
         <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:100px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.25);font-family:var(--font-mono);font-size:11px;color:var(--brand);margin-bottom:16px;">Revenue co-owner. Earns commission.</div>
         <h3 class="team-name">Home Loans Team</h3>
@@ -1818,7 +1890,7 @@ footer {
       </div>
     </div>
     <!-- Team 4: Leadership -->
-    <div class="team-panel" id="team-4">
+    <div class="teams-panel" id="team-leadership">
       <div class="team-info">
         <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:100px;background:rgba(218,119,86,0.1);border:1px solid rgba(218,119,86,0.25);font-family:var(--font-mono);font-size:11px;color:var(--brand);margin-bottom:16px;">Live visibility. No weekly status calls needed.</div>
         <h3 class="team-name">Leadership / CXO</h3>
@@ -1843,6 +1915,14 @@ footer {
         </div>
       </div>
     </div>
+    </div>
+    </div>
+  </div>
+  <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+    <div class="teams-story-progress-track">
+      <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+    </div>
+  </div>
   </div>
 </section>
 
@@ -2121,12 +2201,13 @@ function selectWtTab(idx) {
   list.innerHTML = d.feats.map(f => `<div class="wt-feat-row"><i class="fa-solid fa-check"></i><span>${f}</span></div>`).join('');
 }
 
-// ── TEAM TABS ──
-function selectTeam(idx) {
-  document.querySelectorAll('.team-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
-  document.querySelectorAll('.team-panel').forEach((p,i) => {
-    p.classList.toggle('active', i===idx);
-  });
+// ── TEAM TABS (static HTML; React route wires ScrollTrigger + click-to-scroll) ──
+function switchTeam(tab, teamId) {
+  document.querySelectorAll('.team-tab').forEach((t) => t.classList.remove('active'));
+  document.querySelectorAll('.teams-panel').forEach((p) => p.classList.remove('active'));
+  tab.classList.add('active');
+  const panel = document.getElementById('team-' + teamId);
+  if (panel) panel.classList.add('active');
 }
 </script>
 </body>

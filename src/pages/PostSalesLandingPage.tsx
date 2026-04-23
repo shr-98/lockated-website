@@ -1,9 +1,89 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/** Pinned nav offset — match vendor-management / post-sales.html `#navbar`. */
+const POST_SALES_NAV_OFFSET_PX = 68
+/** Team Use Cases: scroll distance per tab (same as Vendor Management). */
+const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+
+type TeamUseCasesGsapOpts = {
+  teamTabs: HTMLElement[]
+  teamIds: string[]
+  switchTeam: (teamId: string, tabEl?: HTMLElement) => void
+}
+
+/**
+ * “Built for Every Team” — pin section and advance tabs from scroll (desktop; reduced motion / narrow: click only).
+ */
+function initTeamUseCasesGsap(
+  root: HTMLElement,
+  opts: TeamUseCasesGsapOpts,
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
+
+  return ScrollTrigger.create({
+    id: 'post-sales-teams-use-cases',
+    trigger: pin,
+    start: `top ${POST_SALES_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: true,
+    pinSpacing: true,
+    pinType: 'transform',
+    anticipatePin: 0,
+    fastScrollEnd: true,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
+
 /** Warm tokens in `post-sales.html` + Tailwind preflight — match Post Possession / Snag integration. */
 const POST_SALES_ISOLATION_CSS = `
+.post-sales-root {
+  position: relative;
+  isolation: isolate;
+}
+html:has(.post-sales-root) {
+  scroll-padding-top: ${POST_SALES_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.post-sales-root section[id],
+.post-sales-root .teams-section#teams {
+  scroll-margin-top: ${POST_SALES_NAV_OFFSET_PX + 4}px;
+}
+.post-sales-root #navbar {
+  z-index: 10050;
+}
+.post-sales-root #teamsStoryPin {
+  z-index: 1 !important;
+}
+.post-sales-root .pin-spacer {
+  background: var(--bg) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
 .post-sales-root h1,
 .post-sales-root h2,
 .post-sales-root h3,
@@ -12,11 +92,8 @@ const POST_SALES_ISOLATION_CSS = `
 .post-sales-root h6 {
   font-family: var(--font-display, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
 }
-.post-sales-root button.wt-tab,
-.post-sales-root button.team-tab {
-  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
-}
 .post-sales-root button.wt-tab {
+  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
   background: transparent !important;
 }
 .post-sales-root button.wt-tab:hover {
@@ -27,16 +104,24 @@ const POST_SALES_ISOLATION_CSS = `
   background: rgba(218, 119, 86, 0.1) !important;
   color: var(--brand) !important;
 }
-.post-sales-root button.team-tab {
-  background: transparent !important;
+/* Teams: same stretch behavior as vendor-management (UI card column fills on pin) */
+.post-sales-root .teams-panel.active {
+  align-items: stretch !important;
 }
-.post-sales-root button.team-tab:hover {
-  background: var(--bg-card) !important;
+.post-sales-root .teams-panel.active > .team-info,
+.post-sales-root .teams-panel.active > .team-visual {
+  height: 100%;
+  min-width: 0;
 }
-.post-sales-root button.team-tab.active {
-  background: var(--brand) !important;
-  color: var(--on-primary) !important;
-  border-color: var(--brand) !important;
+.post-sales-root .team-visual {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+.post-sales-root .teams-layout {
+  min-width: 0;
 }
 .post-sales-root .form-input,
 .post-sales-root select.form-input,
@@ -461,29 +546,100 @@ ${chipSvgs}
       selectWtTab(initial >= 0 ? initial : 0)
     }
 
-    // Team tabs (selectTeam)
-    const teamTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.team-tab'))
-    const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-panel'))
-    const selectTeam = (idx: number) => {
-      if (!teamTabs.length) return
-      const i = Math.max(0, Math.min(teamTabs.length - 1, Math.floor(Number(idx) || 0)))
-      teamTabs.forEach((t, j) => t.classList.toggle('active', j === i))
-      teamPanels.forEach((p, j) => p.classList.toggle('active', j === i))
+    // “Built for Every Team” — same tab / scroll / progress behavior as vendor-management
+    const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.teams-tabs .team-tab'))
+    const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
+      teamTabs.forEach((t) => t.classList.remove('active'))
+      root.querySelectorAll<HTMLElement>('.teams-panel').forEach((p) => p.classList.remove('active'))
+      tabEl?.classList.add('active')
+      root.querySelector<HTMLElement>(`#team-${CSS.escape(teamId)}`)?.classList.add('active')
     }
-    ;(window as any).selectTeam = selectTeam
-    ;(window as any).selectTeamTab = selectTeam
-    if (teamTabs.length) selectTeam(teamTabs.findIndex((t) => t.classList.contains('active')) || 0)
+    const teamIds: string[] = []
+    teamTabs.forEach((tab) => {
+      const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+      if (m?.[1]) teamIds.push(m[1])
+    })
+    let teamStorySt: ScrollTrigger | null = null
+    const scrollToTeamIndex = (idx: number) => {
+      if (!teamIds[idx] || !teamTabs[idx]) return
+      if (!teamStorySt) {
+        switchTeam(teamIds[idx]!, teamTabs[idx]!)
+        return
+      }
+      const st = teamStorySt
+      const n = teamIds.length
+      if (n <= 1) {
+        switchTeam(teamIds[0]!, teamTabs[0]!)
+        return
+      }
+      const p = idx / (n - 1)
+      const y = st.start + p * (st.end - st.start)
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+    const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
+    teamTabs.forEach((tab) => {
+      const onClickAttr = tab.getAttribute('onclick') ?? ''
+      const match = onClickAttr.match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+      const teamId = match?.[1]
+      if (!teamId) return
+      const fn = (e: Event) => {
+        e.preventDefault()
+        const idx = teamIds.indexOf(teamId)
+        if (idx >= 0) scrollToTeamIndex(idx)
+        else switchTeam(teamId, tab)
+      }
+      tab.addEventListener('click', fn)
+      teamHandlers.push({ el: tab, fn })
+    })
+    const initialTeamTab = teamTabs.find((t) => t.classList.contains('active'))
+    if (initialTeamTab) {
+      const match = (initialTeamTab.getAttribute('onclick') ?? '').match(
+        /switchTeam\(this,\s*'([^']+)'\s*\)/,
+      )
+      if (match?.[1]) switchTeam(match[1], initialTeamTab)
+    }
+
+    const refreshTeamScroll = () => {
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh()
+      })
+    }
+    const gsapCtx = gsap.context(() => {
+      teamStorySt = initTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh()
+        })
+      })
+    }, root)
+    const onLayoutRefresh = () => refreshTeamScroll()
+    if (document.readyState === 'complete') onLayoutRefresh()
+    else window.addEventListener('load', onLayoutRefresh)
+    const lateLayout = window.setTimeout(() => refreshTeamScroll(), 250)
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined
+    const onResize = () => {
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        resizeTimer = undefined
+        refreshTeamScroll()
+      }, 100)
+    }
+    window.addEventListener('resize', onResize, { passive: true })
 
     return () => {
+      gsapCtx.revert()
+      clearTimeout(lateLayout)
+      window.removeEventListener('load', onLayoutRefresh)
+      window.removeEventListener('resize', onResize)
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
       window.removeEventListener('scroll', onScroll)
       fadeObserver.disconnect()
       window.clearTimeout(onLoadStartCounters)
       counterTimers.forEach((t) => window.clearInterval(t))
       if (heroSlideTimer) window.clearInterval(heroSlideTimer)
+      teamHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       delete (window as any).openUsp
       delete (window as any).selectWtTab
-      delete (window as any).selectTeam
-      delete (window as any).selectTeamTab
     }
   }, [bodyHtml])
 
