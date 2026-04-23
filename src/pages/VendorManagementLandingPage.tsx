@@ -13,6 +13,8 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
  */
 /** Pinned sections + #navbar must stay below a fixed 68px header (matches vendor HTML). */
 const VENDOR_NAV_OFFSET_PX = 68
+/** Team Use Cases: scroll distance per tab (smaller = faster progression). */
+const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
 
 const VENDOR_MGMT_ISOLATION_CSS = `
 .vendor-mgmt-root {
@@ -181,7 +183,7 @@ function initTeamUseCasesGsap(
     id: 'teams-use-cases',
     trigger: pin,
     start: `top ${VENDOR_NAV_OFFSET_PX}px`,
-    end: () => `+=${(n + 0.5) * window.innerHeight}`,
+    end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
     /* transform-based pin reduces 1px seams / jitter vs position:fixed on some GPUs */
