@@ -48,6 +48,7 @@
   --t2:            #DBC2A9;
   --t3:            #D5DBDB;
   --border:        #C4B89D;
+  --white:         #FFFFFF;
 
   --success:       #A4F4E7;
   --warning:       #F4C790;
@@ -314,79 +315,21 @@ section{padding:108px 0;}
 .col-attr p{font-size:11px;color:rgba(44,44,42,.56);}
 
 /* ── USE CASES ── */
-#uc{background:var(--bg);}
-.uc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;grid-auto-rows:1fr;}
-.ucc{border-radius:var(--r2);overflow:hidden;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all .45s var(--ease);position:relative;}
-.ucc{height:100%;}
+#uc{background:var(--band);}
+.uc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.ucc{border-radius:var(--r2);overflow:hidden;background:var(--surface);border:1px solid rgba(196,184,157,0.35);cursor:pointer;transition:all .45s var(--ease);position:relative;}
+.ucc:nth-child(1){grid-row:1/3;}
+.ucc:nth-child(4){grid-column:2/4;}
 .ucc:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--accent);}
 .ucc-in{padding:32px;height:100%;display:flex;flex-direction:column;}
 .ucc-ico{width:48px;height:48px;border-radius:13px;margin-bottom:18px;background:var(--accent-08);border:1px solid var(--accent-15);display:flex;align-items:center;justify-content:center;}
 .ucc-ico i{font-size:20px;color:var(--accent);}
 .ucc h4{font-size:18px;font-weight:700;letter-spacing:-.025em;margin-bottom:9px;line-height:1.25;color:var(--dark);}
 .ucc p{font-size:13px;color:var(--txt-2);line-height:1.76;flex:1;}
-.ucc-tags{margin-top:22px;padding-top:18px;border-top:1px solid var(--t3);display:flex;flex-wrap:wrap;gap:7px;}
-.ut{font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;background:var(--accent-08);color:var(--accent);border:1px solid var(--accent-15);}
-.ucc-arr{position:absolute;bottom:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--t3);display:flex;align-items:center;justify-content:center;color:var(--txt-3);font-size:11px;transition:all .3s;}
+.ucc-tags{margin-top:22px;padding-top:18px;border-top:1px solid rgba(196,184,157,0.35);display:flex;flex-wrap:wrap;gap:7px;}
+.ut{font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;background:rgba(218,119,86,0.07);color:var(--accent);border:1px solid rgba(218,119,86,0.18);}
+.ucc-arr{position:absolute;bottom:20px;right:20px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid rgba(196,184,157,0.35);display:flex;align-items:center;justify-content:center;color:var(--txt-3);font-size:11px;transition:all .3s;}
 .ucc:hover .ucc-arr{background:var(--accent);border-color:var(--accent);color:var(--on-primary);}
-
-/* USE CASES — desktop: Vendor-style pinned story (scroll driver in React route) */
-.uc-desktop-only{display:none;}
-.uc-mobile-only{display:block;}
-@media(min-width:768px){
-  .uc-desktop-only{display:block;}
-  .uc-mobile-only{display:none;}
-}
-#uc.uc-section{background:var(--bg);padding:40px 0 32px;}
-@media(min-width:768px){
-  section#uc.uc-section{padding:40px 0 36px;}
-}
-/* Tighter than global .sec-hd (p had 56px margin-bottom → huge gap before columns). */
-#uc.uc-section .sec-hd .tag{margin-bottom:10px;}
-#uc.uc-section .sec-hd h2{margin-bottom:8px;}
-#uc.uc-section .sec-hd p{margin:0 auto 16px;max-width:540px;}
-#uc.uc-section .uc-story-pin{position:relative;will-change:transform;background:var(--bg);}
-.uc-story-progress{margin-top:10px;max-width:480px;margin-left:auto;margin-right:auto;}
-@media(max-width:767px){.uc-story-progress{display:none;}}
-.uc-story-progress-track{height:4px;border-radius:100px;background:rgba(44,44,42,.12);overflow:hidden;}
-.uc-story-progress-fill{height:100%;width:100%;background:var(--accent);border-radius:100px;transform:scaleX(0);transform-origin:left center;will-change:transform;}
-.uc-layout{display:grid;grid-template-columns:280px 1fr;gap:0;margin-top:0;align-items:start;padding:0;}
-.uc-tabs{display:flex;flex-direction:column;gap:4px;}
-button.uc-tab{
-  display:flex;align-items:center;gap:14px;
-  padding:16px 18px;border-radius:12px;
-  cursor:pointer;border:1.5px solid transparent;
-  background:var(--surface);transition:all .2s ease;
-  font:inherit;text-align:left;width:100%;
-}
-button.uc-tab:hover{border-color:var(--border);}
-button.uc-tab.active{border-color:var(--accent);background:rgba(218,119,86,.05);}
-.uc-tab-ico{
-  width:40px;height:40px;border-radius:10px;
-  background:var(--bg);display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;border:1px solid var(--t3);
-}
-button.uc-tab.active .uc-tab-ico{background:var(--accent);border-color:var(--accent);}
-button.uc-tab.active .uc-tab-ico i{color:var(--on-primary);}
-.uc-tab-ico i{font-size:16px;color:rgba(44,44,44,.5);}
-.uc-tab-tx{font-size:14px;font-weight:600;color:rgba(44,44,44,.6);}
-button.uc-tab.active .uc-tab-tx{color:var(--dark);}
-.uc-panel{display:none;}
-.uc-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;}
-.ucp-title{font-size:24px;font-weight:800;letter-spacing:-.8px;color:var(--dark);margin-bottom:0;}
-.ucp-desc{font-size:15px;color:rgba(44,44,42,.6);line-height:1.7;margin-bottom:0;}
-.ucp-f{display:flex;flex-direction:column;gap:0;}
-.ucp-fi{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:0;background:transparent;border-radius:0;
-  border:none;font-size:13.5px;font-weight:500;color:var(--dark);
-  line-height:1.5;margin:0;
-}
-.ucp-fi-ico{flex-shrink:0;}
-.ucp-fi-ico i{color:var(--accent);width:16px;height:16px;margin-top:1px;}
-.ucp-cta{margin-top:0;display:flex;align-items:center;gap:0;flex-wrap:wrap;}
-.ucp-cta .btn{padding:12px 18px;font-size:14px;}
-.ucp-dash{height:100%;display:flex;flex-direction:column;}
-.ucp-dash .dash-body{flex:1;}
 
 /* ── MODAL ── */
 .mb{display:none;position:fixed;inset:0;z-index:1100;background:rgba(44,44,42,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:24px;}
@@ -476,8 +419,6 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
   .sol-sticky{position:relative;top:0;}
   .uc-g{grid-template-columns:1fr 1fr;}
   .ucc:nth-child(1){grid-row:auto;} .ucc:nth-child(4){grid-column:auto;}
-  .uc-layout{grid-template-columns:1fr;gap:0;}
-  .uc-panel.active{grid-template-columns:1fr;gap:0;}
   .footer-top{grid-template-columns:1fr 1fr;}
   .cta-stats{gap:40px;}
 }
@@ -794,15 +735,14 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
 </section>
 
 <!-- USE CASES -->
-<section class="uc-section" id="uc" data-uc-story="1">
+<section id="uc">
   <div class="wrap">
-    <div class="sec-hd sec-hd--uc-tight reveal uc-mobile-only">
+    <div class="sec-hd reveal">
       <div class="tag"><i class="fa-solid fa-buildings"></i> Use Cases</div>
       <h2>Built for every segment<br>of real estate development</h2>
       <p>From Tier A luxury developers to affordable housing at scale — CP Management adapts to your network's complexity.</p>
     </div>
-
-    <div class="uc-g reveal uc-mobile-only">
+    <div class="uc-g reveal">
       <div class="ucc" onclick="openM('residential')">
         <div class="ucc-in">
           <div class="ucc-ico"><i class="fa-solid fa-city"></i></div>
@@ -847,202 +787,6 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
           <div class="ucc-tags"><span class="ut">Arabic UI</span><span class="ut">Multi-currency</span><span class="ut">UAE RERA ready</span></div>
         </div>
         <div class="ucc-arr"><i class="fa-solid fa-arrow-up-right"></i></div>
-      </div>
-    </div>
-
-    <div class="uc-desktop-only">
-      <div class="uc-story-pin reveal" id="ucStoryPin">
-        <div class="sec-hd sec-hd--uc-tight">
-          <div class="tag"><i class="fa-solid fa-buildings"></i> Use Cases</div>
-          <h2>Built for every segment<br>of real estate development</h2>
-          <p>From Tier A luxury developers to affordable housing at scale — CP Management adapts to your network's complexity.</p>
-        </div>
-        <div class="uc-layout">
-          <div class="uc-tabs" aria-label="CP Management use case segments">
-            <button type="button" class="uc-tab active" data-uc="residential" aria-selected="true">
-              <span class="uc-tab-ico"><i class="fa-solid fa-city"></i></span>
-              <span class="uc-tab-tx">Residential</span>
-            </button>
-            <button type="button" class="uc-tab" data-uc="commercial" aria-selected="false">
-              <span class="uc-tab-ico"><i class="fa-solid fa-building"></i></span>
-              <span class="uc-tab-tx">Commercial</span>
-            </button>
-            <button type="button" class="uc-tab" data-uc="luxury" aria-selected="false">
-              <span class="uc-tab-ico"><i class="fa-solid fa-gem"></i></span>
-              <span class="uc-tab-tx">Luxury</span>
-            </button>
-            <button type="button" class="uc-tab" data-uc="affordable" aria-selected="false">
-              <span class="uc-tab-ico"><i class="fa-solid fa-house"></i></span>
-              <span class="uc-tab-tx">Affordable</span>
-            </button>
-            <button type="button" class="uc-tab" data-uc="gcc" aria-selected="false">
-              <span class="uc-tab-ico"><i class="fa-solid fa-globe"></i></span>
-              <span class="uc-tab-tx">GCC</span>
-            </button>
-          </div>
-
-          <div>
-            <div class="uc-panel active" data-uc="residential">
-              <div>
-                <div class="ucp-title">Residential Real Estate Development</div>
-                <p class="ucp-desc">The primary use case. CP teams use Setup, Activity, and Invoices daily. Finance uses SAP integration. Marketing tracks collateral attribution. Leadership monitors the CP channel on one dashboard.</p>
-                <div class="ucp-f">
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>End-to-end CP lifecycle — registration through brokerage</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>SAP invoice push with finance-grade controls</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Collateral attribution that proves what drives walk-ins</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Executive visibility without weekly status meetings</div>
-                </div>
-                <div class="ucp-cta">
-                  <button type="button" class="btn btn-fill" onclick="openM('residential')"><i class="fa-solid fa-arrow-up-right"></i> View full use case</button>
-                </div>
-              </div>
-              <div class="dash ucp-dash">
-                <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">Residential CP snapshot</span></div>
-                <div class="dash-body">
-                  <div class="dr">
-                    <div class="dc"><div class="dc-lbl">Active CPs</div><div class="dc-val">186</div><div class="dc-sub up">↑ +22 this month</div></div>
-                    <div class="dc"><div class="dc-lbl">Open invoices</div><div class="dc-val a">₹14.2L</div><div class="dc-sub warn">4 pending SAP</div></div>
-                  </div>
-                  <div class="dc">
-                    <div class="dc-lbl">Channel performance (30d)</div>
-                    <div class="dc-bar"><div class="dc-fill" style="width:58%"></div></div>
-                    <div class="dc-meta"><span>Lead → booking: 55%</span><span class="as">+9 pts vs last quarter</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="uc-panel" data-uc="commercial">
-              <div>
-                <div class="ucp-title">Commercial Real Estate</div>
-                <p class="ucp-desc">High deal values, fewer CPs — brokerage errors are disproportionately costly. Precise brokerage tracking on lease and sale transactions with a live SAP audit trail.</p>
-                <div class="ucp-f">
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>High-value deal tracking with booking-level precision</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Immutable SAP audit trail for every payout decision</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>NRI/OS brokerage rules without spreadsheet drift</div>
-                </div>
-                <div class="ucp-cta">
-                  <button type="button" class="btn btn-fill" onclick="openM('commercial')"><i class="fa-solid fa-arrow-up-right"></i> View full use case</button>
-                </div>
-              </div>
-              <div class="dash ucp-dash">
-                <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">Commercial deal desk</span></div>
-                <div class="dash-body">
-                  <div class="dr">
-                    <div class="dc"><div class="dc-lbl">Largest open deal</div><div class="dc-val">₹6.2Cr</div><div class="dc-sub up">lease + fit-out</div></div>
-                    <div class="dc"><div class="dc-lbl">Brokerage at risk</div><div class="dc-val a">₹18.4L</div><div class="dc-sub warn">1 variance flagged</div></div>
-                  </div>
-                  <div class="dc">
-                    <div class="dc-lbl" style="margin-bottom:10px">SAP posting status</div>
-                    <div class="dc-list">
-                      <div class="dc-row"><span>INV-2024-191</span><div class="badge bg-ok">Posted</div></div>
-                      <div class="dc-row"><span>INV-2024-197</span><div class="badge bg-w">In review</div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="uc-panel" data-uc="luxury">
-              <div>
-                <div class="ucp-title">Luxury &amp; Ultra-Luxury</div>
-                <p class="ucp-desc">VIP reward programs for top CPs — airport lounge access, international experiences, curated travel. Brand-consistent, personalised collateral at the premium end of the market.</p>
-                <div class="ucp-f">
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Gold-tier recognition that retains top 20% brokers</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Curated travel &amp; experiences with verified redemption</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Premium-branded collateral — never a blurry WhatsApp screenshot</div>
-                </div>
-                <div class="ucp-cta">
-                  <button type="button" class="btn btn-fill" onclick="openM('luxury')"><i class="fa-solid fa-arrow-up-right"></i> View full use case</button>
-                </div>
-              </div>
-              <div class="dash ucp-dash">
-                <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">Luxury CP loyalty</span></div>
-                <div class="dash-body">
-                  <div class="dc">
-                    <div class="dc-lbl" style="margin-bottom:9px">Tier mix</div>
-                    <div class="dc-tiers">
-                      <div class="dc-tier t-bronze"><i class="fa-solid fa-shield"></i><span>Bronze</span></div>
-                      <div class="dc-tier t-silver"><i class="fa-solid fa-shield-halved"></i><span>Silver</span></div>
-                      <div class="dc-tier t-gold"><i class="fa-solid fa-crown"></i><span>Gold → lounge</span></div>
-                    </div>
-                  </div>
-                  <div class="dc">
-                    <div class="dc-lbl">Top CP retention (YoY)</div>
-                    <div class="dc-bar"><div class="dc-fill" style="width:78%"></div></div>
-                    <div class="dc-meta"><span>Gold cohort</span><span class="as">+35% vs unstructured programs</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="uc-panel" data-uc="affordable">
-              <div>
-                <div class="ucp-title">Affordable Housing at Scale</div>
-                <p class="ucp-desc">Rapid CP activation at high volume. Temporary registration eliminates lead loss. Ladder schemes incentivise volume-based brokers. Invoice automation handles high-throughput brokerage.</p>
-                <div class="ucp-f">
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Temporary registration so leads are never “lost in verification”</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Ladder programs that scale across thousands of CPs</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>High-throughput invoices without a bigger finance team</div>
-                </div>
-                <div class="ucp-cta">
-                  <button type="button" class="btn btn-fill" onclick="openM('affordable')"><i class="fa-solid fa-arrow-up-right"></i> View full use case</button>
-                </div>
-              </div>
-              <div class="dash ucp-dash">
-                <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">Volume CP operations</span></div>
-                <div class="dash-body">
-                  <div class="dr">
-                    <div class="dc"><div class="dc-lbl">CP network</div><div class="dc-val">4,960</div><div class="dc-sub up">+412 activated</div></div>
-                    <div class="dc"><div class="dc-lbl">Temp → verified</div><div class="dc-val" style="font-size:22px">2h</div><div class="dc-sub up">median</div></div>
-                  </div>
-                  <div class="dc">
-                    <div class="dc-lbl">Invoice throughput</div>
-                    <div class="dc-bar"><div class="dc-fill" style="width:88%"></div></div>
-                    <div class="dc-meta"><span>3× vs manual</span><span class="as">automation on</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="uc-panel" data-uc="gcc">
-              <div>
-                <div class="ucp-title">GCC Expansion — UAE &amp; Saudi Arabia</div>
-                <p class="ucp-desc">International CP networks across time zones and currencies. NRI brokerage with different rates. Arabic UI and AED/SAR wallet ready. UAE RERA compliance framework included.</p>
-                <div class="ucp-f">
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Multi-currency wallet + redemption (AED / SAR / QAR)</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>Arabic UI for CP-facing and admin surfaces</div>
-                  <div class="ucp-fi"><span class="ucp-fi-ico"><i class="fa-solid fa-check"></i></span>PDPL + UAE RERA guardrails for international CP data</div>
-                </div>
-                <div class="ucp-cta">
-                  <button type="button" class="btn btn-fill" onclick="openM('gcc')"><i class="fa-solid fa-arrow-up-right"></i> View full use case</button>
-                </div>
-              </div>
-              <div class="dash ucp-dash">
-                <div class="dash-bar"><div class="db db-r"></div><div class="db db-y"></div><div class="db db-g"></div><span class="dash-bar-lbl">GCC readiness</span></div>
-                <div class="dash-body">
-                  <div class="dr">
-                    <div class="dc"><div class="dc-lbl">Wallet currency</div><div class="dc-val" style="font-size:20px">AED</div><div class="dc-sub up">SAR / QAR ready</div></div>
-                    <div class="dc"><div class="dc-lbl">Locale</div><div class="dc-val" style="font-size:20px">AR</div><div class="dc-sub up">UI + comms</div></div>
-                  </div>
-                  <div class="dc">
-                    <div class="dc-lbl" style="margin-bottom:10px">Compliance checklist</div>
-                    <div class="dc-list">
-                      <div class="dc-row"><span>PDPL + hosting</span><div class="badge bg-ok">Ready</div></div>
-                      <div class="dc-row"><span>UAE RERA mapping</span><div class="badge bg-w">In rollout</div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="uc-story-progress" role="img" aria-label="Use case progress along scroll">
-          <div class="uc-story-progress-track">
-            <div class="uc-story-progress-fill" id="ucStoryProgress"></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

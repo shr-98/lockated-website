@@ -1,8 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-void gsap.registerPlugin(ScrollTrigger)
 
 /**
  * `public/cp-management.html` uses `.reveal` animations. The app `index.css` adds a
@@ -66,20 +62,7 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
   background-color: var(--surface) !important;
   color: var(--txt) !important;
 }
-/* Use-case panels: top-align; avoid a full-viewport “tall column” and empty vertical gap. */
-.cp-management-root .uc-panel.active {
-  align-items: start !important;
-}
-.cp-management-root .ucp-dash {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-}
-.cp-management-root #ucStoryPin,
-.cp-management-root .uc-layout {
-  min-height: 0;
-}
-/* Global .sec-hd p { margin-bottom: 56px } left a huge gap before the 3-col layout. */
+/* Global .sec-hd p { margin-bottom: 56px } left a huge gap before the bento grid. */
 .cp-management-root #uc .sec-hd p {
   margin-bottom: 16px !important;
 }
@@ -98,59 +81,15 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
 }
 .cp-management-root .hero-pills,
 .cp-management-root .modal,
-.cp-management-root .ucc,
 .cp-management-root .ui.on {
   background-color: var(--surface) !important;
 }
-/* Use Cases: hide progress (no pinned scroll-story) */
-.cp-management-root .uc-story-progress {
-  display: none !important;
+.cp-management-root #uc {
+  background-color: var(--band, #E8E2D6) !important;
 }
-/* Match Vendor Management "Team Use Cases" spacing + feature-card styling */
-.cp-management-root #uc.uc-section {
-  background: var(--bg) !important;
-}
-.cp-management-root #uc .uc-layout {
-  grid-template-columns: 280px 1fr !important;
-  gap: 40px !important;
-  margin-top: 52px !important;
-  align-items: start !important;
-}
-.cp-management-root #uc .uc-panel.active {
-  grid-template-columns: 1fr 1fr !important;
-  gap: 40px !important;
-  align-items: start !important;
-}
-.cp-management-root #uc .ucp-title {
-  margin-bottom: 10px !important;
-}
-.cp-management-root #uc .ucp-desc {
-  margin-bottom: 24px !important;
-}
-.cp-management-root #uc .ucp-f {
-  gap: 10px !important;
-}
-.cp-management-root #uc .ucp-fi {
-  padding: 14px 18px !important;
-  background: var(--surface) !important;
-  border-radius: 10px !important;
-  border: 1px solid var(--t3) !important;
-  margin: 0 !important;
-}
-.cp-management-root #uc .ucp-cta {
-  margin-top: 20px !important;
-  gap: 10px !important;
-}
-@media (max-width: 767px) {
-  .cp-management-root #uc .uc-layout {
-    grid-template-columns: 1fr !important;
-    gap: 0 !important;
-    margin-top: 24px !important;
-  }
-  .cp-management-root #uc .uc-panel.active {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-  }
+.cp-management-root .ucc {
+  background-color: var(--surface, #F0EAE1) !important;
+  border-color: rgba(196, 184, 157, 0.35) !important;
 }
 `
 

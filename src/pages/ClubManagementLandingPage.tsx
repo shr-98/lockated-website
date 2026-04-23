@@ -16,6 +16,10 @@ const CLUB_MGMT_NO_BLUR_CSS = `
 .club-mgmt-root .img-icon-uc {
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) !important;
 }
+.club-mgmt-root .usecase-modal {
+  -webkit-backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(8px) !important;
+}
 `
 
 const CLUB_MANAGEMENT_ISOLATION_CSS = `
