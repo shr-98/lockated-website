@@ -1992,6 +1992,37 @@ svg { display: block; }
 }
 .teams-inner { max-width: 1400px; margin: 0 auto; }
 
+/* Team use cases: pinned scroll story (GSAP in React route — same pattern as Vendor Management) */
+.teams-section .teams-story-pin {
+  position: relative;
+  will-change: transform;
+  background: var(--cream);
+}
+.teams-story-progress {
+  margin-top: 36px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 767px) {
+  .teams-story-progress { display: none; }
+}
+.teams-story-progress-track {
+  height: 4px;
+  border-radius: 100px;
+  background: rgba(44,44,44,0.12);
+  overflow: hidden;
+}
+.teams-story-progress-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  border-radius: 100px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
 .teams-header { margin-bottom: 52px; }
 
 /* Tab strip */
@@ -3997,8 +4028,9 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
 
 
 <!-- ═══════════════════════════════════════════ TARGETED TEAMS ═══ -->
-<section class="teams-section" id="teams">
+<section class="teams-section" id="teams" data-teams-story="1">
   <div class="teams-inner">
+    <div class="teams-story-pin" id="teamsStoryPin">
     <div class="teams-header">
       <div class="section-eyebrow reveal">Built for every team</div>
       <h2 class="section-title reveal reveal-delay-1">Your whole company.<br><span class="accent">One platform.</span></h2>
@@ -4378,6 +4410,13 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+      <div class="teams-story-progress-track">
+        <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+      </div>
+    </div>
     </div>
   </div>
 </section>
