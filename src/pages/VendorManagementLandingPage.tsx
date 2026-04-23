@@ -107,68 +107,46 @@ body::before {
 }
 `
 
+type TeamUseCasesGsapOpts = {
+  teamTabs: HTMLElement[]
+  teamIds: string[]
+  switchTeam: (teamId: string, tabEl?: HTMLElement) => void
+}
+
 /**
- * #test-case — ScrollTrigger storytelling (app route only; not in static file scripts).
- * Spec: `pin: true`, `scrub: 1`, `end: "+=300%"`, `anticipatePin: 1`,
- * `invalidateOnRefresh: true`, progress on `#testCaseProgress`, cross-fade
- * `.storytelling-step` + `.tc-panel` in lockstep. Reduced motion: static stack.
+ * #teams — pin Team Use Cases and advance tabs from scroll (desktop app route only).
+ * Mobile / reduced motion: no pin; tabs stay click-only.
  */
-function initTestCaseGsap(root: HTMLElement) {
-  const pin = root.querySelector<HTMLElement>('.test-case-story-pin')
-  if (!pin) return
+function initTeamUseCasesGsap(
+  root: HTMLElement,
+  opts: TeamUseCasesGsapOpts,
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
 
-  const testSection = root.querySelector<HTMLElement>('#test-case')
-  const progressFill = root.querySelector<HTMLElement>('#testCaseProgress')
-  const stepEls = gsap.utils.toArray<HTMLElement>('.storytelling-step', pin)
-  if (stepEls.length < 2) return
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
 
-  const panelEls = gsap.utils.toArray<HTMLElement>('.test-case-mock .tc-panel', pin)
-  const sameLen = panelEls.length === stepEls.length
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    testSection?.classList.add('test-case-reduced')
-    if (progressFill) progressFill.style.transform = 'scaleX(1)'
-    return
-  }
-
-  const n = stepEls.length
-  gsap.set(stepEls, { autoAlpha: 0, y: 28 })
-  gsap.set(stepEls[0]!, { autoAlpha: 1, y: 0 })
-  if (sameLen) {
-    gsap.set(panelEls, { autoAlpha: 0, y: 18 })
-    gsap.set(panelEls[0]!, { autoAlpha: 1, y: 0 })
-  }
-
-  const tl = gsap.timeline()
-  const durOut = 0.42
-  const durIn = 0.5
-  const gap = 0.52
-  for (let i = 0; i < n - 1; i++) {
-    const t0 = 0.02 + i * gap
-    const prev: HTMLElement[] = [stepEls[i]!]
-    if (sameLen) prev.push(panelEls[i]!)
-    const next: HTMLElement[] = [stepEls[i + 1]!]
-    if (sameLen) next.push(panelEls[i + 1]!)
-
-    tl.to(prev, { autoAlpha: 0, y: -24, duration: durOut, ease: 'power2.in' }, t0)
-    tl.fromTo(
-      next,
-      { autoAlpha: 0, y: 28 },
-      { autoAlpha: 1, y: 0, duration: durIn, ease: 'power2.out' },
-      t0 + 0.12,
-    )
-  }
-
-  ScrollTrigger.create({
+  return ScrollTrigger.create({
+    id: 'teams-use-cases',
     trigger: pin,
     start: 'top top',
-    end: '+=300%',
+    end: () => `+=${(n + 0.5) * window.innerHeight}`,
     pin: true,
-    scrub: 1,
-    animation: tl,
     anticipatePin: 1,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
       if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
     },
   })
@@ -388,6 +366,28 @@ export default function VendorManagementLandingPage() {
       tabEl?.classList.add('active')
       root.querySelector<HTMLElement>(`#team-${CSS.escape(teamId)}`)?.classList.add('active')
     }
+    const teamIds: string[] = []
+    teamTabs.forEach((tab) => {
+      const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+      if (m?.[1]) teamIds.push(m[1])
+    })
+    let teamStorySt: ScrollTrigger | null = null
+    const scrollToTeamIndex = (idx: number) => {
+      if (!teamIds[idx] || !teamTabs[idx]) return
+      if (!teamStorySt) {
+        switchTeam(teamIds[idx]!, teamTabs[idx]!)
+        return
+      }
+      const st = teamStorySt
+      const n = teamIds.length
+      if (n <= 1) {
+        switchTeam(teamIds[0]!, teamTabs[0]!)
+        return
+      }
+      const p = idx / (n - 1)
+      const y = st.start + p * (st.end - st.start)
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
     const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
     teamTabs.forEach((tab) => {
       const onClickAttr = tab.getAttribute('onclick') ?? ''
@@ -396,7 +396,9 @@ export default function VendorManagementLandingPage() {
       if (!teamId) return
       const fn = (e: Event) => {
         e.preventDefault()
-        switchTeam(teamId, tab)
+        const idx = teamIds.indexOf(teamId)
+        if (idx >= 0) scrollToTeamIndex(idx)
+        else switchTeam(teamId, tab)
       }
       tab.addEventListener('click', fn)
       teamHandlers.push({ el: tab, fn })
@@ -561,7 +563,7 @@ export default function VendorManagementLandingPage() {
     closeBtn?.addEventListener('click', onCloseBtn)
 
     const gsapCtx = gsap.context(() => {
-      initTestCaseGsap(root)
+      teamStorySt = initTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam })
       requestAnimationFrame(() => {
         ScrollTrigger.refresh()
       })

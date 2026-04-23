@@ -328,121 +328,6 @@
     font-size: 12px; font-weight: 600; color: var(--primary);
   }
 
-  /* TEST CASE — scroll-driven storytelling (GSAP ScrollTrigger) */
-  .test-case-section { background: var(--band); }
-  .test-case-section .section-label { color: var(--primary); }
-  .test-case-section .section-label::before { background: var(--primary); }
-  .test-case-section .test-case-header { text-align: center; max-width: 720px; margin: 0 auto; }
-  .test-case-section .test-case-header .section-sub { margin-left: auto; margin-right: auto; }
-  .test-case-story-pin { position: relative; will-change: transform; }
-  .test-case-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: start;
-    margin-top: 48px;
-  }
-  @media (max-width: 960px) {
-    .test-case-layout { grid-template-columns: 1fr; }
-  }
-  .storytelling-stack {
-    position: relative;
-    min-height: 16rem;
-  }
-  @media (min-width: 961px) { .storytelling-stack { min-height: 19rem; } }
-  .storytelling-step {
-    position: absolute;
-    left: 0; right: 0; top: 0;
-    text-align: left;
-  }
-  .storytelling-step h3 {
-    font-size: clamp(1.1rem, 1.2vw, 1.25rem);
-    font-weight: 800;
-    color: var(--dark);
-    margin-bottom: 10px;
-    letter-spacing: -0.3px;
-  }
-  .storytelling-step p {
-    font-size: 15px;
-    line-height: 1.7;
-    color: rgba(44,44,44,0.7);
-  }
-  .storytelling-step .step-kicker {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1.1px;
-    text-transform: uppercase;
-    color: var(--primary);
-    margin-bottom: 8px;
-  }
-  .test-case-mock {
-    position: relative;
-    border-radius: 16px;
-    border: 1px solid var(--card-border);
-    background: var(--surface);
-    padding: 20px 20px 16px;
-    min-height: 16rem;
-    box-shadow: 0 8px 24px rgba(44,44,44,0.08);
-  }
-  .test-case-mock-hd {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: rgba(44,44,44,0.45);
-    margin-bottom: 12px;
-  }
-  .tc-mock-panels { position: relative; min-height: 11.5rem; }
-  .tc-mock-panels .tc-panel {
-    position: absolute;
-    left: 0; right: 0; top: 0;
-  }
-  .tc-panel-card {
-    padding: 14px 16px;
-    border-radius: 10px;
-    background: var(--bg);
-    border: 1px solid var(--divider);
-    font-size: 13px;
-    color: var(--dark);
-  }
-  .tc-panel-card strong { color: var(--primary); }
-  .storytelling-progress {
-    margin-top: 40px;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .storytelling-progress-track {
-    height: 4px;
-    border-radius: 100px;
-    background: rgba(44,44,44,0.12);
-    overflow: hidden;
-  }
-  .storytelling-progress-fill {
-    height: 100%;
-    width: 100%;
-    background: var(--primary);
-    border-radius: 100px;
-    transform: scaleX(0);
-    transform-origin: left center;
-    will-change: transform;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .test-case-reduced .storytelling-step {
-      position: relative !important;
-      opacity: 1 !important;
-      transform: none !important;
-      margin-bottom: 1.5rem;
-    }
-    .test-case-reduced .tc-mock-panels { min-height: 0; }
-    .test-case-reduced .tc-mock-panels .tc-panel {
-      position: relative !important;
-      margin-bottom: 0.75rem;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  }
-
   /* FEATURES */
   .features-section { background: var(--bg); }
   .features-layout {
@@ -836,8 +721,18 @@
   .modal-outcome-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); margin-bottom: 8px; }
   .modal-outcome p { font-size: 14px; color: var(--dark); font-weight: 500; line-height: 1.6; }
 
-  /* TEAM USE CASES */
+  /* TEAM USE CASES (scroll pin + progress: GSAP in app route) */
   .teams-section { background: var(--bg); }
+  .teams-story-pin { position: relative; will-change: transform; }
+  .teams-story-progress { margin-top: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+  @media (max-width: 767px) { .teams-story-progress { display: none; } }
+  .teams-story-progress-track {
+    height: 4px; border-radius: 100px; background: rgba(44,44,44,0.12); overflow: hidden;
+  }
+  .teams-story-progress-fill {
+    height: 100%; width: 100%; background: var(--primary); border-radius: 100px;
+    transform: scaleX(0); transform-origin: left center; will-change: transform;
+  }
   .teams-layout { display: grid; grid-template-columns: 280px 1fr; gap: 40px; margin-top: 52px; align-items: start; }
   .teams-tabs { display: flex; flex-direction: column; gap: 4px; }
   .team-tab {
@@ -1027,7 +922,6 @@
   </a>
   <ul class="nav-links">
     <li><a href="#pain">Problems</a></li>
-    <li><a href="#test-case">Test case</a></li>
     <li><a href="#walkthrough">Walkthrough</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#teams">Teams</a></li>
@@ -1129,65 +1023,6 @@
       </div>
     </div>
 
-  </div>
-</section>
-
-<!-- TEST CASE: scroll-driven storytelling (GSAP ScrollTrigger in app) -->
-<section class="test-case-section" id="test-case" data-storytelling="1">
-  <div class="test-case-story-pin">
-    <div class="test-case-header">
-      <div class="section-label">Test case</div>
-      <h2 class="section-title">From invite to SAP sync—<br>one governed story on scroll</h2>
-      <p class="section-sub">Pinned section, scrub: 1, anticipatePin, progress bar, step cross-fades. Scroll to advance each beat.</p>
-    </div>
-    <div class="test-case-layout">
-      <div class="test-case-copy">
-        <div class="storytelling-stack">
-          <article class="storytelling-step" data-step="0">
-            <div class="step-kicker">Step 1 of 4</div>
-            <h3>Invite with duplicate GST pre-check</h3>
-            <p>Procurement issues a tokenized link. The vendor self-fills; on GSTIN entry the system flags a duplicate L3 vendor. No manual spreadsheet compare—first line of defense before anyone touches SAP.</p>
-          </article>
-          <article class="storytelling-step" data-step="1">
-            <div class="step-kicker">Step 2 of 4</div>
-            <h3>Pre-qualification &amp; right routing</h3>
-            <p>Engineering and QA get structured scoring. The approval matrix fans out by category and HOD, not a linear email thread. The vendor sees status in portal—no “where is my file?” calls.</p>
-          </article>
-          <article class="storytelling-step" data-step="2">
-            <div class="step-kicker">Step 3 of 4</div>
-            <h3>Finance, GST defaulter gate, then SAP</h3>
-            <p>Finance clears statutory sections; a GST defaulter is auto-blocked with reason on record. On final approval, SAP push runs with a stored reference. Payment teams never outrun compliance.</p>
-          </article>
-          <article class="storytelling-step" data-step="3">
-            <div class="step-kicker">Step 4 of 4</div>
-            <h3>Immutable audit, re-KYC on the calendar</h3>
-            <p>Every field change, approval, and document sits in the trail. Re-KYC is section-wise with aging filters—RBI, RERA, or internal audit exports without rebuild.</p>
-          </article>
-        </div>
-      </div>
-      <div class="test-case-mock" aria-hidden="true">
-        <div class="test-case-mock-hd">Lockated VMS · live storyboard</div>
-        <div class="tc-mock-panels">
-          <div class="tc-panel" data-mock="0">
-            <div class="tc-panel-card"><strong>Onboarding</strong> — GSTIN validated, duplicate L3 match flagged, invite holds.</div>
-          </div>
-          <div class="tc-panel" data-mock="1">
-            <div class="tc-panel-card"><strong>Pre-Q</strong> — QA score 82, routing to HOD-Projects per matrix.</div>
-          </div>
-          <div class="tc-panel" data-mock="2">
-            <div class="tc-panel-card"><strong>Compliance</strong> — GST clear, SAP ref #8F2A-2024, push success.</div>
-          </div>
-          <div class="tc-panel" data-mock="3">
-            <div class="tc-panel-card"><strong>Audit</strong> — 312 events, last re-KYC 4 sections, export ready.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="storytelling-progress" role="img" aria-label="Story progress">
-      <div class="storytelling-progress-track">
-        <div class="storytelling-progress-fill" id="testCaseProgress"></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1934,11 +1769,12 @@
 </section>
 
 <!-- TEAM USE CASES -->
-<section class="teams-section" id="teams">
+<section class="teams-section" id="teams" data-teams-story="1">
   <div class="section-label">Team Use Cases</div>
   <div class="section-title">Every team works better<br>with Vendor Management</div>
   <p class="section-sub">Different teams. Different workflows. One unified system that makes each of them faster.</p>
 
+  <div class="teams-story-pin" id="teamsStoryPin">
   <div class="teams-layout">
     <div class="teams-tabs">
       <div class="team-tab active" onclick="switchTeam(this, 'purchase')">
@@ -2153,6 +1989,12 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+    <div class="teams-story-progress-track">
+      <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+    </div>
+  </div>
   </div>
 </section>
 
