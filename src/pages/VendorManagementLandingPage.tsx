@@ -11,10 +11,38 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
  * no blur. The app shell's `index.css` adds a global `.reveal { filter: blur(...) }`
  * meant for other pages — scope overrides so this route matches the file pixel-for-pixel.
  */
+/** Pinned sections + #navbar must stay below a fixed 68px header (matches vendor HTML). */
+const VENDOR_NAV_OFFSET_PX = 68
+
 const VENDOR_MGMT_ISOLATION_CSS = `
 .vendor-mgmt-root {
   position: relative;
   isolation: isolate;
+}
+/* Window scroll: anchor jumps land section titles below the fixed nav (no text hidden under bar). */
+html:has(.vendor-mgmt-root) {
+  scroll-padding-top: ${VENDOR_NAV_OFFSET_PX}px;
+  /* Avoid width jump when scrollbar appears (can look like a layout “gap”). */
+  scrollbar-gutter: stable;
+}
+/* In-page #section links + scrollIntoView: same offset. */
+.vendor-mgmt-root section[id],
+.vendor-mgmt-root .teams-section#teams {
+  scroll-margin-top: ${VENDOR_NAV_OFFSET_PX + 4}px;
+}
+/* Keep the fixed bar above GSAP-pinned content (ST may set inline z-index on the pin). */
+.vendor-mgmt-root #navbar {
+  z-index: 10050;
+}
+.vendor-mgmt-root #teamsStoryPin {
+  z-index: 1 !important;
+}
+/* Pin-spacer: same bg as page; avoid subpixel seams at section boundaries. */
+.vendor-mgmt-root .pin-spacer {
+  background: var(--bg) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 /* Hero / bento: do not override — must match
    public/vendor-management.html (same as Downloads replica). */
@@ -105,6 +133,23 @@ body::before {
 .vendor-mgmt-root #end-banner.cta-banner {
   background-color: var(--band) !important;
 }
+
+/* Teams "use cases" pinned story: prevent right-side UI card gaps on scroll by
+   stretching the two-column panel and letting the UI card fill height. */
+.vendor-mgmt-root .teams-panel.active {
+  align-items: stretch !important;
+}
+.vendor-mgmt-root .teams-panel.active > div {
+  height: 100%;
+}
+.vendor-mgmt-root .wt-ui-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.vendor-mgmt-root .wt-ui-body {
+  flex: 1;
+}
 `
 
 type TeamUseCasesGsapOpts = {
@@ -135,10 +180,14 @@ function initTeamUseCasesGsap(
   return ScrollTrigger.create({
     id: 'teams-use-cases',
     trigger: pin,
-    start: 'top top',
+    start: `top ${VENDOR_NAV_OFFSET_PX}px`,
     end: () => `+=${(n + 0.5) * window.innerHeight}`,
     pin: true,
-    anticipatePin: 1,
+    pinSpacing: true,
+    /* transform-based pin reduces 1px seams / jitter vs position:fixed on some GPUs */
+    pinType: 'transform',
+    anticipatePin: 0,
+    fastScrollEnd: true,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -562,15 +611,39 @@ export default function VendorManagementLandingPage() {
     }
     closeBtn?.addEventListener('click', onCloseBtn)
 
-    const gsapCtx = gsap.context(() => {
-      teamStorySt = initTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam })
+    const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
         ScrollTrigger.refresh()
       })
+    }
+    const gsapCtx = gsap.context(() => {
+      teamStorySt = initTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh()
+        })
+      })
     }, root)
+    const onLayoutRefresh = () => refreshTeamScroll()
+    if (document.readyState === 'complete') onLayoutRefresh()
+    else window.addEventListener('load', onLayoutRefresh)
+    const lateLayout = window.setTimeout(() => refreshTeamScroll(), 250)
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined
+    const onResize = () => {
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        resizeTimer = undefined
+        refreshTeamScroll()
+      }, 100)
+    }
+    window.addEventListener('resize', onResize, { passive: true })
 
     return () => {
       gsapCtx.revert()
+      clearTimeout(lateLayout)
+      window.removeEventListener('load', onLayoutRefresh)
+      window.removeEventListener('resize', onResize)
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
       window.removeEventListener('scroll', onScroll)
       revealObserver.disconnect()
       counterObserver.disconnect()

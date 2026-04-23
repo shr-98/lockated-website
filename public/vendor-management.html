@@ -723,7 +723,11 @@
 
   /* TEAM USE CASES (scroll pin + progress: GSAP in app route) */
   .teams-section { background: var(--bg); }
-  .teams-story-pin { position: relative; will-change: transform; }
+  .teams-section .teams-story-pin {
+    position: relative;
+    will-change: transform;
+    background: var(--bg);
+  }
   .teams-story-progress { margin-top: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
   @media (max-width: 767px) { .teams-story-progress { display: none; } }
   .teams-story-progress-track {
@@ -1768,13 +1772,13 @@
   </div>
 </section>
 
-<!-- TEAM USE CASES -->
+<!-- TEAM USE CASES (header inside pin so scroll doesn’t split title from content) -->
 <section class="teams-section" id="teams" data-teams-story="1">
+  <div class="teams-story-pin" id="teamsStoryPin">
   <div class="section-label">Team Use Cases</div>
   <div class="section-title">Every team works better<br>with Vendor Management</div>
   <p class="section-sub">Different teams. Different workflows. One unified system that makes each of them faster.</p>
 
-  <div class="teams-story-pin" id="teamsStoryPin">
   <div class="teams-layout">
     <div class="teams-tabs">
       <div class="team-tab active" onclick="switchTeam(this, 'purchase')">
