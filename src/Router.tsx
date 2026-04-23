@@ -19,10 +19,12 @@ import VendorManagementLandingPage from './pages/VendorManagementLandingPage'
 import PostSalesLandingPage from './pages/PostSalesLandingPage'
 import ClubManagementLandingPage from './pages/ClubManagementLandingPage'
 import SlugPage from './pages/SlugPage'
+import ScrollStoryTimelineDemoPage from './pages/ScrollStoryTimelineDemoPage'
 
 export default function Router() {
   return (
     <Routes>
+      <Route path="scroll-story-timeline" element={<ScrollStoryTimelineDemoPage />} />
       <Route path="customer-app" element={<CustomerAppPage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="lease-management" element={<LeaseManagementLandingPage />} />

@@ -139,16 +139,15 @@
     text-align: center;
     position: relative;
     overflow: hidden;
-    background: var(--bg);
   }
 
-  /* BENTO GRID BACKGROUND */
+  /* BENTO — pixel match: Vendor management_landing page (1).html */
   .hero-bento-bg {
     position: absolute;
     inset: 0;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: repeat(14, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     gap: 1px;
     opacity: 0.06;
     pointer-events: none;
@@ -165,57 +164,61 @@
   @keyframes cellPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
   .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px; border-radius: 100px;
-    background: rgba(218,119,86,0.1); border: 1px solid rgba(218,119,86,0.25);
-    font-size: 12px; font-weight: 600; color: var(--primary);
-    letter-spacing: 0.5px; text-transform: uppercase;
-    margin-bottom: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 7px 18px; border-radius: 999px;
+    background: rgba(218,119,86,0.12); border: 1px solid rgba(218,119,86,0.18);
+    font-size: 11px; font-weight: 700; color: rgba(218,119,86,0.92);
+    letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 26px;
     position: relative; z-index: 2;
     animation: fadeDown 0.6s ease both;
   }
-  .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: blink 1.4s ease infinite; }
+  /* Replica doesn't show the dot; keep markup but hide it. */
+  .hero-eyebrow-dot { display: none; }
   @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
   .hero h1 {
-    font-size: clamp(40px, 5vw, 68px);
+    font-size: clamp(44px, 5.8vw, 76px);
     font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -2px;
+    line-height: 1.02;
+    letter-spacing: -2.6px;
     color: var(--dark);
-    max-width: 860px;
+    max-width: 960px;
     position: relative; z-index: 2;
     animation: fadeUp 0.7s ease 0.15s both;
   }
   .hero h1 .accent { color: var(--primary); }
-  .hero h1 .accent-green { color: var(--green); }
+  /* Replica uses the dark text color for the third line, not green */
+  .hero h1 .accent-green { color: var(--dark); }
   .hero-sub {
-    font-size: 17px; font-weight: 400; color: rgba(44,44,44,0.65);
-    max-width: 560px; line-height: 1.65;
-    margin: 20px auto 0;
+    font-size: 14.5px; font-weight: 400; color: rgba(44,44,44,0.64);
+    max-width: 640px; line-height: 1.65;
+    margin: 18px auto 0;
     position: relative; z-index: 2;
     animation: fadeUp 0.7s ease 0.3s both;
   }
   .hero-ctas {
     display: flex; align-items: center; gap: 12px;
-    margin-top: 36px;
+    margin-top: 34px;
     position: relative; z-index: 2;
     animation: fadeUp 0.7s ease 0.45s both;
   }
   .btn-hero-primary {
-    padding: 14px 32px; border-radius: 10px;
-    background: var(--primary); color: var(--on-primary);
+    padding: 14px 32px; border-radius: 12px;
+    background: linear-gradient(180deg, #DA7756 0%, #D46A45 100%);
+    color: var(--on-primary);
     font-size: 15px; font-weight: 600;
     text-decoration: none; border: none;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(218,119,86,0.35);
+    box-shadow: 0 6px 22px rgba(218,119,86,0.28);
   }
-  .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(218,119,86,0.45); }
+  .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(218,119,86,0.34); }
   .btn-hero-secondary {
-    padding: 14px 32px; border-radius: 10px;
-    border: 1.5px solid var(--card-border);
-    color: var(--dark); background: rgba(246,244,238,0.82);
-    font-size: 15px; font-weight: 500;
+    padding: 14px 32px; border-radius: 12px;
+    border: 1.5px solid rgba(44,44,44,0.18);
+    color: var(--dark);
+    background: rgba(253,252,249,0.82);
+    font-size: 15px; font-weight: 600;
     text-decoration: none;
     transition: all 0.25s ease;
     backdrop-filter: blur(10px);
@@ -224,20 +227,26 @@
 
   /* STATS ROW */
   .hero-stats {
-    display: flex; gap: 48px; align-items: center;
-    margin-top: 56px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0;
+    width: min(760px, calc(100% - 24px));
+    margin-top: 46px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(44,44,44,0.12);
     position: relative; z-index: 2;
     animation: fadeUp 0.7s ease 0.6s both;
   }
-  .hero-stat { text-align: center; }
+  .hero-stat { text-align: center; width: 33.333%; }
   .hero-stat-number {
     font-size: 38px; font-weight: 800; color: var(--dark);
     letter-spacing: -1.5px; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .hero-stat-number .unit { font-size: 22px; font-weight: 600; color: var(--dark); }
-  .hero-stat-label { font-size: 12px; color: rgba(44,44,44,0.55); font-weight: 500; margin-top: 4px; }
-  .stat-divider { width: 1px; height: 44px; background: var(--divider); }
+  .hero-stat-label { font-size: 11px; color: rgba(44,44,44,0.55); font-weight: 500; margin-top: 6px; }
+  .stat-divider { width: 1px; height: 54px; background: rgba(44,44,44,0.12); margin-top: 6px; }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -317,6 +326,121 @@
     padding: 6px 12px; border-radius: 6px;
     background: rgba(218,119,86,0.08); border: 1px solid rgba(218,119,86,0.2);
     font-size: 12px; font-weight: 600; color: var(--primary);
+  }
+
+  /* TEST CASE — scroll-driven storytelling (GSAP ScrollTrigger) */
+  .test-case-section { background: var(--band); }
+  .test-case-section .section-label { color: var(--primary); }
+  .test-case-section .section-label::before { background: var(--primary); }
+  .test-case-section .test-case-header { text-align: center; max-width: 720px; margin: 0 auto; }
+  .test-case-section .test-case-header .section-sub { margin-left: auto; margin-right: auto; }
+  .test-case-story-pin { position: relative; will-change: transform; }
+  .test-case-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 48px;
+  }
+  @media (max-width: 960px) {
+    .test-case-layout { grid-template-columns: 1fr; }
+  }
+  .storytelling-stack {
+    position: relative;
+    min-height: 16rem;
+  }
+  @media (min-width: 961px) { .storytelling-stack { min-height: 19rem; } }
+  .storytelling-step {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    text-align: left;
+  }
+  .storytelling-step h3 {
+    font-size: clamp(1.1rem, 1.2vw, 1.25rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .storytelling-step p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(44,44,44,0.7);
+  }
+  .storytelling-step .step-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .test-case-mock {
+    position: relative;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    background: var(--surface);
+    padding: 20px 20px 16px;
+    min-height: 16rem;
+    box-shadow: 0 8px 24px rgba(44,44,44,0.08);
+  }
+  .test-case-mock-hd {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(44,44,44,0.45);
+    margin-bottom: 12px;
+  }
+  .tc-mock-panels { position: relative; min-height: 11.5rem; }
+  .tc-mock-panels .tc-panel {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+  }
+  .tc-panel-card {
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--divider);
+    font-size: 13px;
+    color: var(--dark);
+  }
+  .tc-panel-card strong { color: var(--primary); }
+  .storytelling-progress {
+    margin-top: 40px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .storytelling-progress-track {
+    height: 4px;
+    border-radius: 100px;
+    background: rgba(44,44,44,0.12);
+    overflow: hidden;
+  }
+  .storytelling-progress-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--primary);
+    border-radius: 100px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .test-case-reduced .storytelling-step {
+      position: relative !important;
+      opacity: 1 !important;
+      transform: none !important;
+      margin-bottom: 1.5rem;
+    }
+    .test-case-reduced .tc-mock-panels { min-height: 0; }
+    .test-case-reduced .tc-mock-panels .tc-panel {
+      position: relative !important;
+      margin-bottom: 0.75rem;
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 
   /* FEATURES */
@@ -903,6 +1027,7 @@
   </a>
   <ul class="nav-links">
     <li><a href="#pain">Problems</a></li>
+    <li><a href="#test-case">Test case</a></li>
     <li><a href="#walkthrough">Walkthrough</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#teams">Teams</a></li>
@@ -1004,6 +1129,65 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- TEST CASE: scroll-driven storytelling (GSAP ScrollTrigger in app) -->
+<section class="test-case-section" id="test-case" data-storytelling="1">
+  <div class="test-case-story-pin">
+    <div class="test-case-header">
+      <div class="section-label">Test case</div>
+      <h2 class="section-title">From invite to SAP sync—<br>one governed story on scroll</h2>
+      <p class="section-sub">Pinned section, scrub: 1, anticipatePin, progress bar, step cross-fades. Scroll to advance each beat.</p>
+    </div>
+    <div class="test-case-layout">
+      <div class="test-case-copy">
+        <div class="storytelling-stack">
+          <article class="storytelling-step" data-step="0">
+            <div class="step-kicker">Step 1 of 4</div>
+            <h3>Invite with duplicate GST pre-check</h3>
+            <p>Procurement issues a tokenized link. The vendor self-fills; on GSTIN entry the system flags a duplicate L3 vendor. No manual spreadsheet compare—first line of defense before anyone touches SAP.</p>
+          </article>
+          <article class="storytelling-step" data-step="1">
+            <div class="step-kicker">Step 2 of 4</div>
+            <h3>Pre-qualification &amp; right routing</h3>
+            <p>Engineering and QA get structured scoring. The approval matrix fans out by category and HOD, not a linear email thread. The vendor sees status in portal—no “where is my file?” calls.</p>
+          </article>
+          <article class="storytelling-step" data-step="2">
+            <div class="step-kicker">Step 3 of 4</div>
+            <h3>Finance, GST defaulter gate, then SAP</h3>
+            <p>Finance clears statutory sections; a GST defaulter is auto-blocked with reason on record. On final approval, SAP push runs with a stored reference. Payment teams never outrun compliance.</p>
+          </article>
+          <article class="storytelling-step" data-step="3">
+            <div class="step-kicker">Step 4 of 4</div>
+            <h3>Immutable audit, re-KYC on the calendar</h3>
+            <p>Every field change, approval, and document sits in the trail. Re-KYC is section-wise with aging filters—RBI, RERA, or internal audit exports without rebuild.</p>
+          </article>
+        </div>
+      </div>
+      <div class="test-case-mock" aria-hidden="true">
+        <div class="test-case-mock-hd">Lockated VMS · live storyboard</div>
+        <div class="tc-mock-panels">
+          <div class="tc-panel" data-mock="0">
+            <div class="tc-panel-card"><strong>Onboarding</strong> — GSTIN validated, duplicate L3 match flagged, invite holds.</div>
+          </div>
+          <div class="tc-panel" data-mock="1">
+            <div class="tc-panel-card"><strong>Pre-Q</strong> — QA score 82, routing to HOD-Projects per matrix.</div>
+          </div>
+          <div class="tc-panel" data-mock="2">
+            <div class="tc-panel-card"><strong>Compliance</strong> — GST clear, SAP ref #8F2A-2024, push success.</div>
+          </div>
+          <div class="tc-panel" data-mock="3">
+            <div class="tc-panel-card"><strong>Audit</strong> — 312 events, last re-KYC 4 sections, export ready.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="storytelling-progress" role="img" aria-label="Story progress">
+      <div class="storytelling-progress-track">
+        <div class="storytelling-progress-fill" id="testCaseProgress"></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2241,13 +2425,16 @@
 </footer>
 
 <script>
-// BENTO GRID BG
+// BENTO GRID BG — 14×10 = 140 (same as Vendor management_landing page (1).html)
 const bentoBg = document.getElementById('bentoBg');
-for (let i = 0; i < 48; i++) {
-  const cell = document.createElement('div');
-  cell.className = 'cell';
-  cell.style.animationDelay = (Math.random() * 3) + 's';
-  bentoBg.appendChild(cell);
+if (bentoBg) {
+  bentoBg.innerHTML = '';
+  for (let i = 0; i < 140; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.style.animationDelay = (Math.random() * 3) + 's';
+    bentoBg.appendChild(cell);
+  }
 }
 
 // NAV SCROLL

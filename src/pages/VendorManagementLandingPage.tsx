@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
@@ -8,6 +12,18 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
  * meant for other pages — scope overrides so this route matches the file pixel-for-pixel.
  */
 const VENDOR_MGMT_ISOLATION_CSS = `
+.vendor-mgmt-root {
+  position: relative;
+  isolation: isolate;
+}
+/* Hero / bento: do not override — must match
+   public/vendor-management.html (same as Downloads replica). */
+/* The exported HTML adds a global noise overlay on body::before with z-index:9999.
+   Inside the SPA this can cover the whole app and make it look blank. Disable it on this route. */
+body::before {
+  content: none !important;
+  display: none !important;
+}
 .vendor-mgmt-root .reveal {
   opacity: 0 !important;
   transform: translateY(24px) !important;
@@ -91,6 +107,73 @@ const VENDOR_MGMT_ISOLATION_CSS = `
 }
 `
 
+/**
+ * #test-case — ScrollTrigger storytelling (app route only; not in static file scripts).
+ * Spec: `pin: true`, `scrub: 1`, `end: "+=300%"`, `anticipatePin: 1`,
+ * `invalidateOnRefresh: true`, progress on `#testCaseProgress`, cross-fade
+ * `.storytelling-step` + `.tc-panel` in lockstep. Reduced motion: static stack.
+ */
+function initTestCaseGsap(root: HTMLElement) {
+  const pin = root.querySelector<HTMLElement>('.test-case-story-pin')
+  if (!pin) return
+
+  const testSection = root.querySelector<HTMLElement>('#test-case')
+  const progressFill = root.querySelector<HTMLElement>('#testCaseProgress')
+  const stepEls = gsap.utils.toArray<HTMLElement>('.storytelling-step', pin)
+  if (stepEls.length < 2) return
+
+  const panelEls = gsap.utils.toArray<HTMLElement>('.test-case-mock .tc-panel', pin)
+  const sameLen = panelEls.length === stepEls.length
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    testSection?.classList.add('test-case-reduced')
+    if (progressFill) progressFill.style.transform = 'scaleX(1)'
+    return
+  }
+
+  const n = stepEls.length
+  gsap.set(stepEls, { autoAlpha: 0, y: 28 })
+  gsap.set(stepEls[0]!, { autoAlpha: 1, y: 0 })
+  if (sameLen) {
+    gsap.set(panelEls, { autoAlpha: 0, y: 18 })
+    gsap.set(panelEls[0]!, { autoAlpha: 1, y: 0 })
+  }
+
+  const tl = gsap.timeline()
+  const durOut = 0.42
+  const durIn = 0.5
+  const gap = 0.52
+  for (let i = 0; i < n - 1; i++) {
+    const t0 = 0.02 + i * gap
+    const prev: HTMLElement[] = [stepEls[i]!]
+    if (sameLen) prev.push(panelEls[i]!)
+    const next: HTMLElement[] = [stepEls[i + 1]!]
+    if (sameLen) next.push(panelEls[i + 1]!)
+
+    tl.to(prev, { autoAlpha: 0, y: -24, duration: durOut, ease: 'power2.in' }, t0)
+    tl.fromTo(
+      next,
+      { autoAlpha: 0, y: 28 },
+      { autoAlpha: 1, y: 0, duration: durIn, ease: 'power2.out' },
+      t0 + 0.12,
+    )
+  }
+
+  ScrollTrigger.create({
+    trigger: pin,
+    start: 'top top',
+    end: '+=300%',
+    pin: true,
+    scrub: 1,
+    animation: tl,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
+
 export default function VendorManagementLandingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [cssText, setCssText] = useState('')
@@ -103,19 +186,51 @@ export default function VendorManagementLandingPage() {
 
     async function load() {
       try {
-        const res = await fetch('/vendor-management.html', { cache: 'no-cache' })
-        if (!res.ok) throw new Error(`Failed to load /vendor-management.html (${res.status})`)
+        const ts = Date.now()
+        const candidates = [
+          `/vendor-management-replica.html?ts=${ts}`,
+          `/vendor-management.html?ts=${ts}`,
+        ]
 
-        const text = await res.text()
+        /**
+         * Vite's SPA fallback returns `index.html` (≈1KB with `<div id="root"></div>`) for
+         * any missing static file, so a naive `res.ok` check would render nothing.
+         * We require the response body to actually look like the exported vendor page.
+         */
+        const looksLikeVendorHtml = (html: string) =>
+          /id=["']hero["']/.test(html) || /class=["']hero["']/.test(html)
+
+        let text = ''
+        let usedUrl = ''
+        for (const url of candidates) {
+          const r = await fetch(url, { cache: 'no-store' })
+          if (!r.ok) continue
+          const t = await r.text()
+          if (looksLikeVendorHtml(t)) {
+            text = t
+            usedUrl = url
+            break
+          }
+        }
+
+        if (!text) {
+          throw new Error(
+            'Could not load vendor-management HTML. Ensure `public/vendor-management.html` exists.',
+          )
+        }
+
         const doc = new DOMParser().parseFromString(text, 'text/html')
 
         const styles = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')
           .join('\n')
-        const body = doc.body?.innerHTML ?? ''
-
-        if (!styles.trim() || !body.trim()) {
-          throw new Error('`public/vendor-management.html` must contain <style> and full <body> markup.')
+        let body = doc.body?.innerHTML ?? ''
+        if (!body.trim()) {
+          const m = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
+          if (m?.[1]) body = m[1]
+        }
+        if (!body.trim()) {
+          throw new Error(`Loaded ${usedUrl} but could not extract <body> markup.`)
         }
 
         const links: HeadLinks = Array.from(doc.head?.querySelectorAll('link[rel]') ?? [])
@@ -153,11 +268,11 @@ export default function VendorManagementLandingPage() {
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
 
-    // Bento grid background cells
+    // BENTO — same as `Vendor management_landing page (1).html`: 14×10=140, random delay, CSS handles borders/tints
     const bentoBg = root.querySelector<HTMLElement>('#bentoBg')
     if (bentoBg) {
       bentoBg.innerHTML = ''
-      for (let i = 0; i < 48; i++) {
+      for (let i = 0; i < 140; i++) {
         const cell = document.createElement('div')
         cell.className = 'cell'
         cell.style.animationDelay = `${Math.random() * 3}s`
@@ -445,7 +560,15 @@ export default function VendorManagementLandingPage() {
     }
     closeBtn?.addEventListener('click', onCloseBtn)
 
+    const gsapCtx = gsap.context(() => {
+      initTestCaseGsap(root)
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh()
+      })
+    }, root)
+
     return () => {
+      gsapCtx.revert()
       window.removeEventListener('scroll', onScroll)
       revealObserver.disconnect()
       counterObserver.disconnect()
