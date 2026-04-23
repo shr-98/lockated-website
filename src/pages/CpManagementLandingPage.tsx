@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
 
 /**
  * `public/cp-management.html` uses `.reveal` animations. The app `index.css` adds a
  * global blur reveal — scope overrides + shell styling (same approach as FM Matrix).
  */
 const CP_MANAGEMENT_ISOLATION_CSS = `
+.cp-management-root {
+  scroll-padding-top: 70px;
+}
 .cp-management-root .reveal,
 .cp-management-root .reveal.pre {
   filter: none !important;
@@ -59,6 +66,29 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
   background-color: var(--surface) !important;
   color: var(--txt) !important;
 }
+/* Use-case panels: top-align; avoid a full-viewport “tall column” and empty vertical gap. */
+.cp-management-root .uc-panel.active {
+  align-items: start !important;
+}
+.cp-management-root .ucp-dash {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.cp-management-root #ucStoryPin,
+.cp-management-root .uc-layout {
+  min-height: 0;
+}
+/* Global .sec-hd p { margin-bottom: 56px } left a huge gap before the 3-col layout. */
+.cp-management-root #uc .sec-hd p {
+  margin-bottom: 16px !important;
+}
+.cp-management-root #uc .sec-hd .tag {
+  margin-bottom: 10px !important;
+}
+.cp-management-root #uc .sec-hd h2 {
+  margin-bottom: 8px !important;
+}
 .cp-management-root .fg input:-webkit-autofill,
 .cp-management-root .fg input:-webkit-autofill:hover,
 .cp-management-root .fg input:-webkit-autofill:focus {
@@ -71,6 +101,56 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
 .cp-management-root .ucc,
 .cp-management-root .ui.on {
   background-color: var(--surface) !important;
+}
+/* Use Cases: hide progress (no pinned scroll-story) */
+.cp-management-root .uc-story-progress {
+  display: none !important;
+}
+/* Match Vendor Management "Team Use Cases" spacing + feature-card styling */
+.cp-management-root #uc.uc-section {
+  background: var(--bg) !important;
+}
+.cp-management-root #uc .uc-layout {
+  grid-template-columns: 280px 1fr !important;
+  gap: 40px !important;
+  margin-top: 52px !important;
+  align-items: start !important;
+}
+.cp-management-root #uc .uc-panel.active {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 40px !important;
+  align-items: start !important;
+}
+.cp-management-root #uc .ucp-title {
+  margin-bottom: 10px !important;
+}
+.cp-management-root #uc .ucp-desc {
+  margin-bottom: 24px !important;
+}
+.cp-management-root #uc .ucp-f {
+  gap: 10px !important;
+}
+.cp-management-root #uc .ucp-fi {
+  padding: 14px 18px !important;
+  background: var(--surface) !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--t3) !important;
+  margin: 0 !important;
+}
+.cp-management-root #uc .ucp-cta {
+  margin-top: 20px !important;
+  gap: 10px !important;
+}
+@media (max-width: 767px) {
+  .cp-management-root #uc .uc-layout {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    margin-top: 24px !important;
+  }
+  .cp-management-root #uc .uc-panel.active {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
 }
 `
 
@@ -146,7 +226,7 @@ export default function CpManagementLandingPage() {
     }
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const rootEl = rootRef.current
     if (!rootEl) return
     if (!bodyHtml) return
@@ -329,7 +409,43 @@ export default function CpManagementLandingPage() {
       })
     })
 
+    // Use Cases: click-only tabs (no pinned scroll story)
+    const uctabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.uc-tabs .uc-tab'))
+    const ucpanels = Array.from(root.querySelectorAll<HTMLElement>('.uc-panel'))
+
+    let lastUc = -1
+    const setUcIndex = (idx: number) => {
+      const n = uctabs.length
+      if (n < 1) return
+      const i = Math.min(n - 1, Math.max(0, Math.floor(idx)))
+      if (i === lastUc) return
+      lastUc = i
+      uctabs.forEach((t, j) => {
+        const on = j === i
+        t.classList.toggle('active', on)
+        t.setAttribute('aria-selected', on ? 'true' : 'false')
+      })
+      ucpanels.forEach((p, j) => p.classList.toggle('active', j === i))
+    }
+
+    if (uctabs.length && ucpanels.length) {
+      const initial = Math.max(0, uctabs.findIndex((t) => t.classList.contains('active')))
+      lastUc = -1
+      setUcIndex(initial)
+    }
+
+    const ucTabHandlers: Array<{ el: HTMLButtonElement; fn: (e: Event) => void }> = []
+    uctabs.forEach((t, j) => {
+      const fn = (e: Event) => {
+        e.preventDefault()
+        setUcIndex(j)
+      }
+      t.addEventListener('click', fn)
+      ucTabHandlers.push({ el: t, fn })
+    })
+
     return () => {
+      ucTabHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('keydown', onKeyDown)
       pillObs.disconnect()
