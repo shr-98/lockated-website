@@ -1,4 +1,49 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
+
+const LEASE_NAV_OFFSET_PX = 68
+const LEASE_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+
+function initLeaseTeamsGsap(
+  root: HTMLElement,
+  opts: { teamTabs: HTMLElement[]; teamIds: string[]; switchTeam: (teamId: string, tabEl?: HTMLElement) => void },
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
+
+  return ScrollTrigger.create({
+    id: 'lease-teams-use-cases',
+    trigger: pin,
+    start: `top ${LEASE_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * LEASE_TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: true,
+    pinSpacing: true,
+    pinType: 'transform',
+    anticipatePin: 0,
+    fastScrollEnd: true,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
@@ -21,6 +66,30 @@ const LEASE_ISOLATION_CSS = `
   --on-primary: #F6F4EE;
   color-scheme: only light;
   background-color: var(--cream) !important;
+}
+html:has(.lease-management-root) {
+  scroll-padding-top: ${LEASE_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.lease-management-root section[id],
+.lease-management-root .teams-section#teams {
+  scroll-margin-top: ${LEASE_NAV_OFFSET_PX + 4}px;
+}
+.lease-management-root #navbar {
+  z-index: 10050;
+}
+.lease-management-root #teamsStoryPin {
+  z-index: 1 !important;
+  min-height: calc(100vh - ${LEASE_NAV_OFFSET_PX}px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lease-management-root .pin-spacer {
+  background: var(--band, #E8E2D6) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 .lease-management-root .reveal {
   opacity: 0 !important;
@@ -158,6 +227,12 @@ const LEASE_ISOLATION_CSS = `
 .lease-management-root .usp-panel-card,
 .lease-management-root .uc-modal-inner {
   background-color: var(--surface) !important;
+}
+.lease-management-root .team-panel.active {
+  align-items: stretch !important;
+}
+.lease-management-root .team-panel.active > div {
+  height: 100%;
 }
 .lease-management-root .usp-panel-card,
 .lease-management-root .mock-kpi,
@@ -363,20 +438,29 @@ export default function LeaseManagementLandingPage() {
     })
 
     // Team tabs
-    root.querySelectorAll<HTMLElement>('.team-tab').forEach((tab) => {
+    const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
+    const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-panel'))
+    const switchTeam = (panelId: string, tabEl?: HTMLElement) => {
+      teamTabs.forEach((t) => t.classList.remove('active'))
+      teamPanels.forEach((p) => p.classList.remove('active'))
+      tabEl?.classList.add('active')
+      root.querySelector<HTMLElement>('#' + CSS.escape(panelId))?.classList.add('active')
+    }
+
+    teamTabs.forEach((tab) => {
       const handler = () => {
         const panelId = tab.dataset.team
         if (!panelId) return
-        root.querySelectorAll('.team-tab').forEach((t) => t.classList.remove('active'))
-        root.querySelectorAll('.team-panel').forEach((p) => p.classList.remove('active'))
-        tab.classList.add('active')
-        root.querySelector<HTMLElement>('#' + CSS.escape(panelId))?.classList.add('active')
+        switchTeam(panelId, tab)
       }
       tab.addEventListener('click', handler)
       cleanups.push(() => tab.removeEventListener('click', handler))
     })
 
-    // In-page anchor links (smooth scroll within app shell)
+    const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
+    const teamsStoryTrigger = initLeaseTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+
+    // In-page anchor links (smooth scroll within app shell, with fixed-nav offset)
     const anchorAbort = new AbortController()
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
       const onClick = (e: MouseEvent) => {
@@ -385,7 +469,8 @@ export default function LeaseManagementLandingPage() {
         const target = root.querySelector<HTMLElement>(href)
         if (!target) return
         e.preventDefault()
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const top = target.getBoundingClientRect().top + window.scrollY - LEASE_NAV_OFFSET_PX - 4
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
       }
       a.addEventListener('click', onClick, { signal: anchorAbort.signal })
     })
@@ -397,6 +482,7 @@ export default function LeaseManagementLandingPage() {
       revealObserver.disconnect()
       counterObserver.disconnect()
       anchorAbort.abort()
+      teamsStoryTrigger?.kill(true)
       delete (window as unknown as { openUCModal?: unknown }).openUCModal
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
     }
