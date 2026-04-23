@@ -1,3 +1,4 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
@@ -354,7 +355,7 @@ export default function SurveyLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

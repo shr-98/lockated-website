@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -31,9 +33,9 @@ function initFmTeamUseCasesGsap(
     end: () => `+=${n * window.innerHeight * FM_TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -239,6 +241,7 @@ export default function FmMatrixLandingPage() {
     if (!rootEl) return
     if (!bodyHtml) return
     const root = rootEl
+    const lenisScroll = createLenisScrollSync()
 
     // Navbar scroll
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -332,6 +335,10 @@ export default function FmMatrixLandingPage() {
     // Vendor-style: pin #teams and advance tabs via scroll
     const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
     const teamsStoryTrigger = initFmTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam: switchFmTeam })
+    requestAnimationFrame(() => {
+      lenisScroll.resize()
+      ScrollTrigger.refresh()
+    })
 
     // Walkthrough tabs
     type WalkthroughDatum = { title: string; name: string; desc: string; highlights: string[] }
@@ -434,7 +441,7 @@ export default function FmMatrixLandingPage() {
       const target = root.querySelector<HTMLElement>(id)
       if (!target) return false
       const top = target.getBoundingClientRect().top + window.scrollY - FM_NAV_OFFSET_PX - 4
-      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, top)
       return true
     }
 
@@ -467,6 +474,7 @@ export default function FmMatrixLandingPage() {
       countersObserver.disconnect()
       teamTabsAbort.abort()
       teamsStoryTrigger?.kill(true)
+      lenisScroll.destroy()
       window.removeEventListener('hashchange', onHashChange)
       anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
     }
@@ -491,7 +499,7 @@ export default function FmMatrixLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

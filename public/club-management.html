@@ -28,6 +28,8 @@
   --warning: #EDC488;
   --info: #6B9BCC;
   --font: 'Poppins', sans-serif;
+  /* Team mock card width (inner UI unchanged) — same as Snag 360 / Post Possession */
+  --team-visual-max-w: 380px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1317,32 +1319,94 @@ nav.scrolled {
   will-change: transform;
 }
 
+@media (max-width: 900px) {
+  .teams-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .teams-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .team-tab {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 148px;
+  }
+  .team-content.active {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .team-content.active .team-visual {
+    justify-self: center;
+  }
+}
+
 .teams-header { margin-bottom: 52px; }
+.teams-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+}
 .teams-tabs {
-  display: flex; gap: 0;
-  border-bottom: 1px solid rgba(196,184,157,0.35);
-  overflow-x: auto; scrollbar-width: none;
-  margin-bottom: 48px;
-  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: start;
+  background: transparent;
 }
-.teams-tabs::-webkit-scrollbar { display: none; }
+.team-panels { min-width: 0; }
 .team-tab {
-  display: flex; align-items: center; gap: 8px;
-  padding: 14px 24px;
-  font-family: var(--font); font-size: 13px; font-weight: 500;
-  color: rgba(44,44,44,0.45); cursor: pointer;
-  border: none; background: var(--cream);
-  border-bottom: 2px solid transparent;
-  transition: all 0.25s ease;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: var(--surface);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(44, 44, 44, 0.6);
+  text-align: left;
+  width: 100%;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.team-tab svg { width: 16px; height: 16px; opacity: 0.5; transition: opacity 0.25s; }
-.team-tab:hover { color: var(--dark); }
-.team-tab:hover svg { opacity: 0.7; }
-.team-tab.active { color: var(--dark); font-weight: 600; border-bottom-color: var(--primary); }
-.team-tab.active svg { opacity: 1; color: var(--primary); }
+.team-tab:hover { border-color: rgba(196, 184, 157, 0.55); color: var(--dark); }
+.team-tab.active {
+  border-color: var(--primary);
+  background: rgba(218, 119, 86, 0.05);
+  color: var(--dark);
+}
+.team-tab-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(196, 184, 157, 0.45);
+}
+.team-tab.active .team-tab-icon {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.team-tab-icon svg {
+  width: 18px;
+  height: 18px;
+  color: rgba(44, 44, 44, 0.5);
+  flex-shrink: 0;
+}
+.team-tab.active .team-tab-icon svg { color: var(--on-primary); }
+.team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44, 44, 44, 0.6); line-height: 1.25; }
+.team-tab.active .team-tab-text { color: var(--dark); }
 .team-content { display: none; }
-.team-content.active { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: center; }
+.team-content.active { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
 .team-info { display: flex; flex-direction: column; }
 .team-badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -1359,9 +1423,21 @@ nav.scrolled {
 .team-feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 7px; }
 .team-modules { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
 .team-module-chip { font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 6px; background: rgba(44,44,44,0.05); border: 1px solid rgba(196,184,157,0.3); color: rgba(44,44,44,0.6); }
-.team-visual { background: var(--cream); border: 1px solid rgba(196,184,157,0.4); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(44,44,44,0.08); }
-.team-visual-header { padding: 14px 18px; background: rgba(240,234,225,0.92); border-bottom: 1px solid rgba(196,184,157,0.2); display: flex; align-items: center; gap: 8px; }
-.team-visual-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.team-visual {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  justify-self: end;
+  width: 100%;
+  max-width: min(100%, var(--team-visual-max-w));
+  background: var(--surface);
+  border: 1px solid #c4b89d;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1);
+}
+.team-visual-header { padding: 14px 18px; background: var(--cream); border-bottom: 1px solid #c4bcad; display: flex; align-items: center; gap: 8px; }
+.team-visual-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 12px; background: var(--cream); flex: 0 0 auto; }
 .leadership-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .kpi-card { background: var(--cream); border-radius: 12px; padding: 16px; border: 1px solid rgba(196,184,157,0.25); position: relative; overflow: hidden; }
 .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2.5px; }
@@ -2845,33 +2921,35 @@ footer::before {
       <p class="section-sub reveal reveal-delay-2">From the owner reading revenue dashboards to the front desk scanning QR codes, every role gets exactly what they need — nothing more, nothing less.</p>
     </div>
 
-    <div class="teams-tabs reveal">
-      <button class="team-tab active" data-team="owner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Club Owner
+    <div class="teams-layout reveal">
+    <div class="teams-tabs" role="tablist" aria-label="Role use cases">
+      <button type="button" class="team-tab active" data-team="owner" role="tab" aria-selected="true">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <span class="team-tab-text">Club Owner</span>
       </button>
-      <button class="team-tab" data-team="manager">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Club Manager
+      <button type="button" class="team-tab" data-team="manager" role="tab" aria-selected="false">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <span class="team-tab-text">Club Manager</span>
       </button>
-      <button class="team-tab" data-team="finance">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Finance Team
+      <button type="button" class="team-tab" data-team="finance" role="tab" aria-selected="false">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <span class="team-tab-text">Finance Team</span>
       </button>
-      <button class="team-tab" data-team="ops">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Operations
+      <button type="button" class="team-tab" data-team="ops" role="tab" aria-selected="false">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <span class="team-tab-text">Operations</span>
       </button>
-      <button class="team-tab" data-team="frontdesk">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Front Desk
+      <button type="button" class="team-tab" data-team="frontdesk" role="tab" aria-selected="false">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <span class="team-tab-text">Front Desk</span>
       </button>
-      <button class="team-tab" data-team="marketing">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Marketing &amp; Retention
+      <button type="button" class="team-tab" data-team="marketing" role="tab" aria-selected="false">
+        <div class="team-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span class="team-tab-text">Marketing &amp; Retention</span>
       </button>
     </div>
 
+    <div class="team-panels">
     <!-- Club Owner -->
     <div class="team-content active" data-content="owner">
       <div class="team-info">
@@ -3192,6 +3270,9 @@ footer::before {
           </div>
         </div>
       </div>
+    </div>
+
+    </div>
     </div>
 
     <div class="teams-story-progress" role="img" aria-label="Role use case progress along scroll">

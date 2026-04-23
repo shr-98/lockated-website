@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -26,6 +28,13 @@ html:has(.vendor-mgmt-root) {
   scroll-padding-top: ${VENDOR_NAV_OFFSET_PX}px;
   /* Avoid width jump when scrollbar appears (can look like a layout “gap”). */
   scrollbar-gutter: stable;
+  /* Team panels swap content height; disable anchoring so scroll+pin don’t “fight” (jitter). */
+  overflow-anchor: none;
+}
+.vendor-mgmt-root .teams-section,
+.vendor-mgmt-root #teamsStoryPin,
+.vendor-mgmt-root .pin-spacer {
+  overflow-anchor: none;
 }
 /* In-page #section links + scrollIntoView: same offset. */
 .vendor-mgmt-root section[id],
@@ -38,6 +47,8 @@ html:has(.vendor-mgmt-root) {
 }
 .vendor-mgmt-root #teamsStoryPin {
   z-index: 1 !important;
+  /* Let GSAP own transforms; pre-set will-change on static HTML can add compositor jitter. */
+  will-change: auto !important;
 }
 /* Pin-spacer: same bg as page; avoid subpixel seams at section boundaries. */
 .vendor-mgmt-root .pin-spacer {
@@ -187,9 +198,11 @@ function initTeamUseCasesGsap(
     pin: true,
     pinSpacing: true,
     /* transform-based pin reduces 1px seams / jitter vs position:fixed on some GPUs */
-    pinType: 'transform',
+    /* fixed + Lenis tends to feel steadier than transform pins on high-DPI / trackpad */
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    /* true can snap/“correct” scroll aggressively at pin edges and feel like screen shake */
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -422,6 +435,9 @@ export default function VendorManagementLandingPage() {
       const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
       if (m?.[1]) teamIds.push(m[1])
     })
+
+    const lenisScroll = createLenisScrollSync()
+
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -437,7 +453,7 @@ export default function VendorManagementLandingPage() {
       }
       const p = idx / (n - 1)
       const y = st.start + p * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, y)
     }
     const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
     teamTabs.forEach((tab) => {
@@ -461,6 +477,30 @@ export default function VendorManagementLandingPage() {
       if (match?.[1]) switchTeam(match[1], initialTeamTab)
     }
 
+    // Team panels use display toggling; different heights reflow the pin and fight scroll
+    // anchoring (feels like screen shake). Lock column height to the tallest panel once.
+    const teamsCol = teamPanels[0]?.parentElement
+    if (teamsCol && teamPanels.length > 0) {
+      const activePanel = teamPanels.find((p) => p.classList.contains('active'))
+      const savedKey = activePanel?.id?.replace(/^team-/, '') || teamIds[0] || ''
+      let maxH = 0
+      for (const p of teamPanels) {
+        const key = p.id?.replace(/^team-/, '') ?? ''
+        if (!key) continue
+        const tab = teamTabs[teamIds.indexOf(key)]
+        switchTeam(key, tab)
+        void teamsCol.offsetHeight
+        maxH = Math.max(maxH, teamsCol.getBoundingClientRect().height)
+      }
+      if (savedKey) {
+        const tab = teamTabs[teamIds.indexOf(savedKey)]
+        switchTeam(savedKey, tab)
+      }
+      if (maxH > 0) {
+        teamsCol.style.minHeight = `${Math.ceil(maxH)}px`
+      }
+    }
+
     // Industry modal
     const modalOverlay = root.querySelector<HTMLElement>('#industryModal')
     const modalTitle = root.querySelector<HTMLElement>('#modalTitle')
@@ -470,6 +510,7 @@ export default function VendorManagementLandingPage() {
     const closeModal = () => {
       modalOverlay?.classList.remove('open')
       document.body.style.overflow = ''
+      lenisScroll.start()
     }
     const openModal = (title: string, pain: string, features: string[], outcome: string) => {
       if (modalTitle) modalTitle.textContent = title
@@ -480,6 +521,7 @@ export default function VendorManagementLandingPage() {
       }
       modalOverlay?.classList.add('open')
       document.body.style.overflow = 'hidden'
+      lenisScroll.stop()
     }
     const industryData: Record<
       string,
@@ -615,6 +657,7 @@ export default function VendorManagementLandingPage() {
 
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
+        lenisScroll.resize()
         ScrollTrigger.refresh()
       })
     }
@@ -642,6 +685,7 @@ export default function VendorManagementLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)
       window.removeEventListener('resize', onResize)
@@ -684,7 +728,7 @@ export default function VendorManagementLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

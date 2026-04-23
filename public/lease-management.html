@@ -30,6 +30,7 @@
   --font: 'Poppins', sans-serif;
   --band: #E8E2D6;
   --surface: #F0EAE1;
+  --divider: rgba(196, 184, 157, 0.55);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;color-scheme:only light;}
@@ -273,19 +274,22 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 /* ── TEAMS ── */
 .teams-section{padding:96px 48px;position:relative;overflow:hidden;background:var(--band);}
 .teams-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(158,200,186,0.08) 0%,transparent 70%);pointer-events:none;}
-.teams-story-progress{height:3px;background:rgba(44,44,44,0.08);border-radius:999px;overflow:hidden;margin-top:18px;margin-bottom:18px}
+.teams-story-progress{height:4px;background:rgba(44,44,44,0.1);border-radius:999px;overflow:hidden;margin-top:32px;max-width:480px;margin-left:auto;margin-right:auto}
 #teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,0.3));transform:scaleX(0);transform-origin:left center}
 .teams-inner{max-width:1200px;margin:0 auto;}
-.teams-layout{display:flex;flex-direction:column;gap:40px;margin-top:56px;}
-.teams-tabs{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;padding-bottom:16px;border-bottom:1px solid rgba(196,184,157,0.35);}
-.team-tab{display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;}
-.team-tab:hover{background:var(--primary-8);}
-.team-tab.active{background:var(--primary-8);border-color:rgba(218,119,86,0.2);}
-.team-tab-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(44,44,44,0.06);transition:all 0.2s;flex-shrink:0;}
-.team-tab.active .team-tab-icon{background:var(--primary);}
-.team-tab-icon svg{width:14px;height:14px;stroke:rgba(44,44,44,0.5);transition:stroke 0.2s;}
-.team-tab.active .team-tab-icon svg{stroke:var(--on-primary);}
-.team-tab-name{font-size:13.5px;font-weight:600;color:rgba(44,44,44,0.6);transition:color 0.2s;}
+/* Two-column layout: vertical tab rail + panels (Vendor Management / PTM pattern) */
+.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:52px;align-items:start;}
+.team-panels{min-width:0;}
+.teams-tabs{display:flex;flex-direction:column;gap:4px;padding-bottom:0;border-bottom:none;}
+.team-tab{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;background:var(--surface);transition:all 0.2s ease;width:100%;box-sizing:border-box;}
+.team-tab:hover{border-color:var(--border);}
+.team-tab.active{border-color:var(--primary);background:rgba(218,119,86,0.05);}
+.team-tab-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--cream);border:1px solid var(--divider);transition:all 0.2s ease;flex-shrink:0;}
+.team-tab.active .team-tab-icon{background:var(--primary);border-color:var(--primary);}
+.team-tab-icon svg{width:18px;height:18px;stroke:currentColor;color:rgba(44,44,44,0.5);transition:color 0.2s;}
+.team-tab:hover .team-tab-icon svg{color:rgba(44,44,44,0.65);}
+.team-tab.active .team-tab-icon svg{color:var(--on-primary);}
+.team-tab-name{font-size:14px;font-weight:600;color:rgba(44,44,44,0.6);transition:color 0.2s;text-align:left;}
 .team-tab.active .team-tab-name{color:var(--dark);}
 .team-tab-arrow{display:none;}
 .team-panel{display:none;animation:panelIn 0.3s ease;}
@@ -366,7 +370,7 @@ footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(
   .wt-panel.active{grid-template-columns:1fr;}
   .usecase-grid{grid-template-columns:1fr 1fr;}
   .uc-card.featured{grid-column:span 2;grid-row:auto;}
-  .teams-layout{grid-template-columns:1fr;}
+  .teams-layout{grid-template-columns:1fr;gap:28px;}
   .team-panel.active{grid-template-columns:1fr;}
   .contact-layout{grid-template-columns:1fr;}
   .footer-top{grid-template-columns:1fr 1fr;}
@@ -1083,10 +1087,9 @@ footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(
 <section class="teams-section" id="teams">
   <!-- Header inside pin so scroll doesn’t split title from content (Vendor-style) -->
   <div class="teams-inner" id="teamsStoryPin">
-    <div class="section-eyebrow reveal">Built for Every Team</div>
+    <div class="section-eyebrow reveal">Team use cases</div>
     <h2 class="section-title reveal reveal-delay-1">Your whole organisation.<br><span class="accent">One platform.</span></h2>
     <p class="section-sub reveal reveal-delay-2">From the CFO approving the lease budget to the Facility Manager closing a maintenance ticket, Lockated gives every team exactly what they need — without getting in each other's way.</p>
-    <div class="teams-story-progress" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
     <div class="teams-layout">
       <div class="teams-tabs reveal">
         <div class="team-tab active" data-team="team1">
@@ -1250,6 +1253,7 @@ footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(
         </div>
       </div>
     </div>
+    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll"><div id="teamsStoryProgress"></div></div>
   </div>
 </section>
 

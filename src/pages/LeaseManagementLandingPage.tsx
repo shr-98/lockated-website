@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -29,9 +31,9 @@ function initLeaseTeamsGsap(
     end: () => `+=${n * window.innerHeight * LEASE_TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -153,17 +155,48 @@ html:has(.lease-management-root) {
   background-color: rgba(218,119,86,0.12) !important;
 }
 .lease-management-root .teams-section,
-.lease-management-root .teams-tabs,
 .lease-management-root .banner-section {
   background-color: var(--band) !important;
 }
-.lease-management-root .teams-tabs,
+.lease-management-root .teams-tabs {
+  background: transparent !important;
+  box-shadow: none !important;
+}
 .lease-management-root .wt-tabs {
   box-shadow: none !important;
 }
-.lease-management-root .team-tab {
-  background-color: transparent !important;
+.lease-management-root .teams-layout .team-tab {
+  color: var(--dark, #2c2c2c) !important;
+  border: 1.5px solid transparent !important;
   background-image: none !important;
+}
+.lease-management-root .teams-layout .team-tab:not(.active) {
+  background: var(--surface, #f0eae1) !important;
+}
+.lease-management-root .teams-layout .team-tab.active {
+  background: rgba(218, 119, 86, 0.05) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.lease-management-root .teams-layout .team-tab-name {
+  color: rgba(44, 44, 44, 0.6) !important;
+}
+.lease-management-root .teams-layout .team-tab.active .team-tab-name {
+  color: var(--dark, #2c2c2c) !important;
+}
+.lease-management-root .teams-layout .team-tab-icon {
+  background: var(--cream, #f6f4ee) !important;
+  border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
+}
+.lease-management-root .teams-layout .team-tab.active .team-tab-icon {
+  background: var(--primary, #da7756) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.lease-management-root .teams-layout .team-tab.active .team-tab-icon svg {
+  color: var(--on-primary, #f6f4ee) !important;
+}
+.lease-management-root .teams-layout .team-tab-icon svg {
+  color: rgba(44, 44, 44, 0.5) !important;
+  stroke: currentColor !important;
 }
 .lease-management-root .usp-tabs,
 .lease-management-root .role-switch {
@@ -312,6 +345,8 @@ export default function LeaseManagementLandingPage() {
     if (!root) return
     if (!bodyHtml) return
 
+    const lenisScroll = createLenisScrollSync()
+
     // Navbar scroll
     const navbar = root.querySelector<HTMLElement>('#navbar')
     const onScroll = () => navbar?.classList.toggle('scrolled', window.scrollY > 20)
@@ -365,6 +400,7 @@ export default function LeaseManagementLandingPage() {
       if (modal) {
         modal.classList.add('open')
         document.body.style.overflow = 'hidden'
+        lenisScroll.stop()
       }
     }
     ;(window as unknown as { closeUCModal: (id: string) => void }).closeUCModal = (id: string) => {
@@ -372,6 +408,7 @@ export default function LeaseManagementLandingPage() {
       if (modal) {
         modal.classList.remove('open')
         document.body.style.overflow = ''
+        lenisScroll.start()
       }
     }
 
@@ -379,6 +416,7 @@ export default function LeaseManagementLandingPage() {
       if (e.key === 'Escape') {
         root.querySelectorAll<HTMLElement>('.uc-modal.open').forEach((m) => m.classList.remove('open'))
         document.body.style.overflow = ''
+        lenisScroll.start()
       }
     }
     document.addEventListener('keydown', onKeyDown)
@@ -459,6 +497,10 @@ export default function LeaseManagementLandingPage() {
 
     const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
     const teamsStoryTrigger = initLeaseTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+    requestAnimationFrame(() => {
+      lenisScroll.resize()
+      ScrollTrigger.refresh()
+    })
 
     // In-page anchor links (smooth scroll within app shell, with fixed-nav offset)
     const anchorAbort = new AbortController()
@@ -470,7 +512,7 @@ export default function LeaseManagementLandingPage() {
         if (!target) return
         e.preventDefault()
         const top = target.getBoundingClientRect().top + window.scrollY - LEASE_NAV_OFFSET_PX - 4
-        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+        scrollDocumentToY(lenisScroll.instance, top)
       }
       a.addEventListener('click', onClick, { signal: anchorAbort.signal })
     })
@@ -483,6 +525,7 @@ export default function LeaseManagementLandingPage() {
       counterObserver.disconnect()
       anchorAbort.abort()
       teamsStoryTrigger?.kill(true)
+      lenisScroll.destroy()
       delete (window as unknown as { openUCModal?: unknown }).openUCModal
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
     }
@@ -512,7 +555,7 @@ export default function LeaseManagementLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

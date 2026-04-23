@@ -9,6 +9,7 @@ import {
 } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -62,6 +63,7 @@ export function ScrollStoryTimeline({
   const textRef = useRef<HTMLDivElement | null>(null)
   const stRef = useRef<ScrollTrigger | null>(null)
   const mmRef = useRef<ReturnType<typeof gsap.matchMedia> | null>(null)
+  const lenisRef = useRef<ReturnType<typeof createLenisScrollSync> | null>(null)
   const [activeStep, setActiveStep] = useState(0)
   const uid = useId()
   const styleId = `story-timeline-style-${uid.replace(/:/g, '')}`
@@ -73,7 +75,7 @@ export function ScrollStoryTimeline({
       const range = st.end - st.start
       const p = totalSteps <= 1 ? 0 : targetIndex / (totalSteps - 1)
       const y = st.start + p * range
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisRef.current?.instance ?? null, y)
     },
     [totalSteps],
   )
@@ -117,6 +119,9 @@ export function ScrollStoryTimeline({
     let initTimer: ReturnType<typeof setTimeout> | null = null
     let desktopCleanup: (() => void) | null = null
 
+    const lenisScroll = createLenisScrollSync()
+    lenisRef.current = lenisScroll
+
     initTimer = setTimeout(() => {
       const mm = gsap.matchMedia()
       mmRef.current = mm
@@ -135,7 +140,9 @@ export function ScrollStoryTimeline({
           end: () => `+=${window.innerHeight * (totalSteps + 1)}`,
           pin: true,
           pinSpacing: true,
+          pinType: 'fixed',
           scrub: false,
+          fastScrollEnd: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate,
@@ -164,6 +171,8 @@ export function ScrollStoryTimeline({
         .filter((t) => t.vars.id === STORY_TIMELINE_ID)
         .forEach((t) => t.kill())
       stRef.current = null
+      lenisRef.current?.destroy()
+      lenisRef.current = null
     }
   }, [initDelayMs, totalSteps, steps.length])
 

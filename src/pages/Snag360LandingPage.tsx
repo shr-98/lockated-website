@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -9,7 +11,7 @@ const SNAG_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
 
 function initSnagTeamsGsap(
   root: HTMLElement,
-  opts: { teamTabs: HTMLElement[]; switchTeamAt: (idx: number, tabEl?: HTMLElement) => void },
+  opts: { teamTabs: HTMLElement[]; switchTeamAt: (idx: number) => void },
 ): ScrollTrigger | null {
   const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
   if (!pin) return null
@@ -29,15 +31,15 @@ function initSnagTeamsGsap(
     end: () => `+=${n * window.innerHeight * SNAG_TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
       if (idx !== lastIdx) {
         lastIdx = idx
-        opts.switchTeamAt(idx, opts.teamTabs[idx])
+        opts.switchTeamAt(idx)
       }
       if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
     },
@@ -94,6 +96,41 @@ html:has(.snag360-root) {
 .snag360-root .teams-tabs {
   flex-shrink: 0;
   align-self: stretch;
+  background: transparent !important;
+}
+.snag360-root .teams-layout button.team-tab {
+  color: var(--dark, #2c2c2c) !important;
+  border: 1.5px solid transparent !important;
+  background-image: none !important;
+}
+.snag360-root .teams-layout button.team-tab:not(.active) {
+  background: var(--surface, #f0eae1) !important;
+}
+.snag360-root .teams-layout button.team-tab.active {
+  background: rgba(218, 119, 86, 0.05) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.snag360-root .teams-layout .team-tab-text {
+  color: rgba(44, 44, 44, 0.6) !important;
+}
+.snag360-root .teams-layout .team-tab.active .team-tab-text {
+  color: var(--dark, #2c2c2c) !important;
+}
+.snag360-root .teams-layout .team-tab-icon {
+  background: var(--cream, #f6f4ee) !important;
+  border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
+}
+.snag360-root .teams-layout .team-tab.active .team-tab-icon {
+  background: var(--primary, #da7756) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.snag360-root .teams-layout .team-tab.active .team-tab-icon svg {
+  color: var(--on-primary, #f6f4ee) !important;
+  stroke: currentColor !important;
+}
+.snag360-root .teams-layout .team-tab-icon svg {
+  color: rgba(44, 44, 44, 0.5) !important;
+  stroke: currentColor !important;
 }
 .snag360-root .pin-spacer {
   background: var(--cream, #F6F4EE) !important;
@@ -101,11 +138,40 @@ html:has(.snag360-root) {
   border: none !important;
   box-shadow: none !important;
 }
+/* Team mock: compact frame like Vendor / Post Sales / PATM (no vertical stretch) */
 .snag360-root .team-content.active {
-  align-items: stretch !important;
+  align-items: start !important;
 }
-.snag360-root .team-content.active > div {
-  height: 100%;
+.snag360-root .team-content.active > .team-info {
+  height: auto !important;
+  min-width: 0;
+}
+.snag360-root .team-content.active > .team-visual {
+  height: auto !important;
+  align-self: start !important;
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  aspect-ratio: auto !important;
+}
+.snag360-root .team-content.active .team-visual-body {
+  flex: 0 0 auto !important;
+}
+/* Team mock: vendor-management .wt-ui-card */
+.snag360-root .team-visual {
+  background: var(--surface, #F0EAE1) !important;
+  border: 1px solid #c4b89d !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+}
+.snag360-root .team-visual-header {
+  background: var(--cream, #F6F4EE) !important;
+  border-bottom: 1px solid #c4bcad !important;
+}
+.snag360-root .team-visual-body {
+  background: var(--cream, #F6F4EE) !important;
 }
 .snag360-root,
 .snag360-root * {
@@ -430,6 +496,7 @@ export default function Snag360LandingPage() {
     const root = rootRef.current
     if (!root) return
     if (!bodyHtml) return
+    const lenisScroll = createLenisScrollSync()
     const snagWindow: Snag360Window = window
 
     // Navbar scroll
@@ -548,6 +615,7 @@ export default function Snag360LandingPage() {
       if (!modal) return
       modal.classList.add('open')
       document.body.style.overflow = 'hidden'
+      lenisScroll.stop()
     }
     snagWindow.closeModal = (e: MouseEvent, id: string, force?: boolean) => {
       const modal = root.querySelector<HTMLElement>('#' + id)
@@ -556,6 +624,7 @@ export default function Snag360LandingPage() {
       if (!shouldClose) return
       modal.classList.remove('open')
       document.body.style.overflow = ''
+      lenisScroll.start()
     }
 
     // Team tabs (HTML uses inline onclick="switchTeam(idx)") + pinned story on scroll.
@@ -563,7 +632,7 @@ export default function Snag360LandingPage() {
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
     const progressFillEl = root.querySelector<HTMLElement>('#teamsStoryProgress')
-    const switchTeamAt = (idx: number, _tabEl?: HTMLElement) => {
+    const switchTeamAt = (idx: number) => {
       teamTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
       teamPanels.forEach((c, i) => c.classList.toggle('active', i === idx))
     }
@@ -586,9 +655,13 @@ export default function Snag360LandingPage() {
       }
       const p = idx / (n - 1)
       const y = st.start + p * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, y)
     }
     teamsStoryTrigger = initSnagTeamsGsap(root, { teamTabs, switchTeamAt })
+    requestAnimationFrame(() => {
+      lenisScroll.resize()
+      ScrollTrigger.refresh()
+    })
     snagWindow.switchTeam = (idx: number) => scrollToTeamIndex(idx)
 
     // Smooth in-page anchors inside this landing page (with fixed-nav offset).
@@ -604,7 +677,7 @@ export default function Snag360LandingPage() {
         if (!t) return
         e.preventDefault()
         const top = t.getBoundingClientRect().top + window.scrollY - SNAG_NAV_OFFSET_PX - 4
-        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+        scrollDocumentToY(lenisScroll.instance, top)
       }
       a.addEventListener('click', onClick)
       anchorHandlers.push({ a, onClick })
@@ -614,6 +687,7 @@ export default function Snag360LandingPage() {
       if (e.key !== 'Escape') return
       root.querySelectorAll<HTMLElement>('.usecase-modal.open').forEach((m) => m.classList.remove('open'))
       document.body.style.overflow = ''
+      lenisScroll.start()
     }
     document.addEventListener('keydown', onKeyDown)
 
@@ -626,6 +700,7 @@ export default function Snag360LandingPage() {
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
       teamsStoryTrigger?.kill(true)
+      lenisScroll.destroy()
       teamsStoryTrigger = null
       delete snagWindow.toggleUSP
       delete snagWindow.switchTab
@@ -650,7 +725,7 @@ export default function Snag360LandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

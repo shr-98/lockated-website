@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -43,9 +45,9 @@ function initTeamUseCasesGsap(
     end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -86,13 +88,21 @@ html:has(.post-possession-root) {
   box-shadow: none !important;
 }
 .post-possession-root .team-panel.active {
-  align-items: stretch !important;
+  align-items: start !important;
 }
 .post-possession-root .team-panel.active .team-visual {
-  height: 100%;
-  align-self: stretch;
-  aspect-ratio: auto;
-  min-height: 260px;
+  height: auto !important;
+  align-self: start !important;
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  aspect-ratio: auto !important;
+}
+@media (max-width: 900px) {
+  .post-possession-root .team-panel.active .team-visual {
+    justify-self: center !important;
+  }
 }
 .post-possession-root h1,
 .post-possession-root h2,
@@ -145,10 +155,22 @@ html:has(.post-possession-root) {
 .post-possession-root .usp-visual,
 .post-possession-root .wt-screen,
 .post-possession-root .tf-row,
-.post-possession-root .team-visual,
 .post-possession-root .uc-card,
 .post-possession-root .contact-form-card {
   background-color: var(--bg-card) !important;
+}
+/* Team mock: vendor-management .wt-ui-card colors */
+.post-possession-root .team-visual {
+  background-color: var(--bg-card, #F0EAE1) !important;
+  border: 1px solid #c4b89d !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+}
+.post-possession-root .team-visual-header {
+  background-color: var(--bg, #F6F4EE) !important;
+  border-bottom: 1px solid #c4bcad !important;
+}
+.post-possession-root .team-visual-body {
+  background-color: var(--bg, #F6F4EE) !important;
 }
 `
 
@@ -408,6 +430,7 @@ export default function PostPossessionLandingPage() {
       teamTabs.forEach((t, j) => t.classList.toggle('active', j === i))
       teamPanels.forEach((p, j) => p.classList.toggle('active', j === i))
     }
+    const lenisScroll = createLenisScrollSync()
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -423,7 +446,7 @@ export default function PostPossessionLandingPage() {
       }
       const p = idx / (n - 1)
       const y = st.start + p * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, y)
     }
     const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
     teamTabs.forEach((tab, idx) => {
@@ -446,6 +469,7 @@ export default function PostPossessionLandingPage() {
 
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
+        lenisScroll.resize()
         ScrollTrigger.refresh()
       })
     }
@@ -480,7 +504,9 @@ export default function PostPossessionLandingPage() {
         const t = root.querySelector<HTMLElement>(href)
         if (!t) return
         e.preventDefault()
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const top =
+          t.getBoundingClientRect().top + window.scrollY - POST_POSSESSION_NAV_OFFSET_PX - 4
+        scrollDocumentToY(lenisScroll.instance, top)
       }
       a.addEventListener('click', onClick)
       anchorHandlers.push({ a, onClick })
@@ -488,6 +514,7 @@ export default function PostPossessionLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)
       window.removeEventListener('resize', onResize)
@@ -530,7 +557,7 @@ export default function PostPossessionLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

@@ -28,6 +28,8 @@
     --surface: #F0EAE1;
     --divider: rgba(196, 184, 157, 0.55);
     --font: 'Poppins', sans-serif;
+    /* Team mock width — same compact frame as Post Sales / Snag / Club */
+    --team-visual-max-w: 380px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2025,37 +2027,55 @@ svg { display: block; }
 
 .teams-header { margin-bottom: 52px; }
 
-/* Tab strip */
+/* Team use cases: left rail tabs + main panel (same pattern as Vendor Management) */
+.teams-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-top: 0;
+}
+.teams-panels { min-width: 0; }
 .teams-tabs {
-  display: flex; gap: 0;
-  border-bottom: 1px solid rgba(196,184,157,0.35);
-  overflow-x: auto; scrollbar-width: none;
-  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: none;
+  overflow: visible;
+  margin-bottom: 0;
+  scrollbar-width: none;
 }
 .teams-tabs::-webkit-scrollbar { display: none; }
-
 .team-tab {
-  display: flex; align-items: center; gap: 8px;
-  padding: 14px 24px;
-  font-family: var(--font); font-size: 13px; font-weight: 500;
-  color: rgba(44,44,44,0.45); cursor: pointer;
-  border: none; background: none;
-  border-bottom: 2px solid transparent;
-  transition: all 0.25s ease;
-  white-space: nowrap;
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; border-radius: 12px;
+  cursor: pointer; border: 1.5px solid transparent;
+  background: var(--surface); transition: all 0.2s ease;
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  text-align: left; width: 100%;
+  -webkit-appearance: none; appearance: none; margin: 0;
+  line-height: 1.3; color: rgba(44,44,44,0.6);
 }
-.team-tab svg { width: 16px; height: 16px; opacity: 0.5; transition: opacity 0.25s; }
-.team-tab:hover { color: var(--dark); }
-.team-tab:hover svg { opacity: 0.7; }
+.team-tab:hover { border-color: var(--border); }
 .team-tab.active {
-  color: var(--dark); font-weight: 600;
-  border-bottom-color: var(--primary);
+  border-color: var(--primary);
+  background: rgba(218,119,86,0.05);
 }
-.team-tab.active svg { opacity: 1; color: var(--primary); }
+.team-tab-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--cream); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border: 1px solid var(--divider);
+}
+.team-tab-icon svg { width: 18px; height: 18px; color: rgba(44,44,44,0.5); flex-shrink: 0; }
+.team-tab:hover .team-tab-icon svg { color: rgba(44,44,44,0.65); }
+.team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
+.team-tab.active .team-tab-icon svg { color: var(--on-primary); }
+.team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
+.team-tab.active .team-tab-text { color: var(--dark); }
 
 /* Team content */
 .team-content { display: none; }
-.team-content.active { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: center; }
+.team-content.active { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
 
 .team-info { display: flex; flex-direction: column; }
 
@@ -2079,7 +2099,27 @@ svg { display: block; }
 }
 .team-features {
   list-style: none; display: flex; flex-direction: column;
-  gap: 10px; margin-bottom: 36px;
+  gap: 10px; margin-bottom: 36px; padding: 0;
+}
+.team-info .team-feature {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 18px; background: var(--surface);
+  border-radius: 10px; border: 1px solid rgba(196,184,157,0.35);
+  font-size: 13.5px; font-weight: 500; color: var(--dark);
+  line-height: 1.5;
+}
+.team-info .team-feature-dot {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+  background: rgba(218,119,86,0.12);
+  position: relative;
+  border: none;
+}
+.team-info .team-feature-dot::after {
+  content: '✓';
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -52%);
+  color: var(--primary);
+  font-size: 11px; font-weight: 800; line-height: 1;
 }
 .team-feature {
   display: flex; align-items: flex-start; gap: 10px;
@@ -2100,25 +2140,39 @@ svg { display: block; }
   color: rgba(44,44,44,0.6);
 }
 
-/* Team visual panels */
+/* Team visual panels — vendor-management .wt-ui-card */
 .team-visual {
-  background: var(--cream);
-  border: 1px solid rgba(196,184,157,0.4);
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  justify-self: end;
+  width: 100%;
+  max-width: min(100%, var(--team-visual-max-w));
+  background: var(--surface);
+  border: 1px solid #c4b89d;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(44,44,44,0.08);
+  box-shadow: 0 16px 48px rgba(44,44,44,0.1);
 }
 .team-visual-header {
   padding: 14px 18px;
-  background: rgba(240,234,225,0.96);
-  border-bottom: 1px solid rgba(196,184,157,0.2);
+  background: var(--cream);
+  border-bottom: 1px solid #c4bcad;
   display: flex; align-items: center; gap: 8px;
 }
 .dot-red { width:9px;height:9px;border-radius:50%;background:#E7848E; }
 .dot-yellow { width:9px;height:9px;border-radius:50%;background:#EDC488; }
 .dot-green { width:9px;height:9px;border-radius:50%;background:#9EC8BA; }
 
-.team-visual-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.team-visual-body {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-height: 0;
+  background: var(--cream);
+}
 
 /* Leadership visual */
 .leadership-row {
@@ -2727,6 +2781,7 @@ footer {
   .teams-section, .usecases-section, .contact-section { padding: 60px 40px; }
   .end-banner { margin: 0 40px 60px; padding: 60px 48px; }
   footer { padding: 60px 40px 32px; }
+  .teams-layout { grid-template-columns: 1fr; gap: 28px; }
   .team-content.active { grid-template-columns: 1fr; }
   .team-visual { display: none; }
   .usecases-bento { grid-template-columns: 1fr 1fr; }
@@ -4032,38 +4087,40 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
   <div class="teams-inner">
     <div class="teams-story-pin" id="teamsStoryPin">
     <div class="teams-header">
-      <div class="section-eyebrow reveal">Built for every team</div>
+      <div class="section-eyebrow reveal">Team use cases</div>
       <h2 class="section-title reveal reveal-delay-1">Your whole company.<br><span class="accent">One platform.</span></h2>
       <p class="section-sub reveal reveal-delay-2">From the C-suite reading dashboards to the developer closing sprints, PTM gives every team exactly what they need, without getting in each other's way.</p>
     </div>
 
-    <div class="teams-tabs reveal">
-      <button class="team-tab active" data-team="leadership">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Leadership
+    <div class="teams-layout">
+    <div class="teams-tabs reveal" role="tablist" aria-label="PTM team use cases">
+      <button type="button" class="team-tab active" data-team="leadership" role="tab" aria-selected="true">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <span class="team-tab-text">Leadership</span>
       </button>
-      <button class="team-tab" data-team="dev">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Engineering
+      <button type="button" class="team-tab" data-team="dev" role="tab" aria-selected="false">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <span class="team-tab-text">Engineering</span>
       </button>
-      <button class="team-tab" data-team="pm">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Project Managers
+      <button type="button" class="team-tab" data-team="pm" role="tab" aria-selected="false">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <span class="team-tab-text">Project Managers</span>
       </button>
-      <button class="team-tab" data-team="hr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        HR &amp; Finance
+      <button type="button" class="team-tab" data-team="hr" role="tab" aria-selected="false">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <span class="team-tab-text">HR &amp; Finance</span>
       </button>
-      <button class="team-tab" data-team="ops">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Operations
+      <button type="button" class="team-tab" data-team="ops" role="tab" aria-selected="false">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <span class="team-tab-text">Operations</span>
       </button>
-      <button class="team-tab" data-team="marketing">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Marketing
+      <button type="button" class="team-tab" data-team="marketing" role="tab" aria-selected="false">
+        <div class="team-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span class="team-tab-text">Marketing</span>
       </button>
     </div>
 
+    <div class="teams-panels">
     <!-- Leadership -->
     <div class="team-content active" data-content="leadership">
       <div class="team-info">
@@ -4410,6 +4467,9 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
           </div>
         </div>
       </div>
+    </div>
+
+    </div>
     </div>
 
     <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">

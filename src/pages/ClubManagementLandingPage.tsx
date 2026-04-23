@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -56,15 +58,25 @@ html:has(.club-mgmt-root) {
   box-shadow: none !important;
 }
 .club-mgmt-root .team-content.active {
-  align-items: stretch !important;
+  align-items: start !important;
 }
 .club-mgmt-root .team-content.active > .team-visual {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  height: auto !important;
+  align-self: start !important;
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 .club-mgmt-root .team-content.active .team-visual-body {
-  flex: 1;
+  flex: 0 0 auto !important;
+}
+@media (max-width: 900px) {
+  .club-mgmt-root .team-content.active > .team-visual {
+    justify-self: center !important;
+  }
 }
 .club-mgmt-root,
 .club-mgmt-root * {
@@ -120,8 +132,18 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root .feature-screen-body {
   background-color: var(--cream, #F6F4EE) !important;
 }
+/* Team mock: vendor-management .wt-ui-card */
+.club-mgmt-root .team-visual {
+  background-color: var(--surface, #F0EAE1) !important;
+  border: 1px solid #c4b89d !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+}
 .club-mgmt-root .team-visual-header {
-  background: rgba(240, 234, 225, 0.92) !important;
+  background: var(--cream, #F6F4EE) !important;
+  border-bottom: 1px solid #c4bcad !important;
+}
+.club-mgmt-root .team-visual-body {
+  background: var(--cream, #F6F4EE) !important;
 }
 .club-mgmt-root .hero-float-card {
   background: rgba(240, 234, 225, 0.88) !important;
@@ -135,15 +157,48 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root .modal-close-uc:hover {
   background-color: var(--surface, #F0EAE1) !important;
 }
-.club-mgmt-root button.feature-tab,
-.club-mgmt-root button.team-tab {
+.club-mgmt-root button.feature-tab {
   background-color: var(--cream, #F6F4EE) !important;
 }
 .club-mgmt-root .feature-tabs {
   background-color: var(--cream, #F6F4EE) !important;
 }
 .club-mgmt-root .teams-tabs {
-  background-color: var(--cream, #F6F4EE) !important;
+  background: transparent !important;
+}
+.club-mgmt-root .teams-layout button.team-tab {
+  color: var(--dark, #2c2c2c) !important;
+  border: 1.5px solid transparent !important;
+  background-image: none !important;
+}
+.club-mgmt-root .teams-layout button.team-tab:not(.active) {
+  background: var(--surface, #f0eae1) !important;
+}
+.club-mgmt-root .teams-layout button.team-tab.active {
+  background: rgba(218, 119, 86, 0.05) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.club-mgmt-root .teams-layout .team-tab-text {
+  color: rgba(44, 44, 44, 0.6) !important;
+}
+.club-mgmt-root .teams-layout .team-tab.active .team-tab-text {
+  color: var(--dark, #2c2c2c) !important;
+}
+.club-mgmt-root .teams-layout .team-tab-icon {
+  background: var(--cream, #f6f4ee) !important;
+  border: 1px solid rgba(196, 184, 157, 0.45) !important;
+}
+.club-mgmt-root .teams-layout .team-tab.active .team-tab-icon {
+  background: var(--primary, #da7756) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.club-mgmt-root .teams-layout .team-tab.active .team-tab-icon svg {
+  color: var(--on-primary, #f6f4ee) !important;
+  stroke: currentColor !important;
+}
+.club-mgmt-root .teams-layout .team-tab-icon svg {
+  color: rgba(44, 44, 44, 0.5) !important;
+  stroke: currentColor !important;
 }
 .club-mgmt-root .btn-primary,
 .club-mgmt-root .btn-hero-primary,
@@ -210,9 +265,9 @@ function initClubTeamStoryGsap(
     end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -292,6 +347,8 @@ export default function ClubManagementLandingPage() {
   useEffect(() => {
     const root = rootRef.current
     if (!root || !bodyHtml) return
+
+    const lenisScroll = createLenisScrollSync()
 
     // NAVBAR SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -417,12 +474,14 @@ export default function ClubManagementLandingPage() {
       if (!modal) return
       modal.classList.add('open')
       document.body.style.overflow = 'hidden'
+      lenisScroll.stop()
     }
     const closeUCModal = (id: string) => {
       const modal = root.querySelector<HTMLElement>(`#modal-${CSS.escape(id)}`)
       if (!modal) return
       modal.classList.remove('open')
       document.body.style.overflow = ''
+      lenisScroll.start()
     }
     ;(window as any).openUCModal = openUCModal
     ;(window as any).closeUCModal = closeUCModal
@@ -434,6 +493,7 @@ export default function ClubManagementLandingPage() {
         if (e.target === modal) {
           modal.classList.remove('open')
           document.body.style.overflow = ''
+          lenisScroll.start()
         }
       }
       modal.addEventListener('click', fn)
@@ -445,6 +505,7 @@ export default function ClubManagementLandingPage() {
         if (m.classList.contains('open')) {
           m.classList.remove('open')
           document.body.style.overflow = ''
+          lenisScroll.start()
         }
       })
     }
@@ -454,10 +515,14 @@ export default function ClubManagementLandingPage() {
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.teams-tabs .team-tab'))
     const teamContents = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
     const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
-      teamTabs.forEach((t) => t.classList.remove('active'))
+      teamTabs.forEach((t) => {
+        t.classList.remove('active')
+        t.setAttribute('aria-selected', 'false')
+      })
       teamContents.forEach((c) => c.classList.remove('active'))
       const tab = tabEl ?? teamTabs.find((t) => t.dataset.team === teamId)
       tab?.classList.add('active')
+      tab?.setAttribute('aria-selected', 'true')
       const content = teamContents.find((c) => c.dataset.content === teamId)
       if (content) {
         content.classList.add('active')
@@ -482,7 +547,7 @@ export default function ClubManagementLandingPage() {
       }
       const p = idx / (n - 1)
       const y = st.start + p * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, y)
     }
     const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
     teamTabs.forEach((tab) => {
@@ -502,6 +567,7 @@ export default function ClubManagementLandingPage() {
 
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
+        lenisScroll.resize()
         ScrollTrigger.refresh()
       })
     }
@@ -538,6 +604,7 @@ export default function ClubManagementLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)
       window.removeEventListener('resize', onTeamResize)
@@ -586,7 +653,7 @@ export default function ClubManagementLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

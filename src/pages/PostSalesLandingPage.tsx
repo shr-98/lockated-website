@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -42,9 +44,9 @@ function initTeamUseCasesGsap(
     end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -104,21 +106,29 @@ html:has(.post-sales-root) {
   background: rgba(218, 119, 86, 0.1) !important;
   color: var(--brand) !important;
 }
-/* Teams: same stretch behavior as vendor-management (UI card column fills on pin) */
+/* Teams: compact mock card like vendor (no vertical stretch / empty frame) */
 .post-sales-root .teams-panel.active {
-  align-items: stretch !important;
+  align-items: start !important;
 }
 .post-sales-root .teams-panel.active > .team-info,
 .post-sales-root .teams-panel.active > .team-visual {
-  height: 100%;
+  height: auto !important;
   min-width: 0;
 }
 .post-sales-root .team-visual {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  min-width: 0;
-  max-width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-self: start !important;
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  aspect-ratio: auto !important;
+}
+@media (max-width: 767px) {
+  .post-sales-root .teams-panel.active .team-visual {
+    justify-self: center !important;
+  }
 }
 .post-sales-root .teams-layout {
   min-width: 0;
@@ -140,11 +150,23 @@ html:has(.post-sales-root) {
 .post-sales-root .usp-visual,
 .post-sales-root .wt-screen,
 .post-sales-root .tf-row,
-.post-sales-root .team-visual,
 .post-sales-root .uc-card,
 .post-sales-root .contact-form-card,
 .post-sales-root .trust-row {
   background-color: var(--bg-card) !important;
+}
+/* Team mock: same as vendor-management .wt-ui-card / .wt-ui-header / .wt-ui-body */
+.post-sales-root .team-visual {
+  background-color: var(--bg-card, #F0EAE1) !important;
+  border: 1px solid #c4b89d !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+}
+.post-sales-root .team-visual-header {
+  background-color: var(--bg, #F6F4EE) !important;
+  border-bottom: 1px solid #c4bcad !important;
+}
+.post-sales-root .team-visual-body {
+  background-color: var(--bg, #F6F4EE) !important;
 }
 `
 
@@ -559,6 +581,7 @@ ${chipSvgs}
       const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
       if (m?.[1]) teamIds.push(m[1])
     })
+    const lenisScroll = createLenisScrollSync()
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -574,7 +597,7 @@ ${chipSvgs}
       }
       const p = idx / (n - 1)
       const y = st.start + p * (st.end - st.start)
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, y)
     }
     const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
     teamTabs.forEach((tab) => {
@@ -601,6 +624,7 @@ ${chipSvgs}
 
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
+        lenisScroll.resize()
         ScrollTrigger.refresh()
       })
     }
@@ -628,6 +652,7 @@ ${chipSvgs}
 
     return () => {
       gsapCtx.revert()
+      lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)
       window.removeEventListener('resize', onResize)
@@ -667,7 +692,7 @@ ${chipSvgs}
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

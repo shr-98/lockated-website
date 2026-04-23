@@ -1,6 +1,8 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -29,9 +31,9 @@ function initLoyaltyTeamsGsap(
     end: () => `+=${n * window.innerHeight * LOYALTY_TEAM_STORY_SCROLL_PER_TAB_VH}`,
     pin: true,
     pinSpacing: true,
-    pinType: 'transform',
+    pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: true,
+    fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -92,14 +94,70 @@ html:has(.loyalty-rule-root) {
   flex-direction: column;
   justify-content: center;
 }
-.loyalty-rule-root .team-content-grid {
-  align-items: stretch !important;
-}
+/* Team mock: compact frame like Vendor / Post Sales / Snag (no vertical stretch) */
 .loyalty-rule-root .team-panel.active {
-  align-items: stretch !important;
+  align-items: start !important;
 }
-.loyalty-rule-root .team-panel.active > div {
-  height: 100%;
+.loyalty-rule-root .team-panel.active > .team-info {
+  height: auto !important;
+  min-width: 0;
+}
+.loyalty-rule-root .team-panel.active > .team-visual {
+  height: auto !important;
+  align-self: start !important;
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  aspect-ratio: auto !important;
+}
+.loyalty-rule-root .team-panel.active .team-visual-body {
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+}
+@media (max-width: 980px) {
+  .loyalty-rule-root .team-panel.active > .team-visual {
+    justify-self: center !important;
+  }
+}
+.loyalty-rule-root .teams-tabs {
+  background: transparent !important;
+}
+.loyalty-rule-root .teams-layout button.team-tab {
+  color: var(--dark, #2c2c2c) !important;
+  border: 1.5px solid transparent !important;
+  background-image: none !important;
+}
+.loyalty-rule-root .teams-layout button.team-tab:not(.active) {
+  background: var(--surface, #f0eae1) !important;
+}
+.loyalty-rule-root .teams-layout button.team-tab.active {
+  background: rgba(218, 119, 86, 0.05) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.loyalty-rule-root .teams-layout .team-tab-name {
+  color: rgba(44, 44, 44, 0.6) !important;
+}
+.loyalty-rule-root .teams-layout .team-tab.active .team-tab-name {
+  color: var(--dark, #2c2c2c) !important;
+}
+.loyalty-rule-root .teams-layout .team-tab-icon {
+  background: var(--cream, #f6f4ee) !important;
+  border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
+}
+.loyalty-rule-root .teams-layout .team-tab.active .team-tab-icon {
+  background: var(--primary, #da7756) !important;
+  border-color: var(--primary, #da7756) !important;
+}
+.loyalty-rule-root .teams-layout .team-tab.active .team-tab-icon svg {
+  color: var(--on-primary, #f6f4ee) !important;
+  stroke: currentColor !important;
+}
+.loyalty-rule-root .teams-layout .team-tab-icon svg {
+  color: rgba(44, 44, 44, 0.5) !important;
+  stroke: currentColor !important;
 }
 .loyalty-rule-root,
 .loyalty-rule-root * {
@@ -204,9 +262,7 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .feature-screen,
 .loyalty-rule-root .feature-screen-body,
 .loyalty-rule-root .wallet-screen-card,
-.loyalty-rule-root .int-flow-card,
-.loyalty-rule-root .team-visual,
-.loyalty-rule-root .team-visual-body {
+.loyalty-rule-root .int-flow-card {
   background: var(--surface, #F0EAE1) !important;
   color: var(--dark, #2C2C2C) !important;
 }
@@ -214,10 +270,24 @@ html:has(.loyalty-rule-root) {
   border: 1px solid rgba(196, 184, 157, 0.45) !important;
   box-shadow: 0 20px 48px rgba(44, 44, 44, 0.09) !important;
 }
-.loyalty-rule-root .feature-screen-header,
-.loyalty-rule-root .team-visual-header {
+.loyalty-rule-root .feature-screen-header {
   background: rgba(255, 255, 255, 0.72) !important;
   border-bottom: 1px solid rgba(196, 184, 157, 0.28) !important;
+}
+/* Team mock: vendor-management .wt-ui-card (not feature-screen) */
+.loyalty-rule-root .team-visual {
+  background: var(--surface, #F0EAE1) !important;
+  border: 1px solid #c4b89d !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  color: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .team-visual-header {
+  background: var(--cream, #F6F4EE) !important;
+  border-bottom: 1px solid #c4bcad !important;
+}
+.loyalty-rule-root .team-visual-body {
+  background: var(--cream, #F6F4EE) !important;
+  color: var(--dark, #2C2C2C) !important;
 }
 .loyalty-rule-root .feature-screen-body *,
 .loyalty-rule-root .team-visual-body * {
@@ -397,6 +467,7 @@ export default function LoyaltyRuleEngineLandingPage() {
     if (!bodyHtml) return
     const root = rootEl
     const loyaltyWindow: LoyaltyRuleWindow = window
+    const lenisScroll = createLenisScrollSync()
 
     // NAV SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -530,6 +601,10 @@ export default function LoyaltyRuleEngineLandingPage() {
     if (initialId) switchTeam(initialId, initialTeam)
     const teamIds = teamTabs.map((t) => t.getAttribute('data-team') || '').filter(Boolean)
     const teamsStoryTrigger = initLoyaltyTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+    requestAnimationFrame(() => {
+      lenisScroll.resize()
+      ScrollTrigger.refresh()
+    })
 
     // INDUSTRY POPUP DATA + handlers (for inline onclick)
     const industryData: Record<string, IndustryDatum> = {
@@ -619,6 +694,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       popupBody.innerHTML = html
       popup.classList.add('open')
       document.body.style.overflow = 'hidden'
+      lenisScroll.stop()
     }
 
     loyaltyWindow.closeIndustry = (_e: unknown, force?: boolean) => {
@@ -627,6 +703,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       if (force) {
         popup.classList.remove('open')
         document.body.style.overflow = ''
+        lenisScroll.start()
       }
     }
 
@@ -690,7 +767,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       const target = root.querySelector<HTMLElement>(id)
       if (!target) return false
       const top = target.getBoundingClientRect().top + window.scrollY - LOYALTY_NAV_OFFSET_PX - 4
-      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      scrollDocumentToY(lenisScroll.instance, top)
       return true
     }
     const anchorHandlers: Array<{ el: HTMLAnchorElement; fn: (e: MouseEvent) => void }> = []
@@ -730,6 +807,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       revealObserver.disconnect()
       teamAbort.abort()
       teamsStoryTrigger?.kill(true)
+      lenisScroll.destroy()
       if (raf !== null) window.cancelAnimationFrame(raf)
       delete loyaltyWindow.openIndustry
       delete loyaltyWindow.closeIndustry
@@ -752,7 +830,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

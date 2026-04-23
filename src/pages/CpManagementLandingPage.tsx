@@ -1,3 +1,4 @@
+import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /**
@@ -416,7 +417,7 @@ export default function CpManagementLandingPage() {
       ) : bodyHtml ? (
         <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       ) : (
-        <div style={{ padding: 24 }}>Loading…</div>
+        <LandingPageLoader />
       )}
     </div>
   )

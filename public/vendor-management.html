@@ -723,6 +723,8 @@
 
   /* TEAM USE CASES (scroll pin + progress: GSAP in app route) */
   .teams-section { background: var(--bg); }
+  /* Reduces scroll jank when panel height changes (browser scroll anchoring vs pin) */
+  .teams-section, #teamsStoryPin, .pin-spacer { overflow-anchor: none; }
   .teams-section .teams-story-pin {
     position: relative;
     will-change: transform;
