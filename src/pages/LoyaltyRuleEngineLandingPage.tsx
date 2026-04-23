@@ -1,4 +1,49 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
+
+const LOYALTY_NAV_OFFSET_PX = 68
+const LOYALTY_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+
+function initLoyaltyTeamsGsap(
+  root: HTMLElement,
+  opts: { teamTabs: HTMLElement[]; teamIds: string[]; switchTeam: (teamId: string, tabEl?: HTMLElement) => void },
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
+
+  return ScrollTrigger.create({
+    id: 'loyalty-teams-use-cases',
+    trigger: pin,
+    start: `top ${LOYALTY_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * LOYALTY_TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: true,
+    pinSpacing: true,
+    pinType: 'transform',
+    anticipatePin: 0,
+    fastScrollEnd: true,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
 
 type IndustryDatum = {
   eyebrow: string
@@ -16,6 +61,46 @@ type LoyaltyRuleWindow = Window & typeof globalThis & {
 }
 
 const LOYALTY_RULE_ISOLATION_CSS = `
+.loyalty-rule-root {
+  position: relative;
+  isolation: isolate;
+}
+html:has(.loyalty-rule-root) {
+  scroll-padding-top: ${LOYALTY_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.loyalty-rule-root section[id],
+.loyalty-rule-root .teams-section#teams {
+  scroll-margin-top: ${LOYALTY_NAV_OFFSET_PX + 4}px;
+}
+.loyalty-rule-root #navbar {
+  z-index: 10050;
+}
+.loyalty-rule-root #teamsStoryPin {
+  z-index: 1 !important;
+}
+.loyalty-rule-root .pin-spacer {
+  background: var(--band, #E8E2D6) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.loyalty-rule-root #teamsStoryPin {
+  background: var(--band, #E8E2D6) !important;
+  min-height: calc(100vh - ${LOYALTY_NAV_OFFSET_PX}px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.loyalty-rule-root .team-content-grid {
+  align-items: stretch !important;
+}
+.loyalty-rule-root .team-panel.active {
+  align-items: stretch !important;
+}
+.loyalty-rule-root .team-panel.active > div {
+  height: 100%;
+}
 .loyalty-rule-root,
 .loyalty-rule-root * {
   color-scheme: only light !important;
@@ -413,18 +498,38 @@ export default function LoyaltyRuleEngineLandingPage() {
       })
     })
 
-    // TEAMS TABS
+    // TEAMS TABS (click + vendor-style pinned story on scroll)
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-panel'))
+    const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
+      teamTabs.forEach((x) => x.classList.remove('active'))
+      teamPanels.forEach((p) => p.classList.remove('active'))
+      tabEl?.classList.add('active')
+      root.querySelector<HTMLElement>('#tp-' + teamId)?.classList.add('active')
+    }
+    const teamAbort = new AbortController()
+    const { signal: teamSignal } = teamAbort
     teamTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const t = tab.getAttribute('data-team')
-        teamTabs.forEach((x) => x.classList.remove('active'))
-        tab.classList.add('active')
-        teamPanels.forEach((p) => p.classList.remove('active'))
-        if (t) root.querySelector<HTMLElement>('#tp-' + t)?.classList.add('active')
-      })
+      const teamId = tab.getAttribute('data-team') || ''
+      if (!teamId) return
+      const activate = (e: Event) => {
+        e.preventDefault()
+        switchTeam(teamId, tab)
+      }
+      tab.addEventListener('click', activate, { signal: teamSignal })
+      tab.addEventListener(
+        'keydown',
+        (e) => {
+          if (e.key === 'Enter' || e.key === ' ') activate(e)
+        },
+        { signal: teamSignal },
+      )
     })
+    const initialTeam = teamTabs.find((t) => t.classList.contains('active'))
+    const initialId = initialTeam?.getAttribute('data-team') || ''
+    if (initialId) switchTeam(initialId, initialTeam)
+    const teamIds = teamTabs.map((t) => t.getAttribute('data-team') || '').filter(Boolean)
+    const teamsStoryTrigger = initLoyaltyTeamsGsap(root, { teamTabs, teamIds, switchTeam })
 
     // INDUSTRY POPUP DATA + handlers (for inline onclick)
     const industryData: Record<string, IndustryDatum> = {
@@ -580,23 +685,42 @@ export default function LoyaltyRuleEngineLandingPage() {
     window.addEventListener('resize', onScrollUsp)
     updateParallax()
 
-    // Smooth in-page anchors within this landing page
+    // Smooth in-page anchors within this landing page (with fixed-nav offset).
+    const smoothScrollTo = (id: string) => {
+      const target = root.querySelector<HTMLElement>(id)
+      if (!target) return false
+      const top = target.getBoundingClientRect().top + window.scrollY - LOYALTY_NAV_OFFSET_PX - 4
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      return true
+    }
+    const anchorHandlers: Array<{ el: HTMLAnchorElement; fn: (e: MouseEvent) => void }> = []
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-      a.addEventListener('click', (e) => {
+      const fn = (e: MouseEvent) => {
         const href = a.getAttribute('href')
-        if (!href) return
-        const t = root.querySelector<HTMLElement>(href)
-        if (!t) return
+        if (!href || href === '#') return
+        if (!href.startsWith('#')) return
+        if (!root.querySelector<HTMLElement>(href)) return
         e.preventDefault()
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
+        smoothScrollTo(href)
+      }
+      a.addEventListener('click', fn)
+      anchorHandlers.push({ el: a, fn })
     })
+    if (window.location.hash) {
+      window.requestAnimationFrame(() => smoothScrollTo(window.location.hash))
+    }
+    const onHashChange = () => {
+      if (window.location.hash) smoothScrollTo(window.location.hash)
+    }
+    window.addEventListener('hashchange', onHashChange)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('scroll', onScrollParallax)
       window.removeEventListener('scroll', onScrollUsp)
       window.removeEventListener('resize', onScrollUsp)
+      window.removeEventListener('hashchange', onHashChange)
+      anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       window.clearTimeout(t1)
       window.clearTimeout(t2)
       window.clearTimeout(t3)
@@ -604,6 +728,8 @@ export default function LoyaltyRuleEngineLandingPage() {
       window.clearTimeout(t5)
       window.clearTimeout(t6)
       revealObserver.disconnect()
+      teamAbort.abort()
+      teamsStoryTrigger?.kill(true)
       if (raf !== null) window.cancelAnimationFrame(raf)
       delete loyaltyWindow.openIndustry
       delete loyaltyWindow.closeIndustry

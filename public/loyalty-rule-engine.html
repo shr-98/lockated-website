@@ -790,7 +790,10 @@ nav.scrolled { background: rgba(246,244,238,0.95); box-shadow: 0 4px 32px rgba(4
 .popup-metric-label { font-size: 11px; color: rgba(44,44,44,0.5); margin-top: 4px; }
 
 /* TEAMS USE CASES */
-.teams-section { padding: 100px 80px; max-width: 1400px; margin: 0 auto; }
+.teams-section { padding: 0; background: var(--band); border-top: 1px solid rgba(196,184,157,0.28); border-bottom: 1px solid rgba(196,184,157,0.28); }
+.teams-inner { max-width: 1400px; margin: 0 auto; padding: 100px 80px; }
+.teams-story-progress{height:3px;background:rgba(44,44,44,0.08);border-radius:999px;overflow:hidden;margin-top:18px;margin-bottom:18px}
+#teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,0.3));transform:scaleX(0);transform-origin:left center}
 .teams-tabs { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(196,184,157,0.3); margin-bottom: 48px; margin-top: 48px; }
 .teams-tabs::-webkit-scrollbar { display: none; }
 .team-tab { display: flex; align-items: center; gap: 8px; padding: 12px 22px; font-size: 13px; font-weight: 500; color: rgba(44,44,44,0.5); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.25s; white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font); }
@@ -2271,9 +2274,12 @@ footer { background: var(--dark); padding: 60px 80px 40px; }
 </div>
 <!-- TEAMS USE CASES -->
 <section class="teams-section" id="teams">
+<div id="teamsStoryPin">
+<div class="teams-inner">
 <div class="section-eyebrow reveal">Teams Use Cases</div>
 <h2 class="section-title reveal">Every team uses it <span class="accent">differently.</span> All of them benefit.</h2>
 <p class="section-sub reveal" style="margin-bottom:0">From marketing to finance to IT — the rule engine serves every stakeholder with exactly what they need.</p>
+<div class="teams-story-progress" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
 <div class="teams-tabs">
 <button class="team-tab active" data-team="marketing">
 <svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
@@ -2523,6 +2529,8 @@ footer { background: var(--dark); padding: 60px 80px 40px; }
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <div style="background:var(--cream);border-radius:8px;padding:10px;border:1px solid rgba(196,184,157,0.2);text-align:center"><div style="font-size:18px;font-weight:800;color:var(--dark)">147</div><div style="font-size:10px;color:rgba(44,44,44,0.45)">Events today</div></div>
 <div style="background:var(--cream);border-radius:8px;padding:10px;border:1px solid rgba(196,184,157,0.2);text-align:center"><div style="font-size:18px;font-weight:800;color:var(--dark)">0</div><div style="font-size:10px;color:rgba(44,44,44,0.45)">Sync errors</div></div>
+</div>
+</div>
 </div>
 </div>
 </div>
