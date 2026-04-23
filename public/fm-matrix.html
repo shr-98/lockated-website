@@ -117,6 +117,8 @@ nav.scrolled{background:rgba(246,244,238,.96);box-shadow:0 4px 30px rgba(44,44,4
 
 /* TEAM USE CASES (Vendor Management–style layout) */
 .teams-section{background:var(--band)}
+.teams-story-progress{height:3px;background:rgba(44,44,44,.08);border-radius:999px;overflow:hidden;margin-top:18px}
+#teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,.3));transform:scaleX(0);transform-origin:left center}
 .teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:48px;align-items:start}
 .teams-tabs{display:flex;flex-direction:column;gap:4px}
 .fm-matrix-team-tab{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;background:var(--surface);transition:all .2s ease}
@@ -127,7 +129,8 @@ nav.scrolled{background:rgba(246,244,238,.96);box-shadow:0 4px 30px rgba(44,44,4
 .fm-matrix-team-tab-text{font-size:14px;font-weight:600;color:rgba(44,44,44,.6)}
 .fm-matrix-team-tab.active .fm-matrix-team-tab-text{color:var(--dark)}
 .fm-matrix-teams-panel{display:none}
-.fm-matrix-teams-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.fm-matrix-teams-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.fm-matrix-teams-panel.active>div{height:100%}
 .fm-matrix-team-title{font-size:24px;font-weight:800;letter-spacing:-.8px;color:var(--dark);margin-bottom:10px}
 .fm-matrix-team-desc{font-size:15px;color:rgba(44,44,44,.6);line-height:1.7;margin-bottom:24px}
 .fm-matrix-team-features{display:flex;flex-direction:column;gap:10px}
@@ -343,11 +346,14 @@ footer{background:var(--bg-cream);padding:56px 48px 36px;border-top:1px solid va
 
 <!-- 6. TEAM USE CASES -->
 <section class="section teams-section" id="teams">
-  <div class="section-inner">
-    <div class="section-eyebrow"><i class="fas fa-users"></i> TEAM USE CASES</div>
-    <div class="section-title reveal">Every function on one<br>governed operating layer</div>
-    <div class="section-sub reveal">How FM, finance, security, and occupant-facing teams use FM Matrix day to day — without switching tools or losing audit context.</div>
-    <div class="teams-layout">
+  <!-- Header inside pin so scroll doesn’t split title from content (Vendor Management behavior) -->
+  <div id="teamsStoryPin">
+    <div class="section-inner">
+      <div class="section-eyebrow"><i class="fas fa-users"></i> TEAM USE CASES</div>
+      <div class="section-title reveal">Every function on one<br>governed operating layer</div>
+      <div class="section-sub reveal">How FM, finance, security, and occupant-facing teams use FM Matrix day to day — without switching tools or losing audit context.</div>
+      <div class="teams-story-progress" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
+      <div class="teams-layout">
       <div class="teams-tabs">
         <div class="fm-matrix-team-tab active" data-team="ops" role="button" tabindex="0"><div class="fm-matrix-team-tab-icon"><i class="fas fa-headset"></i></div><span class="fm-matrix-team-tab-text">FM Operations</span></div>
         <div class="fm-matrix-team-tab" data-team="finance" role="button" tabindex="0"><div class="fm-matrix-team-tab-icon"><i class="fas fa-file-invoice-dollar"></i></div><span class="fm-matrix-team-tab-text">Finance & Billing</span></div>
@@ -428,6 +434,7 @@ footer{background:var(--bg-cream);padding:56px 48px 36px;border-top:1px solid va
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>

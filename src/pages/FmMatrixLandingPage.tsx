@@ -1,4 +1,51 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+void gsap.registerPlugin(ScrollTrigger)
+
+/** Pinned sections + #navbar must stay below a fixed 68px header. */
+const FM_NAV_OFFSET_PX = 68
+/** Team Use Cases: scroll distance per tab (smaller = faster progression). */
+const FM_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+
+function initFmTeamUseCasesGsap(
+  root: HTMLElement,
+  opts: { teamTabs: HTMLElement[]; teamIds: string[]; switchTeam: (teamId: string, tabEl?: HTMLElement) => void },
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
+
+  return ScrollTrigger.create({
+    id: 'fm-teams-use-cases',
+    trigger: pin,
+    start: `top ${FM_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * FM_TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: true,
+    pinSpacing: true,
+    pinType: 'transform',
+    anticipatePin: 0,
+    fastScrollEnd: true,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
 
 /**
  * `public/fm-matrix.html` ships its own `.reveal` animation. The app `index.css`
@@ -6,6 +53,51 @@ import { useEffect, useRef, useState } from 'react'
  * as Vendor Management).
  */
 const FM_MATRIX_ISOLATION_CSS = `
+.fm-matrix-root {
+  position: relative;
+  isolation: isolate;
+}
+/* Window scroll + anchor jumps should land below fixed nav (Vendor-style). */
+html:has(.fm-matrix-root) {
+  scroll-padding-top: ${FM_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.fm-matrix-root section[id],
+.fm-matrix-root .teams-section#teams {
+  scroll-margin-top: ${FM_NAV_OFFSET_PX + 4}px;
+}
+/* Keep the fixed nav above pinned content (ScrollTrigger may set z-index on pin). */
+.fm-matrix-root #navbar {
+  z-index: 10050;
+}
+.fm-matrix-root #teamsStoryPin {
+  z-index: 1 !important;
+}
+/* Pin-spacer background: avoid “gap” seams while pinned. */
+.fm-matrix-root .pin-spacer {
+  background: var(--band, #E8E2D6) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.fm-matrix-root #teamsStoryPin {
+  background: var(--band, #E8E2D6) !important;
+  min-height: calc(100vh - ${FM_NAV_OFFSET_PX}px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.fm-matrix-root .teams-layout {
+  align-items: stretch !important;
+  flex: 1;
+}
+.fm-matrix-root .fm-matrix-teams-panel.active {
+  align-items: stretch !important;
+}
+.fm-matrix-root .fm-matrix-teams-panel.active > div {
+  height: 100%;
+}
+
 .fm-matrix-root .reveal {
   opacity: 0 !important;
   transform: translateY(40px) !important;
@@ -237,6 +329,10 @@ export default function FmMatrixLandingPage() {
     const initialTeam = teamTabs.find((t) => t.classList.contains('active'))
     if (initialTeam?.dataset.team) switchFmTeam(initialTeam.dataset.team, initialTeam)
 
+    // Vendor-style: pin #teams and advance tabs via scroll
+    const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
+    const teamsStoryTrigger = initFmTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam: switchFmTeam })
+
     // Walkthrough tabs
     type WalkthroughDatum = { title: string; name: string; desc: string; highlights: string[] }
     const wd: WalkthroughDatum[] = [
@@ -332,23 +428,47 @@ export default function FmMatrixLandingPage() {
       })
     })
 
-    // Smooth anchor scroll for in-page links
+    // Smooth anchor scroll for in-page links (with fixed-nav offset).
+    // Some browsers ignore scroll-margin-top for scrollIntoView; do manual positioning.
+    const smoothScrollTo = (id: string) => {
+      const target = root.querySelector<HTMLElement>(id)
+      if (!target) return false
+      const top = target.getBoundingClientRect().top + window.scrollY - FM_NAV_OFFSET_PX - 4
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      return true
+    }
+
+    const anchorHandlers: Array<{ el: HTMLAnchorElement; fn: (e: MouseEvent) => void }> = []
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-      a.addEventListener('click', (e) => {
+      const fn = (e: MouseEvent) => {
         const href = a.getAttribute('href')
-        if (!href) return
-        const t = root.querySelector<HTMLElement>(href)
-        if (!t) return
+        if (!href || href === '#') return
+        if (!href.startsWith('#')) return
+        if (!root.querySelector<HTMLElement>(href)) return
         e.preventDefault()
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
+        smoothScrollTo(href)
+      }
+      a.addEventListener('click', fn)
+      anchorHandlers.push({ el: a, fn })
     })
+
+    // If route loads with a hash, apply the same offset once content exists.
+    if (window.location.hash) {
+      window.requestAnimationFrame(() => smoothScrollTo(window.location.hash))
+    }
+    const onHashChange = () => {
+      if (window.location.hash) smoothScrollTo(window.location.hash)
+    }
+    window.addEventListener('hashchange', onHashChange)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
       revealObserver.disconnect()
       countersObserver.disconnect()
       teamTabsAbort.abort()
+      teamsStoryTrigger?.kill(true)
+      window.removeEventListener('hashchange', onHashChange)
+      anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
     }
   }, [bodyHtml])
 
