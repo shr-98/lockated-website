@@ -85,8 +85,7 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .pin-spacer {
   overflow-anchor: none;
 }
-/* GSAP pin uses position:fixed — content taller than the viewport is clipped by the
- * screen unless we cap height and put the long part (tab rail + team row) in .teams-main. */
+/* Team use cases (reference): 3 columns — 280px tabs | scrollable copy | mock. Pin caps height; .team-info scrolls, tabs+mock stay aligned. */
 .loyalty-rule-root #teamsStoryPin {
   z-index: 1 !important;
   position: relative;
@@ -115,8 +114,7 @@ html:has(.loyalty-rule-root) {
   flex-direction: column !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  /* Tighter vertical padding in SPA so more rows fit in the scrollport while pinned. */
-  padding: 40px 80px 12px !important;
+  padding: 48px 80px 20px !important;
   overflow: hidden !important;
 }
 .loyalty-rule-root .teams-inner > .section-eyebrow,
@@ -125,50 +123,66 @@ html:has(.loyalty-rule-root) {
   flex: 0 0 auto !important;
 }
 .loyalty-rule-root .teams-inner .section-sub {
-  margin-bottom: 20px !important;
+  margin-bottom: 0 !important;
 }
 .loyalty-rule-root .teams-inner .teams-main {
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  min-width: 0;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.loyalty-rule-root .teams-inner .teams-story-progress {
+  margin-top: 24px;
+  flex: 0 0 auto !important;
+}
+.loyalty-rule-root .teams-layout {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  max-height: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+  margin-top: 48px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+.loyalty-rule-root .team-panels {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+.loyalty-rule-root .team-panel.active {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  display: grid !important;
+  overflow: hidden !important;
+  align-items: start !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  width: 100% !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 8px !important;
-  scroll-padding-bottom: 16px !important;
-}
-.loyalty-rule-root .team-panels {
-  overflow: visible !important;
-}
-.loyalty-rule-root .teams-inner .teams-story-progress {
-  margin-top: 20px;
-  flex: 0 0 auto !important;
-}
-.loyalty-rule-root .teams-layout {
-  min-width: 0;
-  align-items: start;
-}
-.loyalty-rule-root .team-panels {
-  min-width: 0;
-}
-/*
- * Wider copy column than the mock: 1fr+1fr squeezes the center at medium widths. Let the
- * text track take ~55–60% and the mock cap at 420px so body copy + bullets stay readable.
- */
-.loyalty-rule-root .team-panel.active {
-  align-items: start !important;
-  /* Copy + mock: 1fr grows; mock cap min(420px, 50%) so mid-width viewports do not starve the center. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
-  gap: 40px !important;
-  width: 100% !important;
-}
-.loyalty-rule-root .team-panel.active > .team-info {
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  overflow: visible !important;
   color: var(--dark, #2C2C2C) !important;
 }
 .loyalty-rule-root .team-panel.active > .team-info .team-name {
@@ -193,15 +207,20 @@ html:has(.loyalty-rule-root) {
 }
 .loyalty-rule-root .team-panel.active > .team-visual {
   min-width: 0 !important;
-  height: auto !important;
   align-self: start !important;
-  justify-self: end !important;
+  justify-self: start !important;
   width: 100% !important;
-  max-width: min(100%, 420px) !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
   min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
   display: flex !important;
   flex-direction: column !important;
   aspect-ratio: auto !important;
+  box-sizing: border-box !important;
 }
 .loyalty-rule-root .team-panel.active .team-visual-body {
   flex: 0 0 auto !important;
@@ -209,18 +228,25 @@ html:has(.loyalty-rule-root) {
   min-width: 0 !important;
 }
 @media (max-width: 980px) {
+  .loyalty-rule-root .teams-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+  }
   .loyalty-rule-root .team-panel.active {
     grid-template-columns: 1fr !important;
   }
+  .loyalty-rule-root .team-panel.active > .team-info {
+    max-height: min(52vh, 100%) !important;
+  }
   .loyalty-rule-root .team-panel.active > .team-visual {
     justify-self: center !important;
-    max-width: 420px !important;
+    max-width: min(420px, 100%) !important;
+    max-height: min(60vh, 100%) !important;
   }
   .loyalty-rule-root .teams-inner {
     padding: 72px 32px 72px !important;
   }
 }
-/* No GSAP pin below 768px — undo viewport cap + inner scroll so mobile layout matches static HTML. */
 @media (max-width: 767px) {
   .loyalty-rule-root #teamsStoryPin {
     max-height: none !important;
@@ -234,8 +260,37 @@ html:has(.loyalty-rule-root) {
   }
   .loyalty-rule-root .teams-inner .teams-main {
     flex: none !important;
+    display: block !important;
     overflow: visible !important;
-    padding-bottom: 0 !important;
+  }
+  .loyalty-rule-root .teams-layout {
+    display: block !important;
+    flex: none !important;
+    max-height: none !important;
+    margin-top: 28px !important;
+    overflow: visible !important;
+  }
+  .loyalty-rule-root .team-panels {
+    display: block !important;
+    flex: none !important;
+    overflow: visible !important;
+  }
+  .loyalty-rule-root .team-panel.active {
+    display: block !important;
+    flex: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .loyalty-rule-root .team-panel.active > .team-info {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  .loyalty-rule-root .team-panel.active > .team-visual {
+    max-height: none !important;
+    overflow: visible !important;
+    margin-top: 28px;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 .loyalty-rule-root .teams-tabs {
@@ -483,11 +538,6 @@ html:has(.loyalty-rule-root) {
     transform: none !important;
     transition: none !important;
   }
-}
-/* Do not cap .team-info in the teams section (that clipped KPI + long copy when pinned). */
-.loyalty-rule-root .teams-section .team-info {
-  max-height: none !important;
-  overflow: visible !important;
 }
 .loyalty-rule-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));

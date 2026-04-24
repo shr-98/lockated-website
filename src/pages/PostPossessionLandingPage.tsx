@@ -91,28 +91,86 @@ html:has(.post-possession-root) {
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
-.post-possession-root #teamsStoryPin > .container:first-of-type {
-  flex: 0 0 auto !important;
-}
-.post-possession-root #teamsStoryPin > .container:nth-of-type(2) {
+/* Single .container (matches vendor-management: header + main + progress in one column). */
+.post-possession-root #teamsStoryPin > .container {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+.post-possession-root #teamsStoryPin > .container > .sec-header {
+  flex: 0 0 auto !important;
 }
 .post-possession-root #teamsStoryPin .teams-main {
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  overflow-y: auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.post-possession-root #teamsStoryPin .teams-layout {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-height: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+  margin-top: 48px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+.post-possession-root #teamsStoryPin .team-panels {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+.post-possession-root #teamsStoryPin .team-panel.active {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+  align-items: start !important;
+}
+.post-possession-root #teamsStoryPin .team-panel.active > .team-info {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 32px !important;
-  scroll-padding-bottom: 24px !important;
+}
+.post-possession-root #teamsStoryPin .team-panel.active > .team-visual {
+  align-self: start !important;
+  justify-self: start !important;
+  width: 100% !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box !important;
 }
 .post-possession-root #teamsStoryPin .teams-story-progress {
   flex: 0 0 auto !important;
+  margin-top: 24px !important;
 }
 .post-possession-root .pin-spacer {
   background: var(--bg) !important;
@@ -120,21 +178,20 @@ html:has(.post-possession-root) {
   border: none !important;
   box-shadow: none !important;
 }
-.post-possession-root .team-panel.active {
-  align-items: start !important;
-}
-.post-possession-root .team-panel.active .team-visual {
-  height: auto !important;
-  align-self: start !important;
-  justify-self: end !important;
-  width: 100% !important;
-  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
-  min-height: 0 !important;
-  aspect-ratio: auto !important;
-}
 @media (max-width: 900px) {
-  .post-possession-root .team-panel.active .team-visual {
+  .post-possession-root #teamsStoryPin .team-panel.active {
+    grid-template-columns: 1fr !important;
+  }
+  .post-possession-root #teamsStoryPin .team-panel.active > .team-info {
+    max-height: min(50vh, 100%) !important;
+  }
+  .post-possession-root #teamsStoryPin .team-panel.active > .team-visual {
     justify-self: center !important;
+    max-height: min(58vh, 100%) !important;
+  }
+  .post-possession-root #teamsStoryPin .teams-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
   }
 }
 /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
@@ -144,17 +201,25 @@ html:has(.post-possession-root) {
     display: block !important;
     overflow: visible !important;
   }
-  .post-possession-root #teamsStoryPin > .container:first-of-type,
-  .post-possession-root #teamsStoryPin > .container:nth-of-type(2) {
+  .post-possession-root #teamsStoryPin > .container {
     flex: none !important;
     display: block !important;
     min-height: 0 !important;
     overflow: visible !important;
   }
-  .post-possession-root #teamsStoryPin .teams-main {
+  .post-possession-root #teamsStoryPin .teams-main,
+  .post-possession-root #teamsStoryPin .teams-layout,
+  .post-possession-root #teamsStoryPin .team-panels,
+  .post-possession-root #teamsStoryPin .team-panel.active {
+    display: block !important;
     flex: none !important;
+    max-height: none !important;
     overflow: visible !important;
-    padding-bottom: 0 !important;
+  }
+  .post-possession-root #teamsStoryPin .team-panel.active > .team-info,
+  .post-possession-root #teamsStoryPin .team-panel.active > .team-visual {
+    overflow: visible !important;
+    max-height: none !important;
   }
 }
 .post-possession-root h1,
@@ -165,11 +230,8 @@ html:has(.post-possession-root) {
 .post-possession-root h6 {
   font-family: var(--font-display, 'Poppins'), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
 }
-.post-possession-root button.wt-tab,
-.post-possession-root button.team-tab {
-  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
-}
 .post-possession-root button.wt-tab {
+  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
   background: transparent !important;
 }
 .post-possession-root button.wt-tab:hover {
@@ -180,17 +242,60 @@ html:has(.post-possession-root) {
   background: rgba(218, 119, 86, 0.1) !important;
   color: var(--brand) !important;
 }
+/* Team tabs: vendor-management card style (overrides Tailwind / preflight in SPA) */
 .post-possession-root button.team-tab {
-  background: transparent !important;
+  font-family: var(--font-body), 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 16px 18px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid transparent !important;
+  background: var(--bg-card, #F0EAE1) !important;
+  color: inherit !important;
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+  transition: border-color 0.2s ease, background 0.2s ease !important;
+  box-shadow: none !important;
 }
 .post-possession-root button.team-tab:hover {
-  background: var(--bg-card) !important;
+  border-color: rgba(44, 44, 44, 0.12) !important;
+  background: var(--bg-card, #F0EAE1) !important;
+  color: inherit !important;
 }
 .post-possession-root button.team-tab.active {
-  background: var(--brand) !important;
-  color: var(--on-primary) !important;
-  border-color: var(--brand) !important;
+  border-color: var(--brand, #da7756) !important;
+  background: rgba(218, 119, 86, 0.05) !important;
+  color: inherit !important;
 }
+.post-possession-root .team-tab-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: var(--bg, #F6F4EE) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: 1px solid var(--border-soft, rgba(44, 44, 44, 0.1)) !important;
+}
+.post-possession-root .team-tab-icon i { font-size: 15px !important; color: rgba(44, 44, 44, 0.5) !important; }
+.post-possession-root button.team-tab.active .team-tab-icon {
+  background: var(--brand, #da7756) !important;
+  border-color: var(--brand, #da7756) !important;
+}
+.post-possession-root button.team-tab.active .team-tab-icon i { color: var(--on-primary, #F6F4EE) !important; }
+.post-possession-root .team-tab-text {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: rgba(44, 44, 44, 0.6) !important;
+}
+.post-possession-root button.team-tab.active .team-tab-text { color: var(--text, #2C2C2C) !important; }
 .post-possession-root .form-input,
 .post-possession-root select.form-input,
 .post-possession-root textarea.form-input {
@@ -224,10 +329,6 @@ html:has(.post-possession-root) {
 }
 .post-possession-root .team-visual-body {
   background-color: var(--bg, #F6F4EE) !important;
-}
-.post-possession-root #teams .team-info {
-  max-height: none !important;
-  overflow: visible !important;
 }
 .post-possession-root #walkthrough .wt-info {
   max-height: min(72vh, calc(100vh - 200px));
