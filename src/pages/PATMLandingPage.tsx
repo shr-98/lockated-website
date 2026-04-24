@@ -9,12 +9,25 @@ void gsap.registerPlugin(ScrollTrigger)
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
+/**
+ * Standalone `public/patm.html` uses `.reveal` + `.in-view` for scroll reveals.
+ * The app shell’s `index.css` uses `.reveal` + `.reveal--in` with blur.
+ * For parity with `VendorManagementLandingPage`, the route scopes `.reveal` / `.visible`.
+ * Team use cases: Snag 360 keeps `.reveal` and un-hides with IO + route CSS. PATM does the same:
+ * high-specificity overrides for `#teams` + immediate `visible` / `in-view` in the team effect
+ * (stripping `reveal` was fighting global sheets and could leave the block invisible while pinned).
+ */
 /** Fixed nav height in `public/patm.html` — pin start + scroll padding must match. */
 const PATM_NAV_OFFSET_PX = 68
-/** Pinned two-column team story only at this width+ (matches public/patm.html stacked breakpoint). */
-const PATM_TEAMS_PIN_MIN_WIDTH_PX = 1101
-/** Team use cases: viewport heights of scroll per tab (higher = more time to read each team while scrolling). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 1.0
+/** Pin + team story: same as FM Matrix / Lease Management (min-width: 768px). */
+const PATM_TEAMS_PIN_MIN_WIDTH_PX = 768
+/**
+ * Two-column (tab rail + panels) only at this width+. Below this, `patm.html` stacks tabs over panels
+ * — isolation CSS must not force 2 columns in that range, or the scroll story won’t look like the other landings.
+ */
+const PATM_TEAMS_TWO_COL_MIN_PX = 1101
+/** Team use cases: same scroll length per tab as Snag 360 (`snag-360.html` + `Snag360LandingPage`). */
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 /** Scoped overrides so app Tailwind / global styles do not force white shells, buttons, or forms. */
 const PATM_ISOLATION_CSS = `
@@ -39,8 +52,23 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Progress bar: outer wrapper + track + fill (same pattern as Snag360 / loyalty-rule-engine). */
-.patm-root #teamsStoryPin > .teams-story-progress {
+/* Heading is outside #teamsStoryPin; pin is tab rail + panels + progress (FM Matrix-style). */
+.patm-root .teams-section .teams-section-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+/* Stacking: like vendor-mgmt route — do not over-stack; pin uses z-index 1. */
+.patm-root .teams-section#teams.patm-teams--app {
+  position: relative !important;
+}
+.patm-root #teamsStoryPin {
+  margin-top: 32px !important;
+}
+.patm-root .teams-story-pin-inner {
+  padding-top: 0 !important;
+}
+/* Progress: same track + fill + spacing as Snag360LandingPage (footer of pin). */
+.patm-root #teamsStoryPin .teams-story-progress {
   display: block !important;
   width: 100% !important;
   max-width: 480px !important;
@@ -72,14 +100,17 @@ html:has(.patm-root) {
   border-radius: 100px !important;
   transform-origin: left center !important;
 }
-/* Two-column + GSAP pin only on wide viewports. Below 1100px the HTML stacks — fixed pin height
-   was clipping the tab rail, headings, and progress (768px was stuck between 767/768 media rules). */
+/* Pin shell: 768+ — same flex + background pattern as Snag360 (scroll story + GSAP). */
 @media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) {
   .patm-root #teamsStoryPin {
     z-index: 1 !important;
+    background: var(--cream, #F6F4EE) !important;
     will-change: auto !important;
     display: flex !important;
     flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
     height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
     max-height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
     min-height: 0 !important;
@@ -87,17 +118,28 @@ html:has(.patm-root) {
     overflow: hidden !important;
     overflow-x: hidden !important;
   }
-  .patm-root #teamsStoryPin > .teams-header {
-    flex: 0 0 auto !important;
+  .patm-root #teamsStoryPin .teams-story-pin-inner {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
   }
+  /* Room above footer progress: mirrors Snag .teams-main padding-bottom 32px. */
+  .patm-root #teamsStoryPin .teams-layout {
+    padding-bottom: 32px !important;
+  }
+}
+/* Two-column (rail + panels) only 1101+ — same as public/patm.html @media (max-width: 1100). */
+@media (min-width: ${PATM_TEAMS_TWO_COL_MIN_PX}px) {
   .patm-root #teamsStoryPin .teams-layout {
     flex: 1 1 auto !important;
     min-height: 0 !important;
     min-width: 0 !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 304px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
     grid-template-rows: minmax(0, 1fr) !important;
-    gap: 40px !important;
+    gap: clamp(28px, 3vw, 48px) !important;
     align-items: stretch !important;
     margin-top: 0 !important;
     overflow: hidden !important;
@@ -114,14 +156,6 @@ html:has(.patm-root) {
     scrollbar-gutter: stable;
     touch-action: pan-y !important;
   }
-  .patm-root #teamsStoryPin .teams-tabs::-webkit-scrollbar {
-    display: block !important;
-    width: 6px;
-  }
-  .patm-root #teamsStoryPin .teams-tabs::-webkit-scrollbar-thumb {
-    background: rgba(44, 44, 44, 0.28);
-    border-radius: 4px;
-  }
   .patm-root #teamsStoryPin .teams-panels {
     min-width: 0 !important;
     min-height: 0 !important;
@@ -136,8 +170,9 @@ html:has(.patm-root) {
     min-height: 0 !important;
     max-height: 100% !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
-    align-items: start !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: clamp(28px, 3vw, 48px) !important;
+    align-items: center !important;
     overflow: hidden !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-info {
@@ -150,13 +185,64 @@ html:has(.patm-root) {
     -webkit-overflow-scrolling: touch !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-visual {
-    align-self: start !important;
+    align-self: center !important;
+    justify-self: center !important;
     min-height: 0 !important;
     max-height: 100% !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+}
+/* 768–1100: patm.html stacks (tabs over copy); still pinned like FM, no forced 2-col. */
+@media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) and (max-width: 1100px) {
+  .patm-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    gap: 28px !important;
+    margin-top: 0 !important;
+    align-items: start !important;
+    align-content: stretch !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .teams-tabs {
+    max-height: none !important;
+    min-height: 0 !important;
+    align-self: stretch !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+  }
+  .patm-root #teamsStoryPin .teams-panels {
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active > .team-info {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active > .team-visual {
+    display: none !important;
   }
 }
 .patm-root .pin-spacer {
@@ -166,14 +252,14 @@ html:has(.patm-root) {
   box-shadow: none !important;
 }
 .patm-root .team-content.active {
-  align-items: start !important;
+  align-items: center !important;
 }
 .patm-root .team-content.active > .team-visual {
   height: auto !important;
-  align-self: start !important;
-  justify-self: end !important;
+  align-self: center !important;
+  justify-self: center !important;
   width: 100% !important;
-  max-width: min(100%, var(--team-visual-max-w, 300px)) !important;
+  max-width: min(100%, var(--team-visual-max-w, 420px)) !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -182,8 +268,8 @@ html:has(.patm-root) {
 .patm-root .team-content.active .team-visual-body {
   flex: 0 0 auto !important;
 }
-/* Stacked layout (≤1100px): document scroll; no fixed-height pin. Matches patm.html @media 1100px. */
-@media (max-width: 1100px) {
+/* Mobile (≤767px): no fixed-height pin box — no GSAP pin here; document scroll. */
+@media (max-width: 767px) {
   .patm-root .teams-section#teams,
   .patm-root .teams-section#teams .teams-inner {
     overflow: visible !important;
@@ -213,7 +299,7 @@ html:has(.patm-root) {
     max-height: none !important;
     overflow: visible !important;
   }
-  .patm-root #teamsStoryPin > .teams-story-progress,
+  .patm-root #teamsStoryPin .teams-story-progress,
   .patm-root .teams-section .teams-story-progress {
     display: block !important;
     width: 100% !important;
@@ -226,7 +312,7 @@ html:has(.patm-root) {
   }
 }
 @media (max-width: 768px) {
-  .patm-root #teams .teams-header {
+  .patm-root #teams .teams-section-header {
     min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
@@ -386,35 +472,51 @@ html:has(.patm-root) {
   color: rgba(44, 44, 44, 0.5) !important;
   opacity: 1 !important;
 }
-/* Larger team tabs (tap targets) + bottom padding so the last item clears the screen / home indicator. */
+/* Pinned #teams tab rail: compact sizing like Snag 360 (gap 6, 12px label, 30px icon). */
 .patm-root #teams .teams-tabs {
-  gap: 10px !important;
-  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)) !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+  gap: 6px !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  padding: 0 6px 0 0 !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+}
+.patm-root #teams .teams-tabs::-webkit-scrollbar {
+  display: none !important;
 }
 .patm-root #teams .teams-layout button.team-tab {
-  min-height: 58px !important;
-  padding: 18px 20px !important;
-  border-radius: 14px !important;
+  background-image: none !important;
+  min-height: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 9px !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  font-size: 15px !important;
+  font-size: 12px !important;
   line-height: 1.35 !important;
 }
 .patm-root #teams .teams-layout .team-tab-text {
-  font-size: 15px !important;
+  font-size: 12px !important;
   line-height: 1.35 !important;
 }
 .patm-root #teams .teams-layout .team-tab-icon {
-  width: 48px !important;
-  height: 48px !important;
-  min-width: 48px !important;
-  min-height: 48px !important;
-  border-radius: 12px !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
 }
 .patm-root #teams .teams-layout .team-tab-icon svg {
-  width: 22px !important;
-  height: 22px !important;
+  width: 14px !important;
+  height: 14px !important;
   flex-shrink: 0 !important;
+  color: rgba(44, 44, 44, 0.5) !important;
+  stroke: currentColor !important;
+}
+.patm-root #teams .teams-layout .team-tab.active .team-tab-icon svg {
+  color: var(--on-primary, #f6f4ee) !important;
+  stroke: currentColor !important;
 }
 .patm-root .btn-primary,
 .patm-root .btn-hero-primary,
@@ -443,6 +545,30 @@ html:has(.patm-root) {
   box-shadow: 0 0 0 1000px var(--surface, #F0EAE1) inset !important;
   -webkit-text-fill-color: var(--dark, #2C2C2C) !important;
 }
+
+/* Team use cases: Vendor Management — route CSS last; ensures #teams is never dimmed or stuck pre-reveal. */
+.patm-root .teams-section#teams,
+.patm-root .teams-section#teams .teams-section-header,
+.patm-root .teams-section#teams .teams-story-pin,
+.patm-root .teams-section#teams .teams-story-pin-inner,
+.patm-root .teams-section#teams .teams-layout,
+.patm-root .teams-section#teams .teams-tabs,
+.patm-root .teams-section#teams .teams-panels,
+.patm-root .teams-section#teams .team-content.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.patm-root .teams-section#teams .reveal,
+.patm-root .teams-section#teams .fade-up,
+.patm-root .teams-section#teams .reveal.visible,
+.patm-root .teams-section#teams .reveal.in-view,
+.patm-root .teams-section#teams .reveal.reveal--in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+  will-change: auto !important;
+  visibility: visible !important;
+}
 `
 
 type PatmTeamStoryGsapOpts = {
@@ -452,8 +578,8 @@ type PatmTeamStoryGsapOpts = {
 }
 
 /**
- * #teams — pin + scroll story only on wide two-column layout (min-width: 1101px).
- * Below that: use initPatmTeamProgressBarOnly. Reduced motion: no ST.
+ * #teams — pin + scroll story on tablet/desktop (min-width: 768px), aligned with Snag 360.
+ * Below 768px: `initPatmTeamProgressBarOnly`. Reduced motion: no ST.
  */
 function initPatmTeamStoryGsap(
   root: HTMLElement,
@@ -502,7 +628,7 @@ function initPatmTeamStoryGsap(
 }
 
 /**
- * Below min pin width: no pin (document scroll). Scrub the horizontal bar only; tabs are click-only.
+ * Below 768px: no pin. Scrub the progress bar; tabs are click-only (no Lenis jump).
  */
 function initPatmTeamProgressBarOnly(
   root: HTMLElement,
@@ -537,6 +663,12 @@ function initPatmTeamProgressBarOnly(
 }
 
 const BACKDROP_FILTER_FIX_CSS = `
+/* public/patm.html adds body::before grain at z-index: 9999 — in the SPA it paints over the
+   whole route; vendor-management route disables the same. This style only mounts on PATM. */
+body::before {
+  content: none !important;
+  display: none !important;
+}
 /* PATM integration fix:
    Some browsers/pages can end up with unintended backdrop-filter layers
    that visually blur content. Disable globally inside PATM and re-enable
@@ -566,15 +698,42 @@ const BACKDROP_FILTER_FIX_CSS = `
   color-scheme: only light;
 }
 
-/* Hard-disable transform-based reveal helpers (prevents any residual soft rendering) */
+/* Same scoping as Vendor Management: override global index.css .reveal (blur / opacity) */
 .patm-root .reveal,
 .patm-root .fade-up {
-  opacity: 1 !important;
-  transform: none !important;
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
   filter: none !important;
-  transition: none !important;
+  will-change: auto !important;
+  transition: opacity 0.6s ease, transform 0.6s ease !important;
 }
-.patm-root .reveal.in-view { opacity: 1 !important; transform: none !important; }
+.patm-root .reveal.visible,
+.patm-root .reveal.in-view,
+.patm-root .fade-up.visible,
+.patm-root .fade-up.in-view {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+/* App shell index.css also expects .reveal--in; keep in sync with .visible. */
+.patm-root .reveal.reveal--in,
+.patm-root .reveal.in-view,
+.patm-root .reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .patm-root .reveal,
+  .patm-root .reveal.visible,
+  .patm-root .reveal.in-view,
+  .patm-root .reveal.reveal--in,
+  .patm-root .fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 .patm-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;
@@ -610,6 +769,9 @@ export default function PATMLandingPage() {
 
         const text = await res.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
+
+        const teamsSec = doc.getElementById('teams')
+        if (teamsSec) teamsSec.classList.add('patm-teams--app')
 
         const styles = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')
@@ -650,53 +812,30 @@ export default function PATMLandingPage() {
     if (!root) return
     if (!bodyHtml) return
 
+    // Team use cases (Snag 360): show `.reveal` in #teams immediately so nothing stays opacity:0 before IO / while pinned.
+    root.querySelectorAll<HTMLElement>('#teams .reveal, #teams .fade-up').forEach((el) => {
+      el.classList.add('visible', 'in-view', 'reveal--in')
+    })
+
     // Navbar scroll
     const navbar = root.querySelector<HTMLElement>('#navbar')
     const onScroll = () => navbar?.classList.toggle('scrolled', window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
 
-    // Scroll reveal (adds `in-view` to `.reveal`)
+    // Reveal observer (same pattern as `VendorManagementLandingPage`: .reveal -> .visible)
     const revealEls = Array.from(root.querySelectorAll<HTMLElement>('.reveal'))
-    const markRevealsInView = () => {
-      const vh = window.innerHeight || 0
-      revealEls.forEach((el) => {
-        if (el.classList.contains('in-view')) return
-        const r = el.getBoundingClientRect()
-        if (r.top < vh * 0.92) el.classList.add('in-view')
-      })
-    }
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
-          ;(e.target as HTMLElement).classList.add('in-view')
+          const t = e.target as HTMLElement
+          t.classList.add('visible', 'in-view', 'reveal--in')
         })
       },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
+      { threshold: 0.15 },
     )
     revealEls.forEach((el) => revealObserver.observe(el))
-    // Fallback: ensure nothing stays "pre-reveal" (which can look soft/blurred)
-    markRevealsInView()
-    window.addEventListener('scroll', markRevealsInView, { passive: true })
-    window.addEventListener('resize', markRevealsInView, { passive: true })
-    // Some elements appear via tabs/carousels without scrolling; re-check after interactions
-    const onAnyClick = () => window.requestAnimationFrame(markRevealsInView)
-    root.addEventListener('click', onAnyClick, true)
-    // Also re-check briefly after mount (covers late layout/paint)
-    const revealWarmup = (() => {
-      let n = 0
-      const id = window.setInterval(() => {
-        markRevealsInView()
-        n += 1
-        if (n >= 20) window.clearInterval(id) // ~6s
-      }, 300)
-      return id
-    })()
-    // Absolute fallback: if any are still not revealed, reveal them all.
-    const forceRevealAll = window.setTimeout(() => {
-      revealEls.forEach((el) => el.classList.add('in-view'))
-    }, 1200)
 
     // Counter animation (hero metrics)
     const counters = Array.from(root.querySelectorAll<HTMLElement>('.counter'))
@@ -812,17 +951,7 @@ export default function PATMLandingPage() {
     )
     root.querySelectorAll<HTMLElement>('.screen-analytics, .feature-screen-body').forEach((el) => progressObserver.observe(el))
 
-    // Teams: slide-in keyframes + scroll-pinned “Built for every team” (GSAP; same behavior as Vendor Management)
-    const slideStyle = document.createElement('style')
-    slideStyle.textContent = `
-      @keyframes patmSlideIn {
-        from { opacity: 0; transform: translateY(28px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .patm-root .team-content.active { animation: patmSlideIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards; }
-    `
-    document.head.appendChild(slideStyle)
-
+    // Teams: instant tab/panel swap only (no slide/fade — matches Vendor / other landings; scroll pin is separate).
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.teams-tabs .team-tab'))
     const teamContents = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
     const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
@@ -831,12 +960,7 @@ export default function PATMLandingPage() {
       const tab = tabEl ?? teamTabs.find((t) => t.dataset.team === teamId)
       tab?.classList.add('active')
       const content = teamContents.find((c) => c.dataset.content === teamId)
-      if (content) {
-        content.classList.add('active')
-        content.style.animation = 'none'
-        void content.offsetHeight
-        content.style.animation = ''
-      }
+      if (content) content.classList.add('active')
     }
     const teamIds = teamTabs.map((t) => t.dataset.team).filter(Boolean) as string[]
     const lenisScroll = createLenisScrollSync()
@@ -849,7 +973,7 @@ export default function PATMLandingPage() {
         return
       }
       /* Stacked / narrow: no pin; keep tab switches instant (no Lenis jump). */
-      if (window.matchMedia('(max-width: 1100px)').matches) {
+      if (window.matchMedia('(max-width: 767px)').matches) {
         switchTeam(teamIds[idx]!, teamTabs[idx]!)
         return
       }
@@ -1032,11 +1156,6 @@ export default function PATMLandingPage() {
       if (resizeTimer !== undefined) clearTimeout(resizeTimer)
 
       window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('scroll', markRevealsInView)
-      window.removeEventListener('resize', markRevealsInView)
-      root.removeEventListener('click', onAnyClick, true)
-      window.clearInterval(revealWarmup)
-      window.clearTimeout(forceRevealAll)
       revealObserver.disconnect()
       metricsObserver.disconnect()
       progressObserver.disconnect()
@@ -1056,7 +1175,6 @@ export default function PATMLandingPage() {
       usecaseHoverHandlers.forEach(({ el, onMove }) => el.removeEventListener('mousemove', onMove))
       submitBtn?.removeEventListener('click', onSubmit)
       document.removeEventListener('keydown', onKeyDown)
-      slideStyle.remove()
       delete (window as any).closeModal
     }
   }, [bodyHtml])

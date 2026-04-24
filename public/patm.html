@@ -2005,7 +2005,7 @@ svg { display: block; }
   background: var(--cream);
 }
 .teams-story-progress {
-  margin-top: 36px;
+  margin-top: 28px;
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
@@ -2031,14 +2031,31 @@ svg { display: block; }
   will-change: transform;
 }
 
-.teams-header { margin-bottom: 52px; }
+.teams-section-header{padding-bottom:0;margin-bottom:0}
+#teamsStoryPin{margin-top:32px}
+.teams-story-pin-inner{padding-top:0}
+/* Pinned team story: header scrolls; pin is rail+panels+progress — inner must be a flex column
+   (progress is not a direct #teamsStoryPin child, so the chain was broken after the FM-style split). */
+@media (min-width:1101px){
+  #teamsStoryPin.teams-story-pin{
+    display:flex;flex-direction:column;
+    min-height:calc(100dvh - 68px);max-height:calc(100dvh - 68px);
+    box-sizing:border-box;overflow:hidden;
+  }
+  #teamsStoryPin .teams-story-pin-inner{
+    flex:1 1 auto;min-height:0;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  #teamsStoryPin .teams-layout{flex:1 1 auto;min-height:0;padding-bottom:32px}
+  #teamsStoryPin .teams-story-progress{flex:0 0 auto;align-self:center}
+}
 /* Reduces scroll jank when panel height changes (same idea as vendor-management.html) */
 .teams-section, #teamsStoryPin, .pin-spacer { overflow-anchor: none; }
 
 /* Team use cases: left rail tabs + main panel (same pattern as Vendor Management) */
 .teams-layout {
   display: grid;
-  grid-template-columns: 304px 1fr;
+  grid-template-columns: 280px 1fr;
   gap: 40px;
   align-items: start;
   margin-top: 0;
@@ -2047,7 +2064,7 @@ svg { display: block; }
 .teams-tabs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   border-bottom: none;
   overflow: visible;
   margin-bottom: 0;
@@ -2057,7 +2074,7 @@ svg { display: block; }
 .teams-tabs::-webkit-scrollbar { display: none; }
 .team-tab {
   display: flex; align-items: center; gap: 16px;
-  min-height: 58px; padding: 18px 20px; border-radius: 14px;
+  min-height: 48px; padding: 12px 14px; border-radius: 12px;
   cursor: pointer; border: 1.5px solid transparent;
   background: var(--surface); transition: all 0.2s ease;
   font-family: var(--font); font-size: 15px; font-weight: 600;
@@ -2072,20 +2089,20 @@ svg { display: block; }
   background: rgba(218,119,86,0.05);
 }
 .team-tab-icon {
-  width: 48px; height: 48px; min-width: 48px; min-height: 48px; border-radius: 12px;
+  width: 40px; height: 40px; min-width: 40px; min-height: 40px; border-radius: 10px;
   background: var(--cream); display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; border: 1px solid var(--divider);
 }
-.team-tab-icon svg { width: 22px; height: 22px; color: rgba(44,44,44,0.5); flex-shrink: 0; }
+.team-tab-icon svg { width: 18px; height: 18px; color: rgba(44,44,44,0.5); flex-shrink: 0; }
 .team-tab:hover .team-tab-icon svg { color: rgba(44,44,44,0.65); }
 .team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
 .team-tab.active .team-tab-icon svg { color: var(--on-primary); }
-.team-tab-text { font-size: 15px; font-weight: 600; color: rgba(44,44,44,0.6); }
+.team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
 .team-tab.active .team-tab-text { color: var(--dark); }
 
 /* Team content */
 .team-content { display: none; }
-.team-content.active { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+.team-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
 
 .team-info { display: flex; flex-direction: column; }
 
@@ -4094,14 +4111,14 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
 
 <!-- ═══════════════════════════════════════════ TARGETED TEAMS ═══ -->
 <section class="teams-section" id="teams" data-teams-story="1">
-  <div class="teams-inner">
-    <!-- Team use cases: same DOM pattern as vendor-management.html (header inside #teamsStoryPin; scroll+pin+progress in app). -->
-    <div class="teams-story-pin" id="teamsStoryPin">
-    <div class="teams-header">
-      <div class="section-eyebrow reveal">Team use cases</div>
-      <h2 class="section-title reveal reveal-delay-1">Your whole company.<br><span class="accent">One platform.</span></h2>
-      <p class="section-sub reveal reveal-delay-2">From the C-suite reading dashboards to the developer closing sprints, PTM gives every team exactly what they need, without getting in each other's way.</p>
-    </div>
+  <!-- Titles scroll normally; only tabs + panels (+ progress) are pinned (FM Matrix-style). -->
+  <div class="teams-inner teams-section-header">
+    <div class="section-eyebrow reveal">Team use cases</div>
+    <h2 class="section-title reveal reveal-delay-1">Your whole company.<br><span class="accent">One platform.</span></h2>
+    <p class="section-sub reveal reveal-delay-2">From the C-suite reading dashboards to the developer closing sprints, PTM gives every team exactly what they need, without getting in each other's way.</p>
+  </div>
+  <div class="teams-story-pin" id="teamsStoryPin">
+    <div class="teams-inner teams-story-pin-inner">
     <div class="teams-layout">
     <div class="teams-tabs reveal" role="tablist" aria-label="PTM team use cases">
       <button type="button" class="team-tab active" data-team="leadership" role="tab" aria-selected="true">
@@ -5012,12 +5029,7 @@ teamTabs.forEach(tab => {
     teamContents.forEach(c => c.classList.remove('active'));
     tab.classList.add('active');
     const content = document.querySelector(`[data-content="${team}"]`);
-    if (content) {
-      content.classList.add('active');
-      content.style.animation = 'none';
-      content.offsetHeight; // reflow
-      content.style.animation = 'slideIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards';
-    }
+    if (content) content.classList.add('active');
   });
 });
 
@@ -5108,16 +5120,6 @@ if (submitBtn) {
   });
 }
 
-// Slide-in animation for team content
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .team-content.active { animation: slideIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards; }
-`;
-document.head.appendChild(style);
 </script>
 
 </body>
