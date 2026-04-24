@@ -623,8 +623,15 @@ nav.scrolled {
 /* ── WALKTHROUGH ── */
 #walkthrough { padding:120px 0; background:var(--bg-mid); }
 .wt-tabs {
-  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:40px;
-  padding-bottom:24px; border-bottom:1px solid var(--border-soft);
+  display:flex; flex-direction:column; gap:8px; margin-bottom:0;
+  padding-bottom:0; border-bottom:none;
+  align-self:stretch;
+}
+@media (max-width: 900px) {
+  .wt-tabs {
+    flex-direction:row; flex-wrap:wrap; margin-bottom:24px;
+    padding-bottom:20px; border-bottom:1px solid var(--border-soft);
+  }
 }
 .wt-tab {
   display:flex; align-items:center; gap:8px;
@@ -638,9 +645,12 @@ nav.scrolled {
 .wt-tab.active { background:rgba(218,119,86,0.1); border-color:rgba(218,119,86,0.4); color:var(--brand); }
 .wt-layout {
   display: grid;
-  grid-template-columns: 0.6fr 1fr;
-  gap: 48px;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 0.5fr) minmax(0, 1fr);
+  gap: 32px 40px;
   align-items: start;
+}
+@media (max-width: 900px) {
+  .wt-layout { grid-template-columns: 1fr; }
 }
 .wt-screen {
   background: var(--bg-card);
@@ -681,9 +691,27 @@ nav.scrolled {
 
 /* ── TARGETED TEAMS ── */
 #teams { padding:120px 0; background:var(--bg); }
+.teams-layout {
+  display:grid;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  gap:40px;
+  margin-top:48px;
+  align-items:start;
+  min-width:0;
+}
 .teams-tabs {
-  display:flex; gap:8px; flex-wrap:wrap;
-  justify-content:center; margin-bottom:48px;
+  display:flex; flex-direction:column; gap:8px;
+  justify-content:flex-start;
+  margin-bottom:0;
+}
+@media (max-width: 900px) {
+  .teams-layout { grid-template-columns: 1fr; margin-top: 32px; gap: 24px; }
+  .teams-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
 }
 .team-tab {
   display:flex; align-items:center; gap:8px;
@@ -1031,15 +1059,15 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
       <h2 class="section-title">See it <span class="brand-text">in action.</span></h2>
       <p class="section-sub">Six screens. Every module your residents and FM teams will use every single day.</p>
     </div>
-    <div class="wt-tabs fade-in" id="wtTabs">
+    <div class="wt-layout fade-in">
+      <div class="wt-tabs fade-in" id="wtTabs">
       <button class="wt-tab active" onclick="selectWtTab(0)"><i class="fa-solid fa-house"></i> Home</button>
       <button class="wt-tab" onclick="selectWtTab(1)"><i class="fa-solid fa-dumbbell"></i> My Club</button>
       <button class="wt-tab" onclick="selectWtTab(2)"><i class="fa-solid fa-door-open"></i> Visitors</button>
       <button class="wt-tab" onclick="selectWtTab(3)"><i class="fa-solid fa-star"></i> Loyalty</button>
       <button class="wt-tab" onclick="selectWtTab(4)"><i class="fa-solid fa-concierge-bell"></i> Services</button>
       <button class="wt-tab" onclick="selectWtTab(5)"><i class="fa-solid fa-calendar-days"></i> Events</button>
-    </div>
-    <div class="wt-layout fade-in">
+      </div>
       <div class="wt-screen" id="wtScreen">
         <div class="wt-screen-bar">
           <div class="wt-screen-dots">
@@ -1269,13 +1297,16 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
       <h2 class="section-title">One platform. <span class="brand-text">Every team aligned.</span></h2>
       <p class="section-sub" style="margin:0 auto;">CRM, Sales, Loyalty, and FM — each team gets the exact tools they need. All from one platform. All on one screen.</p>
     </div>
+    </div>
+    <div class="container">
+    <div class="teams-layout">
     <div class="teams-tabs fade-in">
       <button type="button" class="team-tab active"><i class="fa-solid fa-handshake"></i> CRM Team</button>
       <button type="button" class="team-tab"><i class="fa-solid fa-chart-line"></i> Sales Team</button>
       <button type="button" class="team-tab"><i class="fa-solid fa-star"></i> Loyalty Team</button>
       <button type="button" class="team-tab"><i class="fa-solid fa-helmet-safety"></i> Facility Management</button>
     </div>
-
+    <div>
     <!-- Team 0: CRM -->
     <div class="team-panel active fade-in" id="team-0">
       <div class="team-info">
@@ -1383,6 +1414,8 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
           <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-alt);border:1px solid var(--border-soft);border-radius:9px;font-size:12px;"><div style="width:28px;height:28px;border-radius:8px;background:rgba(218,119,86,0.1);display:flex;align-items:center;justify-content:center;color:var(--brand);font-size:12px;flex-shrink:0;"><i class="fa-solid fa-triangle-exclamation"></i></div><span style="color:var(--text-soft);">AMC alert — DG Set renewal in 8 days</span></div>
         </div>
       </div>
+    </div>
+    </div>
     </div>
 
     <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">

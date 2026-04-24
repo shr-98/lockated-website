@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
 const LOYALTY_NAV_OFFSET_PX = 68
-const LOYALTY_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const LOYALTY_TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 function initLoyaltyTeamsGsap(
   root: HTMLElement,
@@ -368,6 +369,12 @@ html:has(.loyalty-rule-root) {
     transition: none !important;
   }
 }
+.loyalty-rule-root .teams-section .team-info,
+.loyalty-rule-root #walkthrough .feature-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 `
 
 export default function LoyaltyRuleEngineLandingPage() {
@@ -468,6 +475,7 @@ export default function LoyaltyRuleEngineLandingPage() {
     const root = rootEl
     const loyaltyWindow: LoyaltyRuleWindow = window
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
 
     // NAV SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -807,6 +815,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       revealObserver.disconnect()
       teamAbort.abort()
       teamsStoryTrigger?.kill(true)
+      innerScrollCleanup()
       lenisScroll.destroy()
       if (raf !== null) window.cancelAnimationFrame(raf)
       delete loyaltyWindow.openIndustry

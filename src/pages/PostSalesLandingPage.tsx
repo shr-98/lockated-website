@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -11,7 +12,7 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 /** Pinned nav offset — match vendor-management / post-sales.html `#navbar`. */
 const POST_SALES_NAV_OFFSET_PX = 68
 /** Team Use Cases: scroll distance per tab (same as Vendor Management). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 type TeamUseCasesGsapOpts = {
   teamTabs: HTMLElement[]
@@ -167,6 +168,12 @@ html:has(.post-sales-root) {
 }
 .post-sales-root .team-visual-body {
   background-color: var(--bg, #F6F4EE) !important;
+}
+.post-sales-root .teams-section .team-info,
+.post-sales-root #walkthrough .wt-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 `
 
@@ -582,6 +589,7 @@ ${chipSvgs}
       if (m?.[1]) teamIds.push(m[1])
     })
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -651,6 +659,7 @@ ${chipSvgs}
     window.addEventListener('resize', onResize, { passive: true })
 
     return () => {
+      innerScrollCleanup()
       gsapCtx.revert()
       lenisScroll.destroy()
       clearTimeout(lateLayout)

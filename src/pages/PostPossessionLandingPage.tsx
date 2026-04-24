@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -11,7 +12,7 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 /** Fixed nav clearance (matches `public/post-possession.html` bar height). */
 const POST_POSSESSION_NAV_OFFSET_PX = 76
 /** Team Use Cases: scroll distance per tab (aligned with vendor management route). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 type TeamUseCasesGsapOpts = {
   teamTabs: HTMLElement[]
@@ -171,6 +172,15 @@ html:has(.post-possession-root) {
 }
 .post-possession-root .team-visual-body {
   background-color: var(--bg, #F6F4EE) !important;
+}
+.post-possession-root #teams .team-info,
+.post-possession-root #walkthrough .wt-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.post-possession-root .wt-layout {
+  min-width: 0;
 }
 `
 
@@ -431,6 +441,7 @@ export default function PostPossessionLandingPage() {
       teamPanels.forEach((p, j) => p.classList.toggle('active', j === i))
     }
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -513,6 +524,7 @@ export default function PostPossessionLandingPage() {
     })
 
     return () => {
+      innerScrollCleanup()
       gsapCtx.revert()
       lenisScroll.destroy()
       clearTimeout(lateLayout)

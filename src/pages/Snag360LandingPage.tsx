@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
 const SNAG_NAV_OFFSET_PX = 68
-const SNAG_TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const SNAG_TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 function initSnagTeamsGsap(
   root: HTMLElement,
@@ -390,6 +391,12 @@ html:has(.snag360-root) {
     transition: none !important;
   }
 }
+.snag360-root .teams-section .team-info,
+.snag360-root #walkthrough .feature-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 `
 
 export default function Snag360LandingPage() {
@@ -497,6 +504,7 @@ export default function Snag360LandingPage() {
     if (!root) return
     if (!bodyHtml) return
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     const snagWindow: Snag360Window = window
 
     // Navbar scroll
@@ -700,6 +708,7 @@ export default function Snag360LandingPage() {
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
       teamsStoryTrigger?.kill(true)
+      innerScrollCleanup()
       lenisScroll.destroy()
       teamsStoryTrigger = null
       delete snagWindow.toggleUSP

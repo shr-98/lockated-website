@@ -413,6 +413,44 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
 .footer-bottom-links a{color:rgba(44,44,42,.45);text-decoration:none;transition:color .2s ease}
 .footer-bottom-links a:hover{color:var(--accent)}
 
+/* ── TEAMS (Built for every team) ── */
+.teams-section{padding:96px 0;background:var(--bg)}
+.teams-story-pin{position:relative;will-change:transform;background:var(--bg)}
+.teams-layout{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:36px;margin-top:40px;align-items:start;min-width:0}
+.teams-tabs{display:flex;flex-direction:column;gap:6px}
+.team-tab{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;border:1.5px solid transparent;background:var(--surface);cursor:pointer;transition:.2s;font-size:13.5px;font-weight:600;color:var(--txt)}
+.team-tab:hover{border-color:rgba(44,44,42,.12)}
+.team-tab.active{border-color:var(--accent);background:rgba(218,119,86,.06);color:var(--dark)}
+.team-tab-icon{width:38px;height:38px;border-radius:9px;background:var(--bg);display:flex;align-items:center;justify-content:center;border:1px solid rgba(44,44,42,.1);flex-shrink:0}
+.team-tab.active .team-tab-icon{background:var(--accent);color:var(--on-primary);border-color:var(--accent)}
+.team-tab-text{color:rgba(44,44,42,.65)}
+.team-tab.active .team-tab-text{color:var(--dark)}
+.teams-panel{display:none}
+.teams-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;min-width:0}
+.team-info{min-width:0}
+.team-name{font-size:clamp(22px,2.5vw,32px);font-weight:700;color:var(--dark);margin-bottom:12px}
+.team-desc{font-size:14.5px;color:rgba(44,44,42,.58);line-height:1.65;margin-bottom:20px}
+.team-features{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.tf-row{display:flex;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid rgba(44,44,42,.08);border-radius:9px}
+.tf-icon{width:30px;height:30px;border-radius:8px;background:rgba(218,119,86,.1);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.tf-text{min-width:0}
+.tf-name{font-size:12.5px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.tf-desc{font-size:12px;color:rgba(44,44,42,.55);line-height:1.45}
+.team-visual{background:var(--surface);border:1px solid rgba(44,44,42,.1);border-radius:12px;overflow:hidden;box-shadow:0 12px 36px rgba(44,44,44,.08)}
+.team-visual-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(44,44,42,.08);background:var(--bg)}
+.tv-lbl{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.tv-live{font-size:11px;color:rgba(44,44,42,.45)}
+.team-visual-body{padding:16px;display:flex;flex-direction:column;gap:10px}
+.tv-row{display:flex;align-items:center;gap:10px;font-size:12.5px;color:rgba(44,44,42,.72)}
+.teams-story-progress{margin-top:32px;max-width:480px;margin-left:auto;margin-right:auto}
+.teams-story-progress-track{height:4px;border-radius:100px;background:rgba(44,44,42,.1);overflow:hidden}
+.teams-story-progress-fill{height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left center}
+@media(max-width:900px){
+  .teams-layout{grid-template-columns:1fr}
+  .teams-tabs{flex-direction:row;flex-wrap:wrap}
+  .teams-panel.active{grid-template-columns:1fr}
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1000px){
   .bento,.sol-grid,.wpanel,.ct-g{grid-template-columns:1fr;gap:36px;}
@@ -444,6 +482,7 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
       <ul class="nav-links">
         <li><a href="#walk">Walkthrough</a></li>
         <li><a href="#features">Features</a></li>
+        <li><a href="#teams">Teams</a></li>
         <li><a href="#uc">Use Cases</a></li>
         <li><a href="#contact">Pricing</a></li>
         <li><a href="#contact">About</a></li>
@@ -809,6 +848,128 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
   </div>
 </div>
 
+<!-- TEAMS (Built for every team — SPA scroll story) -->
+<section class="teams-section" id="teams" data-teams-story="1">
+  <div class="teams-story-pin" id="teamsStoryPin">
+  <div class="wrap">
+    <div class="sec-hd reveal" style="text-align:center;">
+      <div class="tag" style="display:inline-flex;margin-bottom:12px;"><i class="fa-solid fa-people-group"></i> Teams</div>
+      <h2>One platform. <span class="accent">Every function aligned.</span></h2>
+      <p style="max-width:640px;margin:0 auto;color:rgba(44,44,42,.62);">From CP desk to finance to marketing — CP Management gives each team the workflows they already run, with one source of truth.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="teams-layout">
+      <div class="teams-tabs">
+        <div class="team-tab active" role="button" tabindex="0" onclick="switchTeam(this, 'cpops')">
+          <div class="team-tab-icon"><i class="fa-solid fa-headset"></i></div>
+          <span class="team-tab-text">CP Operations</span>
+        </div>
+        <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'finance')">
+          <div class="team-tab-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+          <span class="team-tab-text">Finance &amp; SAP</span>
+        </div>
+        <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'marketing')">
+          <div class="team-tab-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <span class="team-tab-text">Marketing</span>
+        </div>
+        <div class="team-tab" role="button" tabindex="0" onclick="switchTeam(this, 'leadership')">
+          <div class="team-tab-icon"><i class="fa-solid fa-chart-pie"></i></div>
+          <span class="team-tab-text">Leadership</span>
+        </div>
+      </div>
+      <div>
+        <div class="teams-panel active" id="team-cpops">
+          <div class="team-info">
+            <div class="team-name">CP Operations &amp; Onboarding</div>
+            <p class="team-desc">Your CP desk runs on Setup, Activity, and daily walk-in tracking. Registrations, temporary access, ladder visibility, and broadcast updates — without spreadsheets or WhatsApp chaos.</p>
+            <div class="team-features">
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-user-plus"></i></div><div class="tf-text"><div class="tf-name">Self-serve onboarding</div><div class="tf-desc">RERA-verified registration with status the CP can see in real time.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-walkie-talkie"></i></div><div class="tf-text"><div class="tf-name">Walk-in &amp; lead capture</div><div class="tf-desc">Site visit and lead logging the same day — no lost broker traffic.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-ranking-star"></i></div><div class="tf-text"><div class="tf-name">Ladder &amp; tier clarity</div><div class="tf-desc">CPs see exactly what unlocks the next brokerage or reward tier.</div></div></div>
+            </div>
+            <a href="#contact" class="btn btn-fill" style="margin-top:8px;"><i class="fa-solid fa-rocket"></i> See CP ops live</a>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-hd"><span class="tv-lbl">CP Ops · Today</span><span class="tv-live">Live</span></div>
+            <div class="team-visual-body">
+              <div class="tv-row"><i class="fa-solid fa-check" style="color:var(--accent)"></i><span>New registrations — 14</span></div>
+              <div class="tv-row"><i class="fa-solid fa-clock" style="color:var(--accent)"></i><span>Pending RERA — 3</span></div>
+              <div class="tv-row"><i class="fa-solid fa-tower-broadcast" style="color:var(--accent)"></i><span>Broadcast read rate — 81%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="teams-panel" id="team-finance">
+          <div class="team-info">
+            <div class="team-name">Finance &amp; SAP</div>
+            <p class="team-desc">Invoice submission, verification, and payment status sync to SAP without email threads. Disputes drop when every line item is traceable and every state is visible to the CP.</p>
+            <div class="team-features">
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="tf-text"><div class="tf-name">Digital invoice pipeline</div><div class="tf-desc">CPs upload once; finance reviews with full booking context.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-link"></i></div><div class="tf-text"><div class="tf-name">Native SAP posts</div><div class="tf-desc">Approved payouts push with audit references your CFO can reconcile.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-scale-balanced"></i></div><div class="tf-text"><div class="tf-name">Dispute trail</div><div class="tf-desc">Every adjustment is logged with user, timestamp, and reason.</div></div></div>
+            </div>
+            <a href="#contact" class="btn btn-fill" style="margin-top:8px;"><i class="fa-solid fa-rocket"></i> Talk to finance IT</a>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-hd"><span class="tv-lbl">SAP · Brokerage queue</span><span class="tv-live">Sync</span></div>
+            <div class="team-visual-body">
+              <div class="tv-row"><i class="fa-solid fa-file-invoice" style="color:var(--accent)"></i><span>In SAP — 28 invoices</span></div>
+              <div class="tv-row"><i class="fa-solid fa-hourglass-half" style="color:var(--accent)"></i><span>In verification — 6</span></div>
+              <div class="tv-row"><i class="fa-solid fa-ban" style="color:#c45c5c"></i><span>Disputes — 1.2%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="teams-panel" id="team-marketing">
+          <div class="team-info">
+            <div class="team-name">Marketing &amp; Collateral</div>
+            <p class="team-desc">Collateral is personalised, shareable, and attributed. You see which assets drive opens, visits, and bookings — so field marketing spend finally has an ROI.</p>
+            <div class="team-features">
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-paintbrush"></i></div><div class="tf-text"><div class="tf-name">One-tap personalisation</div><div class="tf-desc">CP branding on every brochure and scheme card at scale.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-brands fa-whatsapp"></i></div><div class="tf-text"><div class="tf-name">Share + attribution</div><div class="tf-desc">WhatsApp and email shares tagged to CP and campaign.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-chart-line"></i></div><div class="tf-text"><div class="tf-name">Funnel visibility</div><div class="tf-desc">Opens → visits → bookings by collateral and by CP segment.</div></div></div>
+            </div>
+            <a href="#contact" class="btn btn-fill" style="margin-top:8px;"><i class="fa-solid fa-rocket"></i> See attribution demo</a>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-hd"><span class="tv-lbl">Collateral · This week</span><span class="tv-live">Live</span></div>
+            <div class="team-visual-body">
+              <div class="tv-row"><i class="fa-solid fa-share-nodes" style="color:var(--accent)"></i><span>Shares — 1,240</span></div>
+              <div class="tv-row"><i class="fa-solid fa-location-dot" style="color:var(--accent)"></i><span>Site visits attributed — 186</span></div>
+              <div class="tv-row"><i class="fa-solid fa-trophy" style="color:var(--accent)"></i><span>Top asset — Q1 scheme card</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="teams-panel" id="team-leadership">
+          <div class="team-info">
+            <div class="team-name">Leadership &amp; Analytics</div>
+            <p class="team-desc">Channel health, CP retention, brokerage TAT, and loyalty tier mix on one executive view — so the board can steer the network with numbers, not anecdotes.</p>
+            <div class="team-features">
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-gauge-high"></i></div><div class="tf-text"><div class="tf-name">Channel dashboard</div><div class="tf-desc">Activation, dormancy, and tier mix across regions and projects.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div class="tf-text"><div class="tf-name">Payable TAT</div><div class="tf-desc">End-to-end brokerage cycle time with bottleneck flags.</div></div></div>
+              <div class="tf-row"><div class="tf-icon"><i class="fa-solid fa-crown"></i></div><div class="tf-text"><div class="tf-name">Loyalty economics</div><div class="tf-desc">Redemption mix and cold-wallet exposure next to sales impact.</div></div></div>
+            </div>
+            <a href="#contact" class="btn btn-fill" style="margin-top:8px;"><i class="fa-solid fa-rocket"></i> Book executive briefing</a>
+          </div>
+          <div class="team-visual">
+            <div class="team-visual-hd"><span class="tv-lbl">Executive · Channel KPIs</span><span class="tv-live">Live</span></div>
+            <div class="team-visual-body">
+              <div class="tv-row"><i class="fa-solid fa-percent" style="color:var(--accent)"></i><span>Active CPs — 62%</span></div>
+              <div class="tv-row"><i class="fa-solid fa-arrow-trend-down" style="color:var(--accent)"></i><span>Avg payable TAT — 7.2 days</span></div>
+              <div class="tv-row"><i class="fa-solid fa-ranking-star" style="color:var(--accent)"></i><span>Gold tier share — 18%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+      <div class="teams-story-progress-track">
+        <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
 <!-- END BANNER / CTA -->
 <section id="cta">
   <div class="cta-g1"></div><div class="cta-g2"></div>
@@ -897,6 +1058,7 @@ footer{background:var(--bg);padding:56px 48px 36px;border-top:1px solid var(--bo
       <ul class="footer-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#walk">Walkthrough</a></li>
+        <li><a href="#teams">Teams</a></li>
         <li><a href="#uc">Use Cases</a></li>
         <li><a href="#contact">Pricing</a></li>
         <li><a href="#contact">Contact</a></li>

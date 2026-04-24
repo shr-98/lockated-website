@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -11,7 +12,7 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 /** Fixed nav height in `public/patm.html` — pin start + scroll padding must match. */
 const PATM_NAV_OFFSET_PX = 68
 /** Team use cases: scroll distance per tab (match Vendor Management). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 /** Scoped overrides so app Tailwind / global styles do not force white shells, buttons, or forms. */
 const PATM_ISOLATION_CSS = `
@@ -310,6 +311,12 @@ const BACKDROP_FILTER_FIX_CSS = `
   transition: none !important;
 }
 .patm-root .reveal.in-view { opacity: 1 !important; transform: none !important; }
+.patm-root .teams-section .team-info,
+.patm-root #walkthrough .feature-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 `
 
 export default function PATMLandingPage() {
@@ -570,6 +577,7 @@ export default function PATMLandingPage() {
     }
     const teamIds = teamTabs.map((t) => t.dataset.team).filter(Boolean) as string[]
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -746,6 +754,7 @@ export default function PATMLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      innerScrollCleanup()
       lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)

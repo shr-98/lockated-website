@@ -1,5 +1,53 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+
+void gsap.registerPlugin(ScrollTrigger)
+
+const CP_NAV_OFFSET_PX = 70
+const CP_TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
+
+function initCpTeamsGsap(
+  root: HTMLElement,
+  opts: {
+    teamTabs: HTMLElement[]
+    teamIds: string[]
+    switchTeam: (teamId: string, tabEl?: HTMLElement) => void
+  },
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (!window.matchMedia('(min-width: 768px)').matches) return null
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  let lastIdx = -1
+  return ScrollTrigger.create({
+    id: 'cp-teams-use-cases',
+    trigger: pin,
+    start: `top ${CP_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * CP_TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: true,
+    pinSpacing: true,
+    pinType: 'fixed',
+    anticipatePin: 0,
+    fastScrollEnd: false,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    },
+  })
+}
 
 /**
  * `public/cp-management.html` uses `.reveal` animations. The app `index.css` adds a
@@ -91,6 +139,32 @@ const CP_MANAGEMENT_ISOLATION_CSS = `
 .cp-management-root .ucc {
   background-color: var(--surface, #F0EAE1) !important;
   border-color: rgba(196, 184, 157, 0.35) !important;
+}
+html:has(.cp-management-root) {
+  scroll-padding-top: ${CP_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.cp-management-root section[id],
+.cp-management-root .teams-section#teams {
+  scroll-margin-top: ${CP_NAV_OFFSET_PX + 4}px;
+}
+.cp-management-root #teamsStoryPin {
+  z-index: 1 !important;
+  min-height: calc(100vh - ${CP_NAV_OFFSET_PX}px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cp-management-root .pin-spacer {
+  background: var(--bg) !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.cp-management-root .teams-section .team-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 `
 
@@ -337,55 +411,117 @@ export default function CpManagementLandingPage() {
     }
     document.addEventListener('keydown', onKeyDown)
 
-    // Smooth in-page anchors inside this landing page
+    const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
+
+    const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.teams-tabs .team-tab'))
+    const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
+      teamTabs.forEach((t) => t.classList.remove('active'))
+      root.querySelectorAll<HTMLElement>('.teams-panel').forEach((p) => p.classList.remove('active'))
+      tabEl?.classList.add('active')
+      root.querySelector<HTMLElement>(`#team-${CSS.escape(teamId)}`)?.classList.add('active')
+    }
+    const teamIds: string[] = []
+    teamTabs.forEach((tab) => {
+      const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+      if (m?.[1]) teamIds.push(m[1])
+    })
+    ;(window as unknown as { switchTeam?: (el: HTMLElement, id: string) => void }).switchTeam = (
+      _el: HTMLElement,
+      id: string,
+    ) => {
+      const idx = teamIds.indexOf(id)
+      if (idx >= 0 && teamTabs[idx]) switchTeam(id, teamTabs[idx]!)
+      else switchTeam(id)
+    }
+
+    let teamStorySt: ScrollTrigger | null = null
+    const scrollToTeamIndex = (idx: number) => {
+      if (!teamIds[idx] || !teamTabs[idx]) return
+      if (!teamStorySt) {
+        switchTeam(teamIds[idx]!, teamTabs[idx]!)
+        return
+      }
+      const st = teamStorySt
+      const n = teamIds.length
+      if (n <= 1) {
+        switchTeam(teamIds[0]!, teamTabs[0]!)
+        return
+      }
+      const p = idx / (n - 1)
+      const y = st.start + p * (st.end - st.start)
+      scrollDocumentToY(lenisScroll.instance, y)
+    }
+
+    const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
+    teamTabs.forEach((tab) => {
+      const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+      const teamId = m?.[1]
+      if (!teamId) return
+      const fn = (e: Event) => {
+        e.preventDefault()
+        const idx = teamIds.indexOf(teamId)
+        if (idx >= 0) scrollToTeamIndex(idx)
+      }
+      tab.addEventListener('click', fn)
+      teamHandlers.push({ el: tab, fn })
+    })
+    const initialTab = teamTabs.find((t) => t.classList.contains('active'))
+    const im = (initialTab?.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
+    if (im?.[1]) switchTeam(im[1], initialTab)
+
+    const refreshTeamScroll = () => {
+      requestAnimationFrame(() => {
+        lenisScroll.resize()
+        ScrollTrigger.refresh()
+      })
+    }
+    const gsapCtx = gsap.context(() => {
+      teamStorySt = initCpTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => ScrollTrigger.refresh())
+      })
+    }, root)
+    const onLayoutRefresh = () => refreshTeamScroll()
+    if (document.readyState === 'complete') onLayoutRefresh()
+    else window.addEventListener('load', onLayoutRefresh)
+    const lateLayout = window.setTimeout(() => refreshTeamScroll(), 250)
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined
+    const onResize = () => {
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        resizeTimer = undefined
+        refreshTeamScroll()
+      }, 100)
+    }
+    window.addEventListener('resize', onResize, { passive: true })
+
+    const anchorHandlers: Array<{ el: HTMLAnchorElement; fn: (e: MouseEvent) => void }> = []
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-      a.addEventListener('click', (e) => {
+      const fn = (e: MouseEvent) => {
         const href = a.getAttribute('href')
-        if (!href) return
+        if (!href || href === '#') return
         const t = root.querySelector<HTMLElement>(href)
         if (!t) return
         e.preventDefault()
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
-    })
-
-    // Use Cases: click-only tabs (no pinned scroll story)
-    const uctabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.uc-tabs .uc-tab'))
-    const ucpanels = Array.from(root.querySelectorAll<HTMLElement>('.uc-panel'))
-
-    let lastUc = -1
-    const setUcIndex = (idx: number) => {
-      const n = uctabs.length
-      if (n < 1) return
-      const i = Math.min(n - 1, Math.max(0, Math.floor(idx)))
-      if (i === lastUc) return
-      lastUc = i
-      uctabs.forEach((t, j) => {
-        const on = j === i
-        t.classList.toggle('active', on)
-        t.setAttribute('aria-selected', on ? 'true' : 'false')
-      })
-      ucpanels.forEach((p, j) => p.classList.toggle('active', j === i))
-    }
-
-    if (uctabs.length && ucpanels.length) {
-      const initial = Math.max(0, uctabs.findIndex((t) => t.classList.contains('active')))
-      lastUc = -1
-      setUcIndex(initial)
-    }
-
-    const ucTabHandlers: Array<{ el: HTMLButtonElement; fn: (e: Event) => void }> = []
-    uctabs.forEach((t, j) => {
-      const fn = (e: Event) => {
-        e.preventDefault()
-        setUcIndex(j)
+        const top = t.getBoundingClientRect().top + window.scrollY - CP_NAV_OFFSET_PX - 4
+        scrollDocumentToY(lenisScroll.instance, top)
       }
-      t.addEventListener('click', fn)
-      ucTabHandlers.push({ el: t, fn })
+      a.addEventListener('click', fn)
+      anchorHandlers.push({ el: a, fn })
     })
 
     return () => {
-      ucTabHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
+      innerScrollCleanup()
+      gsapCtx.revert()
+      lenisScroll.destroy()
+      clearTimeout(lateLayout)
+      window.removeEventListener('load', onLayoutRefresh)
+      window.removeEventListener('resize', onResize)
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
+      teamHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
+      anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
+      delete (window as unknown as { switchTeam?: unknown }).switchTeam
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('keydown', onKeyDown)
       pillObs.disconnect()

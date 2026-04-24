@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -10,7 +11,7 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
 /** Fixed nav — pin start + scroll padding (match PATM / Vendor). */
 const CLUB_NAV_OFFSET_PX = 68
-const TEAM_STORY_SCROLL_PER_TAB_VH = 0.7
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
 
 /** Scoped only inside the Club route — avoids wiping blur/filters for the rest of the app. */
 const CLUB_MGMT_NO_BLUR_CSS = `
@@ -234,6 +235,12 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root .usecase-card {
   background-color: var(--cream, #F6F4EE) !important;
 }
+.club-mgmt-root .teams-section .team-info,
+.club-mgmt-root #walkthrough .feature-info {
+  max-height: min(72vh, calc(100vh - 200px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 `
 
 type ClubTeamStoryGsapOpts = {
@@ -349,6 +356,7 @@ export default function ClubManagementLandingPage() {
     if (!root || !bodyHtml) return
 
     const lenisScroll = createLenisScrollSync()
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
 
     // NAVBAR SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -604,6 +612,7 @@ export default function ClubManagementLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      innerScrollCleanup()
       lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)
