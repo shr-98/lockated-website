@@ -125,6 +125,8 @@ html:has(.snag360-root) {
   align-items: stretch !important;
   justify-content: flex-start !important;
   min-height: 0 !important;
+  /* Definite height so pinned story never "floats" in the middle. */
+  height: calc(100dvh - ${SNAG_NAV_OFFSET_PX}px) !important;
   max-height: calc(100dvh - ${SNAG_NAV_OFFSET_PX}px) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
@@ -138,16 +140,86 @@ html:has(.snag360-root) {
 .snag360-root #teamsStoryPin .teams-main {
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
   padding-bottom: 32px !important;
   scroll-padding-bottom: 24px !important;
+}
+.snag360-root #teamsStoryPin .teams-layout {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-height: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+  margin-top: 48px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+.snag360-root #teamsStoryPin .team-panels {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+.snag360-root #teamsStoryPin .team-content.active {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 40px !important;
+  align-items: start !important;
+}
+.snag360-root #teamsStoryPin .team-content.active > .team-info {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+.snag360-root #teamsStoryPin .team-content.active > .team-visual {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 900px) {
+  .snag360-root #teamsStoryPin .team-content.active {
+    grid-template-columns: 1fr !important;
+  }
+  .snag360-root #teamsStoryPin .team-content.active > .team-info {
+    max-height: min(50vh, 100%) !important;
+  }
+  .snag360-root #teamsStoryPin .team-content.active > .team-visual {
+    justify-self: center !important;
+    max-height: min(58vh, 100%) !important;
+  }
+  .snag360-root #teamsStoryPin .teams-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+  }
 }
 /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
 @media (max-width: 767px) {
   .snag360-root #teamsStoryPin {
+    height: auto !important;
     max-height: none !important;
     display: block !important;
     overflow: visible !important;
@@ -157,16 +229,43 @@ html:has(.snag360-root) {
     overflow: visible !important;
     padding-bottom: 0 !important;
   }
+  .snag360-root #teamsStoryPin .teams-layout,
+  .snag360-root #teamsStoryPin .team-panels,
+  .snag360-root #teamsStoryPin .team-content.active {
+    display: block !important;
+    flex: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .snag360-root #teamsStoryPin .team-content.active > .team-info,
+  .snag360-root #teamsStoryPin .team-content.active > .team-visual {
+    overflow: visible !important;
+    max-height: none !important;
+  }
 }
 .snag360-root .teams-tabs {
   flex-shrink: 0;
   align-self: stretch;
   background: transparent !important;
+  /* Make the tab rail more compact so all teams fit in view. */
+  gap: 8px !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  scrollbar-width: none;
+  padding-right: 6px;
+}
+.snag360-root .teams-tabs::-webkit-scrollbar {
+  display: none;
 }
 .snag360-root .teams-layout button.team-tab {
   color: var(--dark, #2c2c2c) !important;
   border: 1.5px solid transparent !important;
   background-image: none !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+}
+.snag360-root .teams-layout button.team-tab .team-tab-text {
+  font-size: 13px !important;
 }
 .snag360-root .teams-layout button.team-tab:not(.active) {
   background: var(--surface, #f0eae1) !important;
@@ -184,6 +283,13 @@ html:has(.snag360-root) {
 .snag360-root .teams-layout .team-tab-icon {
   background: var(--cream, #f6f4ee) !important;
   border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 9px !important;
+}
+.snag360-root .teams-layout .team-tab-icon svg {
+  width: 16px !important;
+  height: 16px !important;
 }
 .snag360-root .teams-layout .team-tab.active .team-tab-icon {
   background: var(--primary, #da7756) !important;
@@ -266,6 +372,35 @@ html:has(.snag360-root) {
 .snag360-root .modal-body,
 .snag360-root .modal-content {
   color: rgba(44, 44, 44, 0.62) !important;
+}
+/* Industry use case modals: ensure "The outcome" is reachable + scrolls on short viewports */
+.snag360-root .usecase-modal {
+  padding: 40px 16px !important;
+}
+/* Scroll the body, keep hero image fixed — avoids the last block feeling "empty" / clipped. */
+.snag360-root .usecase-modal.open .modal-inner {
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: calc(100dvh - 80px) !important;
+  overflow: hidden !important;
+}
+.snag360-root .usecase-modal.open .modal-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+}
+.snag360-root .modal-body {
+  padding-bottom: 56px !important;
+}
+.snag360-root .modal-content h4 {
+  color: var(--dark, #2c2c2c) !important;
+}
+.snag360-root .modal-content p,
+.snag360-root .modal-content li {
+  color: rgba(44, 44, 44, 0.78) !important;
 }
 .snag360-root .reveal {
   opacity: 0 !important;

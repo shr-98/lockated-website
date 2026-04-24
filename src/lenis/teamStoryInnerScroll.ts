@@ -58,6 +58,13 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
   }
 
   const onWheel = (e: WheelEvent) => {
+    // Industry / use-case modals (Snag 360, Post Possession, etc.): use native
+    // scrolling inside `.modal-body` / `.modal-inner` — do not route wheel to Lenis targets.
+    const t = e.target
+    if (t instanceof Element && t.closest('.usecase-modal.open')) {
+      return
+    }
+
     const teamInfo = getTeamInfo(e.target)
     if (teamInfo) {
       const { scrollTop, scrollHeight, clientHeight } = teamInfo
