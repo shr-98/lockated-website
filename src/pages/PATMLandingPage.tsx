@@ -39,7 +39,22 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Progress bar: always styled when present. */
+/* Progress bar: outer wrapper + track + fill (same pattern as Snag360 / loyalty-rule-engine). */
+.patm-root #teamsStoryPin > .teams-story-progress {
+  display: block !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  margin: 28px auto 0 !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
 .patm-root #teamsStoryPin .teams-story-progress-track {
   display: block !important;
   height: 4px !important;
@@ -51,7 +66,10 @@ html:has(.patm-root) {
 .patm-root #teamsStoryPin .teams-story-progress-fill {
   display: block !important;
   min-height: 4px !important;
+  height: 100% !important;
+  width: 100% !important;
   background: var(--primary, #da7756) !important;
+  border-radius: 100px !important;
   transform-origin: left center !important;
 }
 /* Two-column + GSAP pin only on wide viewports. Below 1100px the HTML stacks — fixed pin height
@@ -139,9 +157,6 @@ html:has(.patm-root) {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
-  }
-  .patm-root #teamsStoryPin > .teams-story-progress {
-    flex: 0 0 auto !important;
   }
 }
 .patm-root .pin-spacer {
@@ -514,6 +529,8 @@ function initPatmTeamProgressBarOnly(
     pin: false,
     scrub: 0.2,
     invalidateOnRefresh: true,
+    onEnter: (self) => applyBar(self),
+    onEnterBack: (self) => applyBar(self),
     onRefresh: (self) => applyBar(self),
     onUpdate: (self) => applyBar(self),
   })

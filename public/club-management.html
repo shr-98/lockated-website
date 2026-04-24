@@ -1295,21 +1295,26 @@ nav.scrolled {
   background: var(--cream);
 }
 .teams-story-progress {
-  margin-top: 36px;
+  display: block;
+  width: 100%;
   max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-}
-@media (max-width: 767px) {
-  .teams-story-progress { display: none; }
+  margin: 36px auto 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  height: auto;
+  background: transparent;
+  overflow: visible;
 }
 .teams-story-progress-track {
+  display: block;
   height: 4px;
   border-radius: 100px;
   background: rgba(44,44,44,0.12);
   overflow: hidden;
 }
 .teams-story-progress-fill {
+  display: block;
+  min-height: 4px;
   height: 100%;
   width: 100%;
   background: var(--primary);

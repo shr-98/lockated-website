@@ -12,6 +12,8 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 /** Fixed nav — pin start + scroll padding (match PATM / Vendor). */
 const CLUB_NAV_OFFSET_PX = 68
 const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
+/** `public/club-management.html` stacks the team grid below 900px — inner column scroll only when two columns are side by side. */
+const CLUB_TEAMS_INNER_SCROLL_MIN_PX = 901
 
 /** Scoped only inside the Club route — avoids wiping blur/filters for the rest of the app. */
 const CLUB_MGMT_NO_BLUR_CSS = `
@@ -49,6 +51,39 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root #navbar {
   z-index: 10050;
 }
+/* Progress bar: outer wrapper + track + fill (same as PATM / Snag360 / loyalty). */
+.club-mgmt-root #teamsStoryPin > .teams-story-progress {
+  display: block !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  margin: 28px auto 0 !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+.club-mgmt-root #teamsStoryPin .teams-story-progress-track {
+  display: block !important;
+  height: 4px !important;
+  border-radius: 100px !important;
+  background: rgba(44, 44, 44, 0.12) !important;
+  overflow: hidden !important;
+}
+.club-mgmt-root #teamsStoryPin #teamsStoryProgress,
+.club-mgmt-root #teamsStoryPin .teams-story-progress-fill {
+  display: block !important;
+  min-height: 4px !important;
+  height: 100% !important;
+  width: 100% !important;
+  background: var(--primary, #da7756) !important;
+  border-radius: 100px !important;
+  transform-origin: left center !important;
+}
 .club-mgmt-root #teamsStoryPin {
   z-index: 1 !important;
   background: var(--cream, #F6F4EE) !important;
@@ -74,8 +109,87 @@ html:has(.club-mgmt-root) {
   padding-bottom: 32px !important;
   scroll-padding-bottom: 24px !important;
 }
-.club-mgmt-root #teamsStoryPin .teams-story-progress {
-  flex: 0 0 auto !important;
+/* Wide two columns: center scrolls like PATM / Post Sales — .team-info + .team-visual, not the whole .teams-main. */
+@media (min-width: ${CLUB_TEAMS_INNER_SCROLL_MIN_PX}px) {
+  .club-mgmt-root #teamsStoryPin {
+    height: calc(100dvh - ${CLUB_NAV_OFFSET_PX}px) !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-main {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: 0 !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 304px) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    gap: 40px !important;
+    align-items: stretch !important;
+    margin-top: 0 !important;
+    overflow: hidden !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-tabs {
+    min-height: 0 !important;
+    align-self: start !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-gutter: stable;
+    touch-action: pan-y !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-tabs::-webkit-scrollbar {
+    display: block !important;
+    width: 6px;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-tabs::-webkit-scrollbar-thumb {
+    background: rgba(44, 44, 44, 0.28);
+    border-radius: 4px;
+  }
+  .club-mgmt-root #teamsStoryPin .team-panels {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .club-mgmt-root #teamsStoryPin .team-content.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) !important;
+    gap: 40px !important;
+    align-items: start !important;
+    overflow: hidden !important;
+  }
+  .club-mgmt-root #teamsStoryPin .team-content.active > .team-info {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .club-mgmt-root #teamsStoryPin .team-content.active > .team-visual {
+    align-self: start !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
 @media (max-width: 767px) {
@@ -86,8 +200,38 @@ html:has(.club-mgmt-root) {
   }
   .club-mgmt-root #teamsStoryPin .teams-main {
     flex: none !important;
+    display: block !important;
     overflow: visible !important;
     padding-bottom: 0 !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-layout,
+  .club-mgmt-root #teamsStoryPin .team-panels,
+  .club-mgmt-root #teamsStoryPin .team-content.active {
+    display: block !important;
+    flex: none !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .club-mgmt-root #teamsStoryPin .team-content.active > .team-info,
+  .club-mgmt-root #teamsStoryPin .team-content.active > .team-visual {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-tabs {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .club-mgmt-root #teamsStoryPin > .teams-story-progress,
+  .club-mgmt-root .teams-section .teams-story-progress {
+    display: block !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 28px auto 0 !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 .club-mgmt-root .team-content.active > .team-info {
@@ -277,9 +421,12 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root .usecase-card {
   background-color: var(--cream, #F6F4EE) !important;
 }
-.club-mgmt-root .teams-section .team-info {
-  max-height: none !important;
-  overflow: visible !important;
+/* Stacked / tablet: do not cap .team-info (inner scroll only applies min-width: ${CLUB_TEAMS_INNER_SCROLL_MIN_PX}px). */
+@media (max-width: ${CLUB_TEAMS_INNER_SCROLL_MIN_PX - 1}px) {
+  .club-mgmt-root .teams-section .team-info {
+    max-height: none !important;
+    overflow: visible !important;
+  }
 }
 .club-mgmt-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
@@ -310,6 +457,16 @@ function initClubTeamStoryGsap(
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
 
+  const applyProgress = (self: ScrollTrigger) => {
+    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+    if (idx !== lastIdx) {
+      lastIdx = idx
+      const id = opts.teamIds[idx]
+      if (id) opts.switchTeam(id, opts.teamTabs[idx])
+    }
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
   return ScrollTrigger.create({
     id: 'club-teams-use-cases',
     trigger: pin,
@@ -321,15 +478,13 @@ function initClubTeamStoryGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-      if (idx !== lastIdx) {
-        lastIdx = idx
-        const id = opts.teamIds[idx]
-        if (id) opts.switchTeam(id, opts.teamTabs[idx])
-      }
-      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    onEnter: (self) => applyProgress(self),
+    onEnterBack: (self) => applyProgress(self),
+    onRefresh: (self) => {
+      lastIdx = -1
+      applyProgress(self)
     },
+    onUpdate: (self) => applyProgress(self),
   })
 }
 

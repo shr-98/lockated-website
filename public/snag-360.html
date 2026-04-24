@@ -1876,20 +1876,33 @@
         position: relative;
         overflow: hidden;
       }
+      /* Track + fill: outer is a wrapper; 4px bar is .teams-story-progress-track (same as loyalty-rule-engine). */
       .teams-story-progress {
-        height: 4px;
-        background: rgba(44, 44, 44, 0.1);
-        border-radius: 999px;
-        overflow: hidden;
-        margin-top: 32px;
+        display: block;
+        width: 100%;
         max-width: 480px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 32px auto 0;
+        padding: 0 20px;
+        box-sizing: border-box;
+        height: auto;
+        background: transparent;
+        overflow: visible;
       }
-      #teamsStoryProgress {
+      .teams-story-progress-track {
+        display: block;
+        height: 4px;
+        border-radius: 100px;
+        background: rgba(44, 44, 44, 0.12);
+        overflow: hidden;
+      }
+      #teamsStoryProgress,
+      .teams-story-progress-fill {
+        display: block;
+        min-height: 4px;
         height: 100%;
         width: 100%;
-        background: linear-gradient(90deg, var(--primary), rgba(218, 119, 86, 0.3));
+        background: linear-gradient(90deg, var(--primary), rgba(218, 119, 86, 0.55));
+        border-radius: 100px;
         transform: scaleX(0);
         transform-origin: left center;
       }

@@ -25,6 +25,15 @@ function initSnagTeamsGsap(
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
 
+  const applyProgress = (self: ScrollTrigger) => {
+    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+    if (idx !== lastIdx) {
+      lastIdx = idx
+      opts.switchTeamAt(idx)
+    }
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
   return ScrollTrigger.create({
     id: 'snag-teams-use-cases',
     trigger: pin,
@@ -36,14 +45,13 @@ function initSnagTeamsGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-      if (idx !== lastIdx) {
-        lastIdx = idx
-        opts.switchTeamAt(idx)
-      }
-      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    onEnter: (self) => applyProgress(self),
+    onEnterBack: (self) => applyProgress(self),
+    onRefresh: (self) => {
+      lastIdx = -1
+      applyProgress(self)
     },
+    onUpdate: (self) => applyProgress(self),
   })
 }
 
@@ -76,6 +84,39 @@ html:has(.snag360-root) {
 .snag360-root #navbar {
   z-index: 10050;
 }
+/* Progress bar: same track + fill pattern as loyalty-rule-engine / PATM. Snag HTML nests #teamsStoryProgress inside .teams-story-progress-track — the outer bar must not be the only 4px box or the fill collapses. */
+.snag360-root #teamsStoryPin .teams-story-progress {
+  display: block !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  margin: 28px auto 0 !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+.snag360-root #teamsStoryPin .teams-story-progress-track {
+  display: block !important;
+  height: 4px !important;
+  border-radius: 100px !important;
+  background: rgba(44, 44, 44, 0.12) !important;
+  overflow: hidden !important;
+}
+.snag360-root #teamsStoryPin #teamsStoryProgress,
+.snag360-root #teamsStoryPin .teams-story-progress-fill {
+  display: block !important;
+  min-height: 4px !important;
+  height: 100% !important;
+  width: 100% !important;
+  background: var(--primary, #da7756) !important;
+  border-radius: 100px !important;
+  transform-origin: left center !important;
+}
 .snag360-root #teamsStoryPin {
   z-index: 1 !important;
   background: var(--cream, #F6F4EE) !important;
@@ -104,12 +145,6 @@ html:has(.snag360-root) {
   padding-bottom: 32px !important;
   scroll-padding-bottom: 24px !important;
 }
-.snag360-root #teamsStoryPin .teams-story-progress {
-  flex: 0 0 auto !important;
-  width: 100%;
-  align-self: stretch;
-  box-sizing: border-box;
-}
 /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
 @media (max-width: 767px) {
   .snag360-root #teamsStoryPin {
@@ -122,9 +157,6 @@ html:has(.snag360-root) {
     overflow: visible !important;
     padding-bottom: 0 !important;
   }
-}
-.snag360-root #teamsStoryProgress {
-  box-sizing: border-box;
 }
 .snag360-root .teams-tabs {
   flex-shrink: 0;
