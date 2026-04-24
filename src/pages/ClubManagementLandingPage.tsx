@@ -126,32 +126,47 @@ html:has(.club-mgmt-root) {
     min-height: 0 !important;
     min-width: 0 !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 304px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr) !important;
     grid-template-rows: minmax(0, 1fr) !important;
     gap: 40px !important;
     align-items: stretch !important;
     margin-top: 0 !important;
     overflow: hidden !important;
   }
+  /* Tab rail: compact rows so all role tabs fit without scrolling the rail. */
   .club-mgmt-root #teamsStoryPin .teams-tabs {
-    min-height: 0 !important;
     align-self: start !important;
-    max-height: 100% !important;
+    width: 100% !important;
+    max-width: 260px !important;
     box-sizing: border-box !important;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-gutter: stable;
-    touch-action: pan-y !important;
+    overflow: visible !important;
+    gap: 6px !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
   }
-  .club-mgmt-root #teamsStoryPin .teams-tabs::-webkit-scrollbar {
-    display: block !important;
-    width: 6px;
+  .club-mgmt-root #teamsStoryPin .teams-layout button.team-tab {
+    min-height: 0 !important;
+    padding: 8px 12px !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    gap: 10px !important;
   }
-  .club-mgmt-root #teamsStoryPin .teams-tabs::-webkit-scrollbar-thumb {
-    background: rgba(44, 44, 44, 0.28);
-    border-radius: 4px;
+  .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-text {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-icon {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    border-radius: 8px !important;
+  }
+  .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-icon svg {
+    width: 16px !important;
+    height: 16px !important;
   }
   .club-mgmt-root #teamsStoryPin .team-panels {
     min-width: 0 !important;
