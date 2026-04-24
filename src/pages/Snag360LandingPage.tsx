@@ -248,7 +248,7 @@ html:has(.snag360-root) {
   align-self: stretch;
   background: transparent !important;
   /* Make the tab rail more compact so all teams fit in view. */
-  gap: 8px !important;
+  gap: 6px !important;
   max-height: 100% !important;
   overflow-y: auto !important;
   scrollbar-width: none;
@@ -261,11 +261,11 @@ html:has(.snag360-root) {
   color: var(--dark, #2c2c2c) !important;
   border: 1.5px solid transparent !important;
   background-image: none !important;
-  padding: 12px 14px !important;
-  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  border-radius: 9px !important;
 }
 .snag360-root .teams-layout button.team-tab .team-tab-text {
-  font-size: 13px !important;
+  font-size: 12px !important;
 }
 .snag360-root .teams-layout button.team-tab:not(.active) {
   background: var(--surface, #f0eae1) !important;
@@ -283,13 +283,13 @@ html:has(.snag360-root) {
 .snag360-root .teams-layout .team-tab-icon {
   background: var(--cream, #f6f4ee) !important;
   border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
-  width: 34px !important;
-  height: 34px !important;
-  border-radius: 9px !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 8px !important;
 }
 .snag360-root .teams-layout .team-tab-icon svg {
-  width: 16px !important;
-  height: 16px !important;
+  width: 14px !important;
+  height: 14px !important;
 }
 .snag360-root .teams-layout .team-tab.active .team-tab-icon {
   background: var(--primary, #da7756) !important;
