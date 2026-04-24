@@ -117,9 +117,13 @@ nav.scrolled{background:rgba(246,244,238,.96);box-shadow:0 4px 30px rgba(44,44,4
 
 /* TEAM USE CASES (Vendor Management–style layout) */
 .teams-section{background:var(--band)}
-.teams-story-progress{height:3px;background:rgba(44,44,44,.08);border-radius:999px;overflow:hidden;margin-top:18px}
+.teams-section-header{padding-bottom:0}
+#teamsStoryPin{margin-top:32px}
+.teams-story-pin-inner{padding-top:0}
+.teams-story-progress{height:3px;background:rgba(44,44,44,.08);border-radius:999px;overflow:hidden}
+.teams-story-progress--footer{margin-top:32px;margin-bottom:0;max-width:480px;margin-left:auto;margin-right:auto}
 #teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,.3));transform:scaleX(0);transform-origin:left center}
-.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:48px;align-items:start}
+.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:0;align-items:start}
 .teams-tabs{display:flex;flex-direction:column;gap:4px}
 .fm-matrix-team-tab{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;background:var(--surface);transition:all .2s ease}
 .fm-matrix-team-tab:hover{border-color:var(--card-border)}
@@ -346,13 +350,14 @@ footer{background:var(--bg-cream);padding:56px 48px 36px;border-top:1px solid va
 
 <!-- 6. TEAM USE CASES -->
 <section class="section teams-section" id="teams">
-  <!-- Header inside pin so scroll doesn’t split title from content (Vendor Management behavior) -->
+  <!-- Titles scroll normally; only tabs + content are pinned (pin on “footer” of section, not the heading). -->
+  <div class="section-inner teams-section-header">
+    <div class="section-eyebrow"><i class="fas fa-users"></i> TEAM USE CASES</div>
+    <div class="section-title reveal">Every function on one<br>governed operating layer</div>
+    <div class="section-sub reveal">How FM, finance, security, and occupant-facing teams use FM Matrix day to day — without switching tools or losing audit context.</div>
+  </div>
   <div id="teamsStoryPin">
-    <div class="section-inner">
-      <div class="section-eyebrow"><i class="fas fa-users"></i> TEAM USE CASES</div>
-      <div class="section-title reveal">Every function on one<br>governed operating layer</div>
-      <div class="section-sub reveal">How FM, finance, security, and occupant-facing teams use FM Matrix day to day — without switching tools or losing audit context.</div>
-      <div class="teams-story-progress" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
+    <div class="section-inner teams-story-pin-inner">
       <div class="teams-layout">
       <div class="teams-tabs">
         <div class="fm-matrix-team-tab active" data-team="ops" role="button" tabindex="0"><div class="fm-matrix-team-tab-icon"><i class="fas fa-headset"></i></div><span class="fm-matrix-team-tab-text">FM Operations</span></div>
@@ -436,6 +441,7 @@ footer{background:var(--bg-cream);padding:56px 48px 36px;border-top:1px solid va
         </div>
       </div>
       </div>
+      <div class="teams-story-progress teams-story-progress--footer" aria-hidden="true"><div id="teamsStoryProgress"></div></div>
     </div>
   </div>
 </section>

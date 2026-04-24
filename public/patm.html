@@ -28,8 +28,8 @@
     --surface: #F0EAE1;
     --divider: rgba(196, 184, 157, 0.55);
     --font: 'Poppins', sans-serif;
-    /* Team mock width — same compact frame as Post Sales / Snag / Club */
-    --team-visual-max-w: 380px;
+    /* Team mock: compact “window” frame (right column) */
+    --team-visual-max-w: 300px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2026,6 +2026,8 @@ svg { display: block; }
 }
 
 .teams-header { margin-bottom: 52px; }
+/* Reduces scroll jank when panel height changes (same idea as vendor-management.html) */
+.teams-section, #teamsStoryPin, .pin-spacer { overflow-anchor: none; }
 
 /* Team use cases: left rail tabs + main panel (same pattern as Vendor Management) */
 .teams-layout {
@@ -2150,9 +2152,9 @@ svg { display: block; }
   max-width: min(100%, var(--team-visual-max-w));
   background: var(--surface);
   border: 1px solid #c4b89d;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(44,44,44,0.1);
+  box-shadow: 0 8px 28px rgba(44,44,44,0.08);
 }
 .team-visual-header {
   padding: 14px 18px;
@@ -4085,14 +4087,13 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
 <!-- ═══════════════════════════════════════════ TARGETED TEAMS ═══ -->
 <section class="teams-section" id="teams" data-teams-story="1">
   <div class="teams-inner">
+    <!-- Team use cases: same DOM pattern as vendor-management.html (header inside #teamsStoryPin; scroll+pin+progress in app). -->
     <div class="teams-story-pin" id="teamsStoryPin">
     <div class="teams-header">
       <div class="section-eyebrow reveal">Team use cases</div>
       <h2 class="section-title reveal reveal-delay-1">Your whole company.<br><span class="accent">One platform.</span></h2>
       <p class="section-sub reveal reveal-delay-2">From the C-suite reading dashboards to the developer closing sprints, PTM gives every team exactly what they need, without getting in each other's way.</p>
     </div>
-
-    <div class="teams-main">
     <div class="teams-layout">
     <div class="teams-tabs reveal" role="tablist" aria-label="PTM team use cases">
       <button type="button" class="team-tab active" data-team="leadership" role="tab" aria-selected="true">
@@ -4436,14 +4437,6 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
           <li class="team-feature"><div class="team-feature-dot"></div>Documents: briefs, brand guidelines, and assets on your servers</li>
           <li class="team-feature"><div class="team-feature-dot"></div>Recognition feed for campaign wins and team celebrations</li>
         </ul>
-        <div class="team-modules">
-          <span class="team-module-chip">Projects</span>
-          <span class="team-module-chip">Kanban</span>
-          <span class="team-module-chip">MoM</span>
-          <span class="team-module-chip">Documents</span>
-          <span class="team-module-chip">Channels</span>
-          <span class="team-module-chip">Company Feed</span>
-        </div>
         <a href="#" class="btn-primary" style="width:fit-content;">
           <span>Contact Sales</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -4470,7 +4463,6 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
       </div>
     </div>
 
-    </div>
     </div>
     </div>
 

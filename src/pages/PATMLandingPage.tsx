@@ -11,8 +11,8 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
 /** Fixed nav height in `public/patm.html` — pin start + scroll padding must match. */
 const PATM_NAV_OFFSET_PX = 68
-/** Team use cases: scroll distance per tab (match Vendor Management). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
+/** Team use cases: viewport heights of scroll per tab (higher = more time to read each team while scrolling). */
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.0
 
 /** Scoped overrides so app Tailwind / global styles do not force white shells, buttons, or forms. */
 const PATM_ISOLATION_CSS = `
@@ -23,6 +23,12 @@ const PATM_ISOLATION_CSS = `
 html:has(.patm-root) {
   scroll-padding-top: ${PATM_NAV_OFFSET_PX}px;
   scrollbar-gutter: stable;
+  overflow-anchor: none;
+}
+.patm-root .teams-section,
+.patm-root #teamsStoryPin,
+.patm-root .pin-spacer {
+  overflow-anchor: none;
 }
 .patm-root section[id],
 .patm-root .teams-section#teams {
@@ -31,46 +37,17 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
+/* Team use cases: static grid from patm.html unchanged. Pinned: scroll inside #teamsStoryPin only (no flex hacks on .teams-layout / .team-content). */
 .patm-root #teamsStoryPin {
   z-index: 1 !important;
-  background: var(--cream, #F6F4EE) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  justify-content: flex-start !important;
-  min-height: 0 !important;
+  will-change: auto !important;
   max-height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
-}
-.patm-root #teamsStoryPin .teams-header {
-  flex: 0 0 auto !important;
-}
-.patm-root #teamsStoryPin .teams-main {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 32px !important;
-  scroll-padding-bottom: 24px !important;
-}
-.patm-root #teamsStoryPin .teams-story-progress {
-  flex: 0 0 auto !important;
-}
-/* No GSAP pin below 768px — undo viewport cap + inner scroll. */
-@media (max-width: 767px) {
-  .patm-root #teamsStoryPin {
-    max-height: none !important;
-    display: block !important;
-    overflow: visible !important;
-  }
-  .patm-root #teamsStoryPin .teams-main {
-    flex: none !important;
-    overflow: visible !important;
-    padding-bottom: 0 !important;
-  }
+  scroll-padding-bottom: 8px !important;
 }
 .patm-root .team-content.active > .team-info {
   height: auto !important;
@@ -90,7 +67,7 @@ html:has(.patm-root) {
   align-self: start !important;
   justify-self: end !important;
   width: 100% !important;
-  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  max-width: min(100%, var(--team-visual-max-w, 300px)) !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -98,6 +75,15 @@ html:has(.patm-root) {
 }
 .patm-root .team-content.active .team-visual-body {
   flex: 0 0 auto !important;
+}
+@media (max-width: 767px) {
+  .patm-root #teamsStoryPin {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+.patm-root #teamsStoryProgress {
+  transform-origin: left center !important;
 }
 .patm-root,
 .patm-root * {
@@ -157,11 +143,13 @@ html:has(.patm-root) {
 .patm-root .feature-screen-body {
   background-color: var(--cream, #F6F4EE) !important;
 }
-/* Team mock: vendor-management .wt-ui-card */
+/* Team mock: compact card (max width from --team-visual-max-w in patm.html) */
 .patm-root .team-visual {
   background-color: var(--surface, #F0EAE1) !important;
   border: 1px solid #c4b89d !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: 0 8px 28px rgba(44, 44, 44, 0.08) !important;
+  border-radius: 16px !important;
+  max-width: min(100%, var(--team-visual-max-w, 300px)) !important;
 }
 .patm-root .team-visual-header {
   background: var(--cream, #F6F4EE) !important;
@@ -275,7 +263,10 @@ type PatmTeamStoryGsapOpts = {
   switchTeam: (teamId: string, tabEl?: HTMLElement) => void
 }
 
-/** Pin “Built for every team” and advance tabs from scroll (desktop; reduced-motion / narrow viewports: click only). */
+/**
+ * #teams — pin Team Use Cases and advance tabs from scroll (same as Vendor Management).
+ * Mobile / reduced motion: no pin; tabs stay click-only.
+ */
 function initPatmTeamStoryGsap(
   root: HTMLElement,
   opts: PatmTeamStoryGsapOpts,
@@ -291,6 +282,16 @@ function initPatmTeamStoryGsap(
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
 
+  const applyProgress = (self: ScrollTrigger) => {
+    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+    if (idx !== lastIdx) {
+      lastIdx = idx
+      const id = opts.teamIds[idx]
+      if (id) opts.switchTeam(id, opts.teamTabs[idx])
+    }
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
   return ScrollTrigger.create({
     id: 'patm-teams-use-cases',
     trigger: pin,
@@ -302,15 +303,13 @@ function initPatmTeamStoryGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-      if (idx !== lastIdx) {
-        lastIdx = idx
-        const id = opts.teamIds[idx]
-        if (id) opts.switchTeam(id, opts.teamTabs[idx])
-      }
-      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    onEnter: (self) => applyProgress(self),
+    onEnterBack: (self) => applyProgress(self),
+    onRefresh: (self) => {
+      lastIdx = -1
+      applyProgress(self)
     },
+    onUpdate: (self) => applyProgress(self),
   })
 }
 
@@ -353,10 +352,6 @@ const BACKDROP_FILTER_FIX_CSS = `
   transition: none !important;
 }
 .patm-root .reveal.in-view { opacity: 1 !important; transform: none !important; }
-.patm-root .teams-section .team-info {
-  max-height: none !important;
-  overflow: visible !important;
-}
 .patm-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;

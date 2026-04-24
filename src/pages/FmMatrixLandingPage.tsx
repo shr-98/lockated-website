@@ -82,12 +82,29 @@ html:has(.fm-matrix-root) {
   border: none !important;
   box-shadow: none !important;
 }
+/* Heading is outside #teamsStoryPin; pin is tab rail + panels; progress bar sits in footer. */
+.fm-matrix-root .teams-section .teams-section-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
 .fm-matrix-root #teamsStoryPin {
   background: var(--band, #E8E2D6) !important;
   min-height: calc(100vh - ${FM_NAV_OFFSET_PX}px);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 32px !important;
+}
+.fm-matrix-root .teams-story-pin-inner {
+  padding-top: 0 !important;
+}
+.fm-matrix-root .teams-story-progress--footer {
+  margin-top: 32px !important;
+  margin-bottom: 0 !important;
+  max-width: 480px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  flex: 0 0 auto !important;
 }
 /* No GSAP pin below 768px — let Team Use Cases flow with document scroll. */
 @media (max-width: 767px) {
@@ -97,6 +114,7 @@ html:has(.fm-matrix-root) {
   }
 }
 .fm-matrix-root .teams-layout {
+  margin-top: 0 !important;
   align-items: stretch !important;
   flex: 1;
 }
