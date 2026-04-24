@@ -352,7 +352,7 @@ html:has(.snag360-root) {
   color: #2C2C2C !important;
 }
 .snag360-root .usecase-card {
-  background: var(--cream, #F6F4EE) !important;
+  background: #fff !important;
 }
 .snag360-root .usecase-card-body {
   background: transparent !important;
