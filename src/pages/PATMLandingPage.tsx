@@ -52,14 +52,44 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Heading is outside #teamsStoryPin; pin is tab rail + panels + progress (FM Matrix-style). */
+/* Heading moved INSIDE #teamsStoryPin at runtime so it pins together with tabs + panels
+   (mirrors public/vendor-management.html). Tight spacing so tabs sit right under the title. */
 .patm-root .teams-section .teams-section-header {
   padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-title {
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-sub {
   margin-bottom: 0 !important;
 }
 /* Stacking: like vendor-mgmt route — do not over-stack; pin uses z-index 1. */
 .patm-root .teams-section#teams.patm-teams--app {
   position: relative !important;
+}
+/* Thin horizontal divider at top of Team Use Cases section — matches the rule between sections
+   (same color/weight as the clients-section / usps-section boundary in public/patm.html). */
+.patm-root .teams-section#teams::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(100%, 1400px) !important;
+  height: 1px !important;
+  background: rgba(196, 184, 157, 0.3) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
 }
 .patm-root #teamsStoryPin {
   margin-top: 32px !important;
@@ -100,7 +130,7 @@ html:has(.patm-root) {
   border-radius: 100px !important;
   transform-origin: left center !important;
 }
-/* Pin shell: 768+ — same flex + background pattern as Snag360 (scroll story + GSAP). */
+/* Pin shell: 768+ — restore viewport-height pin (tabs + panels + progress). */
 @media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) {
   .patm-root #teamsStoryPin {
     z-index: 1 !important;
@@ -124,13 +154,30 @@ html:has(.patm-root) {
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
+    padding-top: clamp(24px, 3vh, 40px) !important;
+    padding-bottom: 0 !important;
+  }
+  /* Header + layout + progress must coexist in the viewport-height pin. Keep the header compact via
+     type/line-height only — do NOT clip with max-height/overflow, or words get cut off. */
+  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
+    flex: 0 0 auto !important;
+  }
+  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-title {
+    font-size: clamp(1.6rem, 3.2vw, 2.4rem) !important;
+    line-height: 1.15 !important;
+  }
+  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-sub {
+    font-size: clamp(0.9rem, 1.1vw, 1rem) !important;
+    line-height: 1.45 !important;
+    margin-top: 6px !important;
   }
   /* Room above footer progress: mirrors Snag .teams-main padding-bottom 32px. */
   .patm-root #teamsStoryPin .teams-layout {
-    padding-bottom: 32px !important;
+    padding-bottom: 12px !important;
+    margin-top: 14px !important;
   }
 }
-/* Two-column (rail + panels) only 1101+ — same as public/patm.html @media (max-width: 1100). */
+/* Two-column (rail + panels) only 1101+ — pinned scroll story desktop. */
 @media (min-width: ${PATM_TEAMS_TWO_COL_MIN_PX}px) {
   .patm-root #teamsStoryPin .teams-layout {
     flex: 1 1 auto !important;
@@ -195,7 +242,7 @@ html:has(.patm-root) {
     -webkit-overflow-scrolling: touch !important;
   }
 }
-/* 768–1100: patm.html stacks (tabs over copy); still pinned like FM, no forced 2-col. */
+/* 768–1100: tabs over copy, still pinned. */
 @media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) and (max-width: 1100px) {
   .patm-root #teamsStoryPin .teams-layout {
     flex: 1 1 auto !important;
@@ -594,17 +641,8 @@ function initPatmTeamStoryGsap(
   if (!window.matchMedia(`(min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches) return null
 
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
-  let lastIdx = -1
 
-  const applyProgress = (self: ScrollTrigger) => {
-    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-    if (idx !== lastIdx) {
-      lastIdx = idx
-      const id = opts.teamIds[idx]
-      if (id) opts.switchTeam(id, opts.teamTabs[idx])
-    }
-    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
-  }
+  let lastIdx = -1
 
   return ScrollTrigger.create({
     id: 'patm-teams-use-cases',
@@ -617,13 +655,15 @@ function initPatmTeamStoryGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onEnter: (self) => applyProgress(self),
-    onEnterBack: (self) => applyProgress(self),
-    onRefresh: (self) => {
-      lastIdx = -1
-      applyProgress(self)
+    onUpdate: (self) => {
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+      if (idx !== lastIdx) {
+        lastIdx = idx
+        const id = opts.teamIds[idx]
+        if (id) opts.switchTeam(id, opts.teamTabs[idx])
+      }
+      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
     },
-    onUpdate: (self) => applyProgress(self),
   })
 }
 
@@ -811,6 +851,17 @@ export default function PATMLandingPage() {
     const root = rootRef.current
     if (!root) return
     if (!bodyHtml) return
+
+    // Team use cases: keep the header ABOVE #teamsStoryPin so the section reads top-down like the
+    // "How we fix it" section — eyebrow + title + subtitle sit on top, content flows normally below.
+    // If a previous render moved the header into the pin, restore it.
+    const teamsSection = root.querySelector<HTMLElement>('#teams')
+    const teamsPin = root.querySelector<HTMLElement>('#teamsStoryPin')
+    const teamsHeader = root.querySelector<HTMLElement>('#teams .teams-section-header')
+    if (teamsSection && teamsPin && teamsHeader && teamsPin.contains(teamsHeader)) {
+      teamsSection.insertBefore(teamsHeader, teamsPin)
+      teamsHeader.classList.remove('patm-teams-header--in-pin')
+    }
 
     // Team use cases (Snag 360): show `.reveal` in #teams immediately so nothing stays opacity:0 before IO / while pinned.
     root.querySelectorAll<HTMLElement>('#teams .reveal, #teams .fade-up').forEach((el) => {
