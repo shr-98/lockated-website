@@ -1,8 +1,8 @@
 /**
- * While the pointer is over a scrollport (`.team-info`, `.teams-main`, `.wt-info`), route
- * wheel deltas to that element first so users can read full content before Lenis advances
- * the pinned team / walkthrough. If `.team-info` can scroll, use it first; then `.teams-main`;
- * then `#teamsStoryPin` when it uses overflow-y auto (e.g. PATM, no `.teams-main`).
+ * While the pointer is over a scrollport (`.team-info`, `.teams-main`, `.teams-tabs`, `.wt-info`, …
+ * ) route wheel deltas to that element first so users can read full content before Lenis advances
+ * the pinned team / walkthrough. Order: `.team-info` → `.teams-main` → `.teams-tabs` (tab rail) →
+ * `#teamsStoryPin` when overflow-y auto, then other leaf hosts.
  */
 export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
   const leafSelectors = ['.team-info', '.team-panel-info', '.wt-info', '.feature-info']
@@ -17,6 +17,14 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
     if (!el) return null
     const m = el.closest('.teams-main')
     return m && root.contains(m) ? (m as HTMLElement) : null
+  }
+
+  /** Left tab rail (e.g. PATM): scroll before Lenis or last tabs look “cut off”. */
+  const getTeamsTabs = (t: EventTarget | null): HTMLElement | null => {
+    const el = t instanceof Element ? t : null
+    if (!el) return null
+    const r = el.closest('.teams-tabs')
+    return r && root.contains(r) ? (r as HTMLElement) : null
   }
 
   /** Pages without `.teams-main` (e.g. PATM) scroll the whole pin (`#teamsStoryPin`) when it has overflow-y: auto. */
@@ -74,6 +82,23 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
         if ((down && !atBottom) || (up && !atTop)) {
           e.preventDefault()
           main.scrollTop += delta
+        }
+        return
+      }
+    }
+
+    const tabRail = getTeamsTabs(e.target)
+    if (tabRail) {
+      const { scrollTop, scrollHeight, clientHeight } = tabRail
+      if (scrollHeight > clientHeight + 2) {
+        const delta = e.deltaY
+        const atTop = scrollTop <= 0
+        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
+        const down = delta > 0
+        const up = delta < 0
+        if ((down && !atBottom) || (up && !atTop)) {
+          e.preventDefault()
+          tabRail.scrollTop += delta
         }
         return
       }

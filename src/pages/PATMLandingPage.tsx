@@ -11,6 +11,8 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
 /** Fixed nav height in `public/patm.html` — pin start + scroll padding must match. */
 const PATM_NAV_OFFSET_PX = 68
+/** Pinned two-column team story only at this width+ (matches public/patm.html stacked breakpoint). */
+const PATM_TEAMS_PIN_MIN_WIDTH_PX = 1101
 /** Team use cases: viewport heights of scroll per tab (higher = more time to read each team while scrolling). */
 const TEAM_STORY_SCROLL_PER_TAB_VH = 1.0
 
@@ -37,21 +39,110 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Team use cases: static grid from patm.html unchanged. Pinned: scroll inside #teamsStoryPin only (no flex hacks on .teams-layout / .team-content). */
-.patm-root #teamsStoryPin {
-  z-index: 1 !important;
-  will-change: auto !important;
-  max-height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
-  box-sizing: border-box !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  scroll-padding-bottom: 8px !important;
+/* Progress bar: always styled when present. */
+.patm-root #teamsStoryPin .teams-story-progress-track {
+  display: block !important;
+  height: 4px !important;
+  border-radius: 100px !important;
+  background: rgba(44, 44, 44, 0.12) !important;
+  overflow: hidden !important;
 }
-.patm-root .team-content.active > .team-info {
-  height: auto !important;
-  min-width: 0;
+.patm-root #teamsStoryPin #teamsStoryProgress,
+.patm-root #teamsStoryPin .teams-story-progress-fill {
+  display: block !important;
+  min-height: 4px !important;
+  background: var(--primary, #da7756) !important;
+  transform-origin: left center !important;
+}
+/* Two-column + GSAP pin only on wide viewports. Below 1100px the HTML stacks — fixed pin height
+   was clipping the tab rail, headings, and progress (768px was stuck between 767/768 media rules). */
+@media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) {
+  .patm-root #teamsStoryPin {
+    z-index: 1 !important;
+    will-change: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
+    max-height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+  }
+  .patm-root #teamsStoryPin > .teams-header {
+    flex: 0 0 auto !important;
+  }
+  .patm-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 304px) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    gap: 40px !important;
+    align-items: stretch !important;
+    margin-top: 0 !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .teams-tabs {
+    min-height: 0 !important;
+    align-self: start !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 10px !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-gutter: stable;
+    touch-action: pan-y !important;
+  }
+  .patm-root #teamsStoryPin .teams-tabs::-webkit-scrollbar {
+    display: block !important;
+    width: 6px;
+  }
+  .patm-root #teamsStoryPin .teams-tabs::-webkit-scrollbar-thumb {
+    background: rgba(44, 44, 44, 0.28);
+    border-radius: 4px;
+  }
+  .patm-root #teamsStoryPin .teams-panels {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+    align-items: start !important;
+    overflow: hidden !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active > .team-info {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active > .team-visual {
+    align-self: start !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .patm-root #teamsStoryPin > .teams-story-progress {
+    flex: 0 0 auto !important;
+  }
 }
 .patm-root .pin-spacer {
   background: var(--cream, #F6F4EE) !important;
@@ -76,10 +167,62 @@ html:has(.patm-root) {
 .patm-root .team-content.active .team-visual-body {
   flex: 0 0 auto !important;
 }
-@media (max-width: 767px) {
+/* Stacked layout (≤1100px): document scroll; no fixed-height pin. Matches patm.html @media 1100px. */
+@media (max-width: 1100px) {
+  .patm-root .teams-section#teams,
+  .patm-root .teams-section#teams .teams-inner {
+    overflow: visible !important;
+  }
   .patm-root #teamsStoryPin {
+    height: auto !important;
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .patm-root #teamsStoryPin .teams-layout,
+  .patm-root #teamsStoryPin .teams-panels,
+  .patm-root #teamsStoryPin .team-content.active {
+    display: block !important;
+    flex: none !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active > .team-info,
+  .patm-root #teamsStoryPin .team-content.active > .team-visual {
     max-height: none !important;
     overflow: visible !important;
+  }
+  .patm-root #teamsStoryPin .teams-tabs {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .patm-root #teamsStoryPin > .teams-story-progress,
+  .patm-root .teams-section .teams-story-progress {
+    display: block !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 28px auto 0 !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+@media (max-width: 768px) {
+  .patm-root #teams .teams-header {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .patm-root #teams .section-title,
+  .patm-root #teams .section-sub {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
   }
 }
 .patm-root #teamsStoryProgress {
@@ -228,6 +371,36 @@ html:has(.patm-root) {
   color: rgba(44, 44, 44, 0.5) !important;
   opacity: 1 !important;
 }
+/* Larger team tabs (tap targets) + bottom padding so the last item clears the screen / home indicator. */
+.patm-root #teams .teams-tabs {
+  gap: 10px !important;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)) !important;
+}
+.patm-root #teams .teams-layout button.team-tab {
+  min-height: 58px !important;
+  padding: 18px 20px !important;
+  border-radius: 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+.patm-root #teams .teams-layout .team-tab-text {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+.patm-root #teams .teams-layout .team-tab-icon {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border-radius: 12px !important;
+}
+.patm-root #teams .teams-layout .team-tab-icon svg {
+  width: 22px !important;
+  height: 22px !important;
+  flex-shrink: 0 !important;
+}
 .patm-root .btn-primary,
 .patm-root .btn-hero-primary,
 .patm-root .form-submit {
@@ -264,8 +437,8 @@ type PatmTeamStoryGsapOpts = {
 }
 
 /**
- * #teams — pin Team Use Cases and advance tabs from scroll (same as Vendor Management).
- * Mobile / reduced motion: no pin; tabs stay click-only.
+ * #teams — pin + scroll story only on wide two-column layout (min-width: 1101px).
+ * Below that: use initPatmTeamProgressBarOnly. Reduced motion: no ST.
  */
 function initPatmTeamStoryGsap(
   root: HTMLElement,
@@ -277,7 +450,7 @@ function initPatmTeamStoryGsap(
   const n = opts.teamIds.length
   if (n < 1) return null
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
-  if (!window.matchMedia('(min-width: 768px)').matches) return null
+  if (!window.matchMedia(`(min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches) return null
 
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
@@ -310,6 +483,39 @@ function initPatmTeamStoryGsap(
       applyProgress(self)
     },
     onUpdate: (self) => applyProgress(self),
+  })
+}
+
+/**
+ * Below min pin width: no pin (document scroll). Scrub the horizontal bar only; tabs are click-only.
+ */
+function initPatmTeamProgressBarOnly(
+  root: HTMLElement,
+  opts: PatmTeamStoryGsapOpts,
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (window.matchMedia(`(min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  const applyBar = (self: ScrollTrigger) => {
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
+  return ScrollTrigger.create({
+    id: 'patm-teams-progress-mobile',
+    trigger: pin,
+    start: `top ${PATM_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: false,
+    scrub: 0.2,
+    invalidateOnRefresh: true,
+    onRefresh: (self) => applyBar(self),
+    onUpdate: (self) => applyBar(self),
   })
 }
 
@@ -625,6 +831,11 @@ export default function PATMLandingPage() {
         switchTeam(teamIds[idx]!, teamTabs[idx]!)
         return
       }
+      /* Stacked / narrow: no pin; keep tab switches instant (no Lenis jump). */
+      if (window.matchMedia('(max-width: 1100px)').matches) {
+        switchTeam(teamIds[idx]!, teamTabs[idx]!)
+        return
+      }
       const st = teamStorySt
       const n = teamIds.length
       if (n <= 1) {
@@ -658,7 +869,9 @@ export default function PATMLandingPage() {
       })
     }
     const gsapCtx = gsap.context(() => {
-      teamStorySt = initPatmTeamStoryGsap(root, { teamTabs, teamIds, switchTeam })
+      teamStorySt = window.matchMedia(`(min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches
+        ? initPatmTeamStoryGsap(root, { teamTabs, teamIds, switchTeam })
+        : initPatmTeamProgressBarOnly(root, { teamTabs, teamIds, switchTeam })
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           ScrollTrigger.refresh()

@@ -1986,6 +1986,10 @@ svg { display: block; }
   position: relative;
   overflow: hidden;
 }
+/* Full tab list must not be clipped; overflow:hidden on the section was cutting the last team tabs. */
+#teams.teams-section {
+  overflow: visible;
+}
 .teams-section::before {
   content: ''; position: absolute;
   top: -200px; left: -200px; width: 600px; height: 600px;
@@ -2005,9 +2009,8 @@ svg { display: block; }
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
-}
-@media (max-width: 767px) {
-  .teams-story-progress { display: none; }
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 .teams-story-progress-track {
   height: 4px;
@@ -2032,7 +2035,7 @@ svg { display: block; }
 /* Team use cases: left rail tabs + main panel (same pattern as Vendor Management) */
 .teams-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 304px 1fr;
   gap: 40px;
   align-items: start;
   margin-top: 0;
@@ -2041,22 +2044,24 @@ svg { display: block; }
 .teams-tabs {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   border-bottom: none;
   overflow: visible;
   margin-bottom: 0;
   scrollbar-width: none;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
 }
 .teams-tabs::-webkit-scrollbar { display: none; }
 .team-tab {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 18px; border-radius: 12px;
+  display: flex; align-items: center; gap: 16px;
+  min-height: 58px; padding: 18px 20px; border-radius: 14px;
   cursor: pointer; border: 1.5px solid transparent;
   background: var(--surface); transition: all 0.2s ease;
-  font-family: var(--font); font-size: 14px; font-weight: 600;
+  font-family: var(--font); font-size: 15px; font-weight: 600;
   text-align: left; width: 100%;
   -webkit-appearance: none; appearance: none; margin: 0;
-  line-height: 1.3; color: rgba(44,44,44,0.6);
+  line-height: 1.35; color: rgba(44,44,44,0.6);
+  box-sizing: border-box;
 }
 .team-tab:hover { border-color: var(--border); }
 .team-tab.active {
@@ -2064,15 +2069,15 @@ svg { display: block; }
   background: rgba(218,119,86,0.05);
 }
 .team-tab-icon {
-  width: 40px; height: 40px; border-radius: 10px;
+  width: 48px; height: 48px; min-width: 48px; min-height: 48px; border-radius: 12px;
   background: var(--cream); display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; border: 1px solid var(--divider);
 }
-.team-tab-icon svg { width: 18px; height: 18px; color: rgba(44,44,44,0.5); flex-shrink: 0; }
+.team-tab-icon svg { width: 22px; height: 22px; color: rgba(44,44,44,0.5); flex-shrink: 0; }
 .team-tab:hover .team-tab-icon svg { color: rgba(44,44,44,0.65); }
 .team-tab.active .team-tab-icon { background: var(--primary); border-color: var(--primary); }
 .team-tab.active .team-tab-icon svg { color: var(--on-primary); }
-.team-tab-text { font-size: 14px; font-weight: 600; color: rgba(44,44,44,0.6); }
+.team-tab-text { font-size: 15px; font-weight: 600; color: rgba(44,44,44,0.6); }
 .team-tab.active .team-tab-text { color: var(--dark); }
 
 /* Team content */
