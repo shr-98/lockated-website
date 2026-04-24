@@ -80,12 +80,30 @@ html:has(.lease-management-root) {
 .lease-management-root #navbar {
   z-index: 10050;
 }
+/* Eyebrow + title + sub scroll; pin is tab rail + panels + progress (FM Matrix–style). */
+.lease-management-root .teams-section .teams-section-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
 .lease-management-root #teamsStoryPin {
   z-index: 1 !important;
+  background: var(--band, #E8E2D6) !important;
   min-height: calc(100vh - ${LEASE_NAV_OFFSET_PX}px);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 32px !important;
+}
+.lease-management-root .teams-story-pin-inner {
+  padding-top: 0 !important;
+}
+.lease-management-root .teams-story-progress--footer {
+  margin-top: 32px !important;
+  margin-bottom: 0 !important;
+  max-width: 480px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  flex: 0 0 auto !important;
 }
 /* No GSAP pin below 768px — let Team Use Cases flow with document scroll. */
 @media (max-width: 767px) {
@@ -93,6 +111,11 @@ html:has(.lease-management-root) {
     min-height: 0 !important;
     display: block !important;
   }
+}
+.lease-management-root .teams-layout {
+  margin-top: 0 !important;
+  align-items: stretch !important;
+  flex: 1;
 }
 .lease-management-root .pin-spacer {
   background: var(--band, #E8E2D6) !important;

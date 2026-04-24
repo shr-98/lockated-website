@@ -274,11 +274,15 @@ nav.scrolled{background:rgba(246,244,238,0.97);box-shadow:0 4px 32px rgba(44,44,
 /* ── TEAMS ── */
 .teams-section{padding:96px 48px;position:relative;overflow:hidden;background:var(--band);}
 .teams-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(158,200,186,0.08) 0%,transparent 70%);pointer-events:none;}
-.teams-story-progress{height:4px;background:rgba(44,44,44,0.1);border-radius:999px;overflow:hidden;margin-top:32px;max-width:480px;margin-left:auto;margin-right:auto}
+.teams-section-header{padding-bottom:0}
+#teamsStoryPin{margin-top:32px}
+.teams-story-pin-inner{padding-top:0}
+.teams-story-progress{height:4px;background:rgba(44,44,44,0.1);border-radius:999px;overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto}
+.teams-story-progress--footer{margin-top:32px;margin-bottom:0}
 #teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,0.3));transform:scaleX(0);transform-origin:left center}
 .teams-inner{max-width:1200px;margin:0 auto;}
-/* Two-column layout: vertical tab rail + panels (Vendor Management / PTM pattern) */
-.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:52px;align-items:start;}
+/* Two-column layout: vertical tab rail + panels (FM Matrix-style: titles scroll, pin is rail + panels + progress) */
+.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:0;align-items:start;}
 .team-panels{min-width:0;}
 .teams-tabs{display:flex;flex-direction:column;gap:4px;padding-bottom:0;border-bottom:none;}
 .team-tab{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;background:var(--surface);transition:all 0.2s ease;width:100%;box-sizing:border-box;}
@@ -1085,11 +1089,14 @@ footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(
 
 <!-- ═══ TEAMS ═══ -->
 <section class="teams-section" id="teams">
-  <!-- Header inside pin so scroll doesn’t split title from content (Vendor-style) -->
-  <div class="teams-inner" id="teamsStoryPin">
+  <!-- Titles scroll normally; only tabs + panels + progress are pinned (same pattern as FM Matrix). -->
+  <div class="teams-inner teams-section-header">
     <div class="section-eyebrow reveal">Team use cases</div>
     <h2 class="section-title reveal reveal-delay-1">Your whole organisation.<br><span class="accent">One platform.</span></h2>
     <p class="section-sub reveal reveal-delay-2">From the CFO approving the lease budget to the Facility Manager closing a maintenance ticket, Lockated gives every team exactly what they need — without getting in each other's way.</p>
+  </div>
+  <div id="teamsStoryPin">
+    <div class="teams-inner teams-story-pin-inner">
     <div class="teams-layout">
       <div class="teams-tabs reveal">
         <div class="team-tab active" data-team="team1">
@@ -1253,7 +1260,8 @@ footer{background:var(--cream);padding:56px 48px 32px;border-top:1px solid rgba(
         </div>
       </div>
     </div>
-    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll"><div id="teamsStoryProgress"></div></div>
+    <div class="teams-story-progress teams-story-progress--footer" role="img" aria-label="Team use case progress along scroll"><div id="teamsStoryProgress"></div></div>
+    </div>
   </div>
 </section>
 
