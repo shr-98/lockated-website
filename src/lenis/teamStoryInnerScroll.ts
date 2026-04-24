@@ -1,7 +1,7 @@
 /**
- * While the pointer is over a scrollport (`.team-info`, `.teams-main`, `.teams-tabs`, `.wt-info`, …
+ * While the pointer is over a scrollport (`.team-info`, `.team-visual`, `.teams-main`, `.teams-tabs`, `.wt-info`, …
  * ) route wheel deltas to that element first so users can read full content before Lenis advances
- * the pinned team / walkthrough. Order: `.team-info` → `.teams-main` → `.teams-tabs` (tab rail) →
+ * the pinned team / walkthrough. Order: `.team-info` → `.team-visual` → `.teams-main` → `.teams-tabs` (tab rail) →
  * `#teamsStoryPin` when overflow-y auto, then other leaf hosts.
  */
 export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
@@ -9,6 +9,11 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
 
   const getTeamInfo = (t: EventTarget | null): HTMLElement | null => {
     const el = t instanceof Element ? t.closest('.team-info') : null
+    return el && root.contains(el) ? (el as HTMLElement) : null
+  }
+
+  const getTeamVisual = (t: EventTarget | null): HTMLElement | null => {
+    const el = t instanceof Element ? t.closest('.team-visual') : null
     return el && root.contains(el) ? (el as HTMLElement) : null
   }
 
@@ -65,6 +70,23 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
         if ((down && !atBottom) || (up && !atTop)) {
           e.preventDefault()
           teamInfo.scrollTop += delta
+        }
+        return
+      }
+    }
+
+    const teamVisual = getTeamVisual(e.target)
+    if (teamVisual) {
+      const { scrollTop, scrollHeight, clientHeight } = teamVisual
+      if (scrollHeight > clientHeight + 2) {
+        const delta = e.deltaY
+        const atTop = scrollTop <= 0
+        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
+        const down = delta > 0
+        const up = delta < 0
+        if ((down && !atBottom) || (up && !atTop)) {
+          e.preventDefault()
+          teamVisual.scrollTop += delta
         }
         return
       }

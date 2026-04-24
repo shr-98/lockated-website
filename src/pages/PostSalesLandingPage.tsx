@@ -11,8 +11,10 @@ type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 
 /** Pinned nav offset — match vendor-management / post-sales.html `#navbar`. */
 const POST_SALES_NAV_OFFSET_PX = 68
-/** Team Use Cases: scroll distance per tab (same as Vendor Management). */
-const TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
+/** Pinned two-column team story only at this width+ (aligns with PATM / `public/patm.html` stacked breakpoint). */
+const POST_SALES_TEAMS_PIN_MIN_WIDTH_PX = 1101
+/** Team use cases: viewport heights of scroll per tab (match PATM). */
+const TEAM_STORY_SCROLL_PER_TAB_VH = 1.0
 
 type TeamUseCasesGsapOpts = {
   teamTabs: HTMLElement[]
@@ -21,9 +23,10 @@ type TeamUseCasesGsapOpts = {
 }
 
 /**
- * “Built for Every Team” — pin section and advance tabs from scroll (desktop; reduced motion / narrow: click only).
+ * #teams — pin + scroll story on wide two-column layout (min-width: 1101px), same as PATM.
+ * Below: use `initPostSalesTeamProgressBarOnly`. Reduced motion: no ST.
  */
-function initTeamUseCasesGsap(
+function initPostSalesTeamStoryGsap(
   root: HTMLElement,
   opts: TeamUseCasesGsapOpts,
 ): ScrollTrigger | null {
@@ -33,10 +36,20 @@ function initTeamUseCasesGsap(
   const n = opts.teamIds.length
   if (n < 1) return null
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
-  if (!window.matchMedia('(min-width: 768px)').matches) return null
+  if (!window.matchMedia(`(min-width: ${POST_SALES_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches) return null
 
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
+
+  const applyProgress = (self: ScrollTrigger) => {
+    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+    if (idx !== lastIdx) {
+      lastIdx = idx
+      const id = opts.teamIds[idx]
+      if (id) opts.switchTeam(id, opts.teamTabs[idx])
+    }
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
 
   return ScrollTrigger.create({
     id: 'post-sales-teams-use-cases',
@@ -49,15 +62,44 @@ function initTeamUseCasesGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-      if (idx !== lastIdx) {
-        lastIdx = idx
-        const id = opts.teamIds[idx]
-        if (id) opts.switchTeam(id, opts.teamTabs[idx])
-      }
-      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    onEnter: (self) => applyProgress(self),
+    onEnterBack: (self) => applyProgress(self),
+    onRefresh: (self) => {
+      lastIdx = -1
+      applyProgress(self)
     },
+    onUpdate: (self) => applyProgress(self),
+  })
+}
+
+/** Below min pin width: no pin. Scrub progress bar; tabs are click-to-scroll on wide or click-only. */
+function initPostSalesTeamProgressBarOnly(
+  root: HTMLElement,
+  opts: TeamUseCasesGsapOpts,
+): ScrollTrigger | null {
+  const pin = root.querySelector<HTMLElement>('#teamsStoryPin')
+  if (!pin) return null
+
+  const n = opts.teamIds.length
+  if (n < 1) return null
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (window.matchMedia(`(min-width: ${POST_SALES_TEAMS_PIN_MIN_WIDTH_PX}px)`).matches) return null
+
+  const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
+  const applyBar = (self: ScrollTrigger) => {
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
+  return ScrollTrigger.create({
+    id: 'post-sales-teams-progress-stacked',
+    trigger: pin,
+    start: `top ${POST_SALES_NAV_OFFSET_PX}px`,
+    end: () => `+=${n * window.innerHeight * TEAM_STORY_SCROLL_PER_TAB_VH}`,
+    pin: false,
+    scrub: 0.2,
+    invalidateOnRefresh: true,
+    onRefresh: (self) => applyBar(self),
+    onUpdate: (self) => applyBar(self),
   })
 }
 
@@ -86,9 +128,7 @@ html:has(.post-sales-root) {
   align-items: stretch !important;
   justify-content: flex-start !important;
   min-height: 0 !important;
-  max-height: calc(100dvh - ${POST_SALES_NAV_OFFSET_PX}px) !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
 }
 .post-sales-root #teamsStoryPin > .container:first-of-type {
   flex: 0 0 auto !important;
@@ -98,20 +138,96 @@ html:has(.post-sales-root) {
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  overflow: hidden !important;
-}
-.post-sales-root #teamsStoryPin .teams-main {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 32px !important;
-  scroll-padding-bottom: 24px !important;
 }
 .post-sales-root #teamsStoryPin .teams-story-progress {
   flex: 0 0 auto !important;
+}
+/* Wide: same pin + inner scroll as PATM — center columns (.team-info / .team-visual) scroll, not the whole .teams-main. */
+@media (min-width: ${POST_SALES_TEAMS_PIN_MIN_WIDTH_PX}px) {
+  .post-sales-root #teamsStoryPin {
+    height: calc(100dvh - ${POST_SALES_NAV_OFFSET_PX}px) !important;
+    max-height: calc(100dvh - ${POST_SALES_NAV_OFFSET_PX}px) !important;
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin > .container:nth-of-type(2) {
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-main {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 304px) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    gap: 40px !important;
+    align-items: stretch !important;
+    margin-top: 0 !important;
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-tabs {
+    min-height: 0 !important;
+    align-self: start !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-gutter: stable;
+    touch-action: pan-y !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-tabs::-webkit-scrollbar {
+    display: block !important;
+    width: 6px;
+  }
+  .post-sales-root #teamsStoryPin .teams-tabs::-webkit-scrollbar-thumb {
+    background: rgba(44, 44, 44, 0.28);
+    border-radius: 4px;
+  }
+  .post-sales-root #teamsStoryPin .teams-panels {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-panel.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    align-items: start !important;
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-panel.active > .team-info {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-panel.active > .team-visual {
+    align-self: start !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 .post-sales-root .pin-spacer {
   background: var(--bg) !important;
@@ -158,9 +274,14 @@ html:has(.post-sales-root) {
   min-height: 0 !important;
   aspect-ratio: auto !important;
 }
-@media (max-width: 767px) {
-  /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
+/* Stacked (≤1100px): document scroll; no fixed-height pin. Center uses natural flow (same idea as PATM). */
+@media (max-width: 1100px) {
+  .post-sales-root .teams-section#teams,
+  .post-sales-root .teams-section#teams .teams-inner {
+    overflow: visible !important;
+  }
   .post-sales-root #teamsStoryPin {
+    height: auto !important;
     max-height: none !important;
     display: block !important;
     overflow: visible !important;
@@ -174,9 +295,38 @@ html:has(.post-sales-root) {
   }
   .post-sales-root #teamsStoryPin .teams-main {
     flex: none !important;
+    display: block !important;
     overflow: visible !important;
     padding-bottom: 0 !important;
   }
+  .post-sales-root #teamsStoryPin .teams-layout,
+  .post-sales-root #teamsStoryPin .teams-panels,
+  .post-sales-root #teamsStoryPin .teams-panel.active {
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-tabs {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-panel.active > .team-info,
+  .post-sales-root #teamsStoryPin .teams-panel.active > .team-visual {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .post-sales-root .teams-section .team-info {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .post-sales-root .teams-section .teams-story-progress {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+@media (max-width: 767px) {
   .post-sales-root .teams-panel.active .team-visual {
     justify-self: center !important;
   }
@@ -218,10 +368,6 @@ html:has(.post-sales-root) {
 }
 .post-sales-root .team-visual-body {
   background-color: var(--bg, #F6F4EE) !important;
-}
-.post-sales-root .teams-section .team-info {
-  max-height: none !important;
-  overflow: visible !important;
 }
 .post-sales-root #walkthrough .wt-info {
   max-height: min(72vh, calc(100vh - 200px));
@@ -646,6 +792,10 @@ ${chipSvgs}
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
+      if (window.matchMedia('(max-width: 1100px)').matches) {
+        switchTeam(teamIds[idx]!, teamTabs[idx]!)
+        return
+      }
       if (!teamStorySt) {
         switchTeam(teamIds[idx]!, teamTabs[idx]!)
         return
@@ -690,7 +840,11 @@ ${chipSvgs}
       })
     }
     const gsapCtx = gsap.context(() => {
-      teamStorySt = initTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam })
+      teamStorySt = window.matchMedia(
+        `(min-width: ${POST_SALES_TEAMS_PIN_MIN_WIDTH_PX}px)`,
+      ).matches
+        ? initPostSalesTeamStoryGsap(root, { teamTabs, teamIds, switchTeam })
+        : initPostSalesTeamProgressBarOnly(root, { teamTabs, teamIds, switchTeam })
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           ScrollTrigger.refresh()
