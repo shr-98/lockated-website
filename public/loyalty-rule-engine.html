@@ -802,10 +802,14 @@ nav.scrolled { background: rgba(246,244,238,0.95); box-shadow: 0 4px 32px rgba(4
 /* TEAMS USE CASES */
 .teams-section { padding: 0; background: var(--band); border-top: 1px solid rgba(196,184,157,0.28); border-bottom: 1px solid rgba(196,184,157,0.28); }
 .teams-inner { max-width: 1400px; margin: 0 auto; padding: 100px 80px; }
-.teams-story-progress{height:4px;background:rgba(44,44,44,0.1);border-radius:999px;overflow:hidden;margin-top:32px;max-width:480px;margin-left:auto;margin-right:auto}
-#teamsStoryProgress{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),rgba(218,119,86,0.3));transform:scaleX(0);transform-origin:left center}
-/* Vertical tab rail + panels (same pattern as Vendor / PTM / Lease) */
-.teams-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-top:48px;align-items:start;}
+/* Progress bar: same pattern as public/vendor-management.html (track + fill, GSAP drives scaleX on #teamsStoryProgress) */
+.teams-story-progress { display: block; width: 100%; max-width: 480px; margin: 36px auto 0; padding: 0; background: transparent; height: auto; }
+.teams-story-progress-track { height: 4px; border-radius: 100px; background: rgba(44, 44, 44, 0.12); overflow: hidden; }
+#teamsStoryProgress,
+.teams-story-progress-fill { display: block; height: 100%; width: 100%; min-height: 4px; background: var(--primary); border-radius: 100px; transform: scaleX(0); transform-origin: left center; will-change: transform; }
+@media (max-width: 767px) { .teams-story-progress { display: none; } }
+/* Vertical tab rail + panels (match Vendor Management: 280px rail, equal two-col row for copy + mock) */
+.teams-layout{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:40px;margin-top:48px;align-items:start;}
 .team-panels{min-width:0;}
 .teams-tabs{display:flex;flex-direction:column;gap:4px;border-bottom:none;overflow:visible;scrollbar-width:none;padding-bottom:0;}
 .teams-tabs::-webkit-scrollbar{display:none;}
@@ -819,7 +823,7 @@ nav.scrolled { background: rgba(246,244,238,0.95); box-shadow: 0 4px 32px rgba(4
 .team-tab.active .team-tab-icon svg{color:var(--on-primary);}
 .team-tab-name{font-size:14px;font-weight:600;color:rgba(44,44,44,0.6);}
 .team-tab.active .team-tab-name{color:var(--dark);}
-.team-panel{display:none;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start;}
+.team-panel{display:none;grid-template-columns:minmax(0,1fr) minmax(0,min(420px,50%));gap:40px;align-items:start;}
 .team-panel.active{display:grid;}
 .team-info { display: flex; flex-direction: column; }
 .team-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-8); border: 1px solid rgba(218,119,86,0.15); border-radius: 6px; padding: 4px 12px; font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; width: fit-content; }
@@ -829,7 +833,8 @@ nav.scrolled { background: rgba(246,244,238,0.95); box-shadow: 0 4px 32px rgba(4
 .team-info .team-features li { display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px; background: var(--surface); border-radius: 10px; border: 1px solid rgba(196,184,157,0.35); font-size: 13.5px; color: var(--dark); line-height: 1.5; }
 .team-feature { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: rgba(44,44,44,0.65); line-height: 1.5; }
 .team-feature-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--primary-8); border: 1.5px solid var(--primary); flex-shrink: 0; margin-top: 1px; background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4L3.5 6L6.5 2' stroke='%23DA7756' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; background-size: 8px; }
-.team-kpi { display: inline-flex; align-items: center; gap: 6px; background: rgba(121,140,94,0.08); border: 1px solid rgba(121,140,94,0.2); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: var(--olive); }
+.team-kpi { display: flex; align-items: flex-start; gap: 10px; width: 100%; max-width: 100%; box-sizing: border-box; background: rgba(121,140,94,0.08); border: 1px solid rgba(121,140,94,0.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--olive); line-height: 1.45; }
+.team-kpi svg { flex-shrink: 0; margin-top: 1px; }
 .team-visual {
   display: flex;
   flex-direction: column;
@@ -852,7 +857,7 @@ nav.scrolled { background: rgba(246,244,238,0.95); box-shadow: 0 4px 32px rgba(4
   flex-direction: column;
   gap: 8px;
   flex: 0 0 auto;
-  min-height: 0;
+  min-height: auto;
   background: var(--cream);
 }
 
@@ -2317,6 +2322,7 @@ footer { background: var(--dark); padding: 60px 80px 40px; }
 <div class="section-eyebrow reveal">Team use cases</div>
 <h2 class="section-title reveal">Every team uses it <span class="accent">differently.</span> All of them benefit.</h2>
 <p class="section-sub reveal" style="margin-bottom:0">From marketing to finance to IT — the rule engine serves every stakeholder with exactly what they need.</p>
+<div class="teams-main">
 <div class="teams-layout">
 <div class="teams-tabs reveal" role="tablist" aria-label="Loyalty team use cases">
 <button type="button" class="team-tab active" data-team="marketing" role="tab" aria-selected="true">
@@ -2444,10 +2450,6 @@ footer { background: var(--dark); padding: 60px 80px 40px; }
 <li><div class="team-feature-dot"></div><span>Mark-to-market balance updated after every transaction — no lag</span></li>
 <li><div class="team-feature-dot"></div><span>30/60/90-day liability forecast for accurate P&amp;L planning</span></li>
 </ul>
-<div class="team-kpi">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          KPI: First loyalty platform that passes the CFO review gate
-        </div>
 </div>
 <div class="team-visual">
 <div class="team-visual-header">
@@ -2573,7 +2575,12 @@ footer { background: var(--dark); padding: 60px 80px 40px; }
 </div>
 </div>
 </div>
-    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll"><div id="teamsStoryProgress"></div></div>
+</div>
+    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+      <div class="teams-story-progress-track">
+        <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+      </div>
+    </div>
   </div>
 </div>
 </section>

@@ -166,6 +166,17 @@ html:has(.cp-management-root) {
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* No GSAP pin below 768px — avoid forced viewport-tall block + inner scroll on team copy. */
+@media (max-width: 767px) {
+  .cp-management-root #teamsStoryPin {
+    min-height: 0 !important;
+    display: block !important;
+  }
+  .cp-management-root .teams-section .team-info {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
 `
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]

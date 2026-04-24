@@ -78,18 +78,50 @@ html:has(.snag360-root) {
 }
 .snag360-root #teamsStoryPin {
   z-index: 1 !important;
-  min-height: calc(100vh - ${SNAG_NAV_OFFSET_PX}px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  background: var(--cream, #F6F4EE) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - ${SNAG_NAV_OFFSET_PX}px) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
   width: 100%;
-  box-sizing: border-box;
 }
-.snag360-root .teams-story-progress {
+.snag360-root #teamsStoryPin > .section-eyebrow,
+.snag360-root #teamsStoryPin > .section-title,
+.snag360-root #teamsStoryPin > .section-sub {
+  flex: 0 0 auto !important;
+}
+.snag360-root #teamsStoryPin .teams-main {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 32px !important;
+  scroll-padding-bottom: 24px !important;
+}
+.snag360-root #teamsStoryPin .teams-story-progress {
+  flex: 0 0 auto !important;
   width: 100%;
-  flex-shrink: 0;
   align-self: stretch;
   box-sizing: border-box;
+}
+/* No GSAP pin below 768px — undo viewport cap + inner scroll. */
+@media (max-width: 767px) {
+  .snag360-root #teamsStoryPin {
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .snag360-root #teamsStoryPin .teams-main {
+    flex: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+  }
 }
 .snag360-root #teamsStoryProgress {
   box-sizing: border-box;
@@ -391,7 +423,11 @@ html:has(.snag360-root) {
     transition: none !important;
   }
 }
-.snag360-root .teams-section .team-info,
+/* Do not cap team copy in the teams section (scroll lives in .teams-main when pinned). */
+.snag360-root .teams-section .team-info {
+  max-height: none !important;
+  overflow: visible !important;
+}
 .snag360-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;

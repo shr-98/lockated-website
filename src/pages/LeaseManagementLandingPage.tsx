@@ -87,6 +87,13 @@ html:has(.lease-management-root) {
   flex-direction: column;
   justify-content: center;
 }
+/* No GSAP pin below 768px — let Team Use Cases flow with document scroll. */
+@media (max-width: 767px) {
+  .lease-management-root #teamsStoryPin {
+    min-height: 0 !important;
+    display: block !important;
+  }
+}
 .lease-management-root .pin-spacer {
   background: var(--band, #E8E2D6) !important;
   margin: 0 !important;

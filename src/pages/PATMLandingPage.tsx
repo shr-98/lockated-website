@@ -33,6 +33,48 @@ html:has(.patm-root) {
 }
 .patm-root #teamsStoryPin {
   z-index: 1 !important;
+  background: var(--cream, #F6F4EE) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - ${PATM_NAV_OFFSET_PX}px) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+.patm-root #teamsStoryPin .teams-header {
+  flex: 0 0 auto !important;
+}
+.patm-root #teamsStoryPin .teams-main {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 32px !important;
+  scroll-padding-bottom: 24px !important;
+}
+.patm-root #teamsStoryPin .teams-story-progress {
+  flex: 0 0 auto !important;
+}
+/* No GSAP pin below 768px — undo viewport cap + inner scroll. */
+@media (max-width: 767px) {
+  .patm-root #teamsStoryPin {
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .patm-root #teamsStoryPin .teams-main {
+    flex: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+  }
+}
+.patm-root .team-content.active > .team-info {
+  height: auto !important;
+  min-width: 0;
 }
 .patm-root .pin-spacer {
   background: var(--cream, #F6F4EE) !important;
@@ -311,7 +353,10 @@ const BACKDROP_FILTER_FIX_CSS = `
   transition: none !important;
 }
 .patm-root .reveal.in-view { opacity: 1 !important; transform: none !important; }
-.patm-root .teams-section .team-info,
+.patm-root .teams-section .team-info {
+  max-height: none !important;
+  overflow: visible !important;
+}
 .patm-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;

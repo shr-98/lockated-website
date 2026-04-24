@@ -81,6 +81,38 @@ html:has(.post-possession-root) {
 }
 .post-possession-root #teamsStoryPin {
   z-index: 1 !important;
+  background: var(--bg, #F6F4EE) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - ${POST_POSSESSION_NAV_OFFSET_PX}px) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+.post-possession-root #teamsStoryPin > .container:first-of-type {
+  flex: 0 0 auto !important;
+}
+.post-possession-root #teamsStoryPin > .container:nth-of-type(2) {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.post-possession-root #teamsStoryPin .teams-main {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 32px !important;
+  scroll-padding-bottom: 24px !important;
+}
+.post-possession-root #teamsStoryPin .teams-story-progress {
+  flex: 0 0 auto !important;
 }
 .post-possession-root .pin-spacer {
   background: var(--bg) !important;
@@ -103,6 +135,26 @@ html:has(.post-possession-root) {
 @media (max-width: 900px) {
   .post-possession-root .team-panel.active .team-visual {
     justify-self: center !important;
+  }
+}
+/* No GSAP pin below 768px — undo viewport cap + inner scroll. */
+@media (max-width: 767px) {
+  .post-possession-root #teamsStoryPin {
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .post-possession-root #teamsStoryPin > .container:first-of-type,
+  .post-possession-root #teamsStoryPin > .container:nth-of-type(2) {
+    flex: none !important;
+    display: block !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .post-possession-root #teamsStoryPin .teams-main {
+    flex: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
   }
 }
 .post-possession-root h1,
@@ -173,7 +225,10 @@ html:has(.post-possession-root) {
 .post-possession-root .team-visual-body {
   background-color: var(--bg, #F6F4EE) !important;
 }
-.post-possession-root #teams .team-info,
+.post-possession-root #teams .team-info {
+  max-height: none !important;
+  overflow: visible !important;
+}
 .post-possession-root #walkthrough .wt-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;

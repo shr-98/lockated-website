@@ -89,6 +89,13 @@ html:has(.fm-matrix-root) {
   flex-direction: column;
   justify-content: center;
 }
+/* No GSAP pin below 768px — let Team Use Cases flow with document scroll. */
+@media (max-width: 767px) {
+  .fm-matrix-root #teamsStoryPin {
+    min-height: 0 !important;
+    display: block !important;
+  }
+}
 .fm-matrix-root .teams-layout {
   align-items: stretch !important;
   flex: 1;

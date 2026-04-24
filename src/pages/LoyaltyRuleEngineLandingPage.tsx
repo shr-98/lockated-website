@@ -71,6 +71,7 @@ const LOYALTY_RULE_ISOLATION_CSS = `
 html:has(.loyalty-rule-root) {
   scroll-padding-top: ${LOYALTY_NAV_OFFSET_PX}px;
   scrollbar-gutter: stable;
+  overflow-anchor: none;
 }
 .loyalty-rule-root section[id],
 .loyalty-rule-root .teams-section#teams {
@@ -79,8 +80,24 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root #navbar {
   z-index: 10050;
 }
+.loyalty-rule-root .teams-section,
+.loyalty-rule-root #teamsStoryPin,
+.loyalty-rule-root .pin-spacer {
+  overflow-anchor: none;
+}
+/* GSAP pin uses position:fixed — content taller than the viewport is clipped by the
+ * screen unless we cap height and put the long part (tab rail + team row) in .teams-main. */
 .loyalty-rule-root #teamsStoryPin {
   z-index: 1 !important;
+  position: relative;
+  background: var(--band, #E8E2D6) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: calc(100dvh - ${LOYALTY_NAV_OFFSET_PX}px) !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  will-change: auto !important;
 }
 .loyalty-rule-root .pin-spacer {
   background: var(--band, #E8E2D6) !important;
@@ -88,27 +105,99 @@ html:has(.loyalty-rule-root) {
   border: none !important;
   box-shadow: none !important;
 }
-.loyalty-rule-root #teamsStoryPin {
-  background: var(--band, #E8E2D6) !important;
-  min-height: calc(100vh - ${LOYALTY_NAV_OFFSET_PX}px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.loyalty-rule-root .teams-inner {
+  max-width: 1400px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  /* Tighter vertical padding in SPA so more rows fit in the scrollport while pinned. */
+  padding: 40px 80px 12px !important;
+  overflow: hidden !important;
 }
-/* Team mock: compact frame like Vendor / Post Sales / Snag (no vertical stretch) */
-.loyalty-rule-root .team-panel.active {
-  align-items: start !important;
+.loyalty-rule-root .teams-inner > .section-eyebrow,
+.loyalty-rule-root .teams-inner > .section-title,
+.loyalty-rule-root .teams-inner > .section-sub {
+  flex: 0 0 auto !important;
 }
-.loyalty-rule-root .team-panel.active > .team-info {
-  height: auto !important;
+.loyalty-rule-root .teams-inner .section-sub {
+  margin-bottom: 20px !important;
+}
+.loyalty-rule-root .teams-inner .teams-main {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 8px !important;
+  scroll-padding-bottom: 16px !important;
+}
+.loyalty-rule-root .team-panels {
+  overflow: visible !important;
+}
+.loyalty-rule-root .teams-inner .teams-story-progress {
+  margin-top: 20px;
+  flex: 0 0 auto !important;
+}
+.loyalty-rule-root .teams-layout {
+  min-width: 0;
+  align-items: start;
+}
+.loyalty-rule-root .team-panels {
   min-width: 0;
 }
+/*
+ * Wider copy column than the mock: 1fr+1fr squeezes the center at medium widths. Let the
+ * text track take ~55–60% and the mock cap at 420px so body copy + bullets stay readable.
+ */
+.loyalty-rule-root .team-panel.active {
+  align-items: start !important;
+  /* Copy + mock: 1fr grows; mock cap min(420px, 50%) so mid-width viewports do not starve the center. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+  gap: 40px !important;
+  width: 100% !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+  color: var(--dark, #2C2C2C) !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info .team-name {
+  color: var(--dark, #2C2C2C) !important;
+  opacity: 1 !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info .team-desc,
+.loyalty-rule-root .team-panel.active > .team-info .team-features li,
+.loyalty-rule-root .team-panel.active > .team-info .team-kpi {
+  opacity: 1 !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info .team-desc {
+  color: rgba(44, 44, 44, 0.72) !important;
+}
+.loyalty-rule-root .team-panel.active > .team-info .team-features li {
+  color: var(--dark, #2C2C2C) !important;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+}
+.loyalty-rule-root .team-panel.active > .team-info .team-kpi {
+  color: var(--olive, #798C5E) !important;
+}
 .loyalty-rule-root .team-panel.active > .team-visual {
+  min-width: 0 !important;
   height: auto !important;
   align-self: start !important;
   justify-self: end !important;
   width: 100% !important;
-  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
+  max-width: min(100%, 420px) !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -117,10 +206,36 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .team-panel.active .team-visual-body {
   flex: 0 0 auto !important;
   min-height: 0 !important;
+  min-width: 0 !important;
 }
 @media (max-width: 980px) {
+  .loyalty-rule-root .team-panel.active {
+    grid-template-columns: 1fr !important;
+  }
   .loyalty-rule-root .team-panel.active > .team-visual {
     justify-self: center !important;
+    max-width: 420px !important;
+  }
+  .loyalty-rule-root .teams-inner {
+    padding: 72px 32px 72px !important;
+  }
+}
+/* No GSAP pin below 768px — undo viewport cap + inner scroll so mobile layout matches static HTML. */
+@media (max-width: 767px) {
+  .loyalty-rule-root #teamsStoryPin {
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .loyalty-rule-root .teams-inner {
+    display: block !important;
+    padding: 72px 32px 72px !important;
+    overflow: visible !important;
+  }
+  .loyalty-rule-root .teams-inner .teams-main {
+    flex: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
   }
 }
 .loyalty-rule-root .teams-tabs {
@@ -369,7 +484,11 @@ html:has(.loyalty-rule-root) {
     transition: none !important;
   }
 }
-.loyalty-rule-root .teams-section .team-info,
+/* Do not cap .team-info in the teams section (that clipped KPI + long copy when pinned). */
+.loyalty-rule-root .teams-section .team-info {
+  max-height: none !important;
+  overflow: visible !important;
+}
 .loyalty-rule-root #walkthrough .feature-info {
   max-height: min(72vh, calc(100vh - 200px));
   overflow-y: auto;
@@ -453,7 +572,7 @@ export default function LoyaltyRuleEngineLandingPage() {
         }
 
         if (cancelled) return
-  setCssText(`${styles}\n${LOYALTY_RULE_ISOLATION_CSS}`)
+        setCssText(`${styles}\n${LOYALTY_RULE_ISOLATION_CSS}`)
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -608,11 +727,36 @@ export default function LoyaltyRuleEngineLandingPage() {
     const initialId = initialTeam?.getAttribute('data-team') || ''
     if (initialId) switchTeam(initialId, initialTeam)
     const teamIds = teamTabs.map((t) => t.getAttribute('data-team') || '').filter(Boolean)
-    const teamsStoryTrigger = initLoyaltyTeamsGsap(root, { teamTabs, teamIds, switchTeam })
-    requestAnimationFrame(() => {
-      lenisScroll.resize()
-      ScrollTrigger.refresh()
-    })
+
+    const refreshTeamScroll = () => {
+      requestAnimationFrame(() => {
+        lenisScroll.resize()
+        ScrollTrigger.refresh()
+      })
+    }
+
+    const gsapCtx = gsap.context(() => {
+      initLoyaltyTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh()
+        })
+      })
+    }, root)
+
+    const onLayoutRefresh = () => refreshTeamScroll()
+    if (document.readyState === 'complete') onLayoutRefresh()
+    else window.addEventListener('load', onLayoutRefresh)
+    const lateLayout = window.setTimeout(() => refreshTeamScroll(), 250)
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined
+    const onWinResize = () => {
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        resizeTimer = undefined
+        refreshTeamScroll()
+      }, 100)
+    }
+    window.addEventListener('resize', onWinResize, { passive: true })
 
     // INDUSTRY POPUP DATA + handlers (for inline onclick)
     const industryData: Record<string, IndustryDatum> = {
@@ -814,7 +958,11 @@ export default function LoyaltyRuleEngineLandingPage() {
       window.clearTimeout(t6)
       revealObserver.disconnect()
       teamAbort.abort()
-      teamsStoryTrigger?.kill(true)
+      gsapCtx.revert()
+      clearTimeout(lateLayout)
+      window.removeEventListener('load', onLayoutRefresh)
+      window.removeEventListener('resize', onWinResize)
+      if (resizeTimer !== undefined) clearTimeout(resizeTimer)
       innerScrollCleanup()
       lenisScroll.destroy()
       if (raf !== null) window.cancelAnimationFrame(raf)
