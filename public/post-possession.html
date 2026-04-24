@@ -1469,13 +1469,15 @@ footer { background:var(--bg); border-top:1px solid var(--border-soft); padding:
     </div>
     </div>
 
-    <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
-      <div class="teams-story-progress-track">
-        <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
-      </div>
-    </div>
-
   </div>
+
+  <!-- Sibling to .container (same as public/vendor-management.html) so the bar is not clipped by the inner flex/overflow column. -->
+  <div class="teams-story-progress" role="img" aria-label="Team use case progress along scroll">
+    <div class="teams-story-progress-track">
+      <div class="teams-story-progress-fill" id="teamsStoryProgress"></div>
+    </div>
+  </div>
+
   </div>
 </section>
 

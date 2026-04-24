@@ -39,6 +39,16 @@ function initTeamUseCasesGsap(
   const progressFill = root.querySelector<HTMLElement>('#teamsStoryProgress')
   let lastIdx = -1
 
+  const applyProgress = (self: ScrollTrigger) => {
+    const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
+    if (idx !== lastIdx) {
+      lastIdx = idx
+      const id = opts.teamIds[idx]
+      if (id) opts.switchTeam(id, opts.teamTabs[idx])
+    }
+    if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+  }
+
   return ScrollTrigger.create({
     id: 'post-possession-teams-use-cases',
     trigger: pin,
@@ -50,15 +60,13 @@ function initTeamUseCasesGsap(
     anticipatePin: 0,
     fastScrollEnd: false,
     invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
-      if (idx !== lastIdx) {
-        lastIdx = idx
-        const id = opts.teamIds[idx]
-        if (id) opts.switchTeam(id, opts.teamTabs[idx])
-      }
-      if (progressFill) progressFill.style.transform = `scaleX(${self.progress})`
+    onEnter: (self) => applyProgress(self),
+    onEnterBack: (self) => applyProgress(self),
+    onRefresh: (self) => {
+      lastIdx = -1
+      applyProgress(self)
     },
+    onUpdate: (self) => applyProgress(self),
   })
 }
 
@@ -87,6 +95,9 @@ html:has(.post-possession-root) {
   align-items: stretch !important;
   justify-content: flex-start !important;
   min-height: 0 !important;
+  /* Definite height (not just max-height) so flex children shrink: header + main + progress bar
+     stay in view; max-height alone clips the bottom (progress) under overflow: hidden. */
+  height: calc(100dvh - ${POST_POSSESSION_NAV_OFFSET_PX}px) !important;
   max-height: calc(100dvh - ${POST_POSSESSION_NAV_OFFSET_PX}px) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
@@ -168,9 +179,43 @@ html:has(.post-possession-root) {
   overscroll-behavior: contain !important;
   box-sizing: border-box !important;
 }
+/* Progress is a direct child of #teamsStoryPin (not inside .container) — see public/post-possession.html, vendor pattern. */
+.post-possession-root #teamsStoryPin > .teams-story-progress,
 .post-possession-root #teamsStoryPin .teams-story-progress {
   flex: 0 0 auto !important;
-  margin-top: 24px !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  box-sizing: border-box !important;
+  margin: 24px auto 0 !important;
+  padding: 0 24px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.post-possession-root #teamsStoryPin .teams-story-progress-track,
+.post-possession-root #teamsStoryPin .teams-story-progress-fill,
+.post-possession-root #teamsStoryPin #teamsStoryProgress {
+  min-height: 4px !important;
+}
+.post-possession-root #teamsStoryPin #teamsStoryProgress,
+.post-possession-root #teamsStoryPin .teams-story-progress-fill {
+  display: block !important;
+  background: var(--brand, #da7756) !important;
+  transform-origin: left center !important;
+}
+.post-possession-root #teamsStoryPin .teams-story-progress-track {
+  display: block !important;
+  height: 4px !important;
+  border-radius: 100px !important;
+  background: rgba(44, 44, 44, 0.12) !important;
+  overflow: hidden !important;
+}
+@media (min-width: 768px) {
+  .post-possession-root #teams .teams-story-progress {
+    display: block !important;
+  }
 }
 .post-possession-root .pin-spacer {
   background: var(--bg) !important;
@@ -197,6 +242,7 @@ html:has(.post-possession-root) {
 /* No GSAP pin below 768px — undo viewport cap + inner scroll. */
 @media (max-width: 767px) {
   .post-possession-root #teamsStoryPin {
+    height: auto !important;
     max-height: none !important;
     display: block !important;
     overflow: visible !important;
