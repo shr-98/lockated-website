@@ -85,11 +85,16 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .pin-spacer {
   overflow-anchor: none;
 }
+.loyalty-rule-root .teams-section {
+  background: var(--cream, #F6F4EE) !important;
+  border-top-color: rgba(196, 184, 157, 0.28) !important;
+  border-bottom-color: rgba(196, 184, 157, 0.28) !important;
+}
 /* Team use cases: narrow tab rail | scrollable copy | mock. Pin caps height. */
 .loyalty-rule-root #teamsStoryPin {
   z-index: 1 !important;
   position: relative;
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   display: flex !important;
   flex-direction: column !important;
   max-height: calc(100dvh - ${LOYALTY_NAV_OFFSET_PX}px) !important;
@@ -99,7 +104,7 @@ html:has(.loyalty-rule-root) {
   will-change: auto !important;
 }
 .loyalty-rule-root .pin-spacer {
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   margin: 0 !important;
   border: none !important;
   box-shadow: none !important;

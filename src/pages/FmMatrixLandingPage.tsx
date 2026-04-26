@@ -77,7 +77,7 @@ html:has(.fm-matrix-root) {
 }
 /* Pin-spacer background: avoid “gap” seams while pinned. */
 .fm-matrix-root .pin-spacer {
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   margin: 0 !important;
   border: none !important;
   box-shadow: none !important;
@@ -88,7 +88,7 @@ html:has(.fm-matrix-root) {
   margin-bottom: 0 !important;
 }
 .fm-matrix-root #teamsStoryPin {
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   min-height: calc(100vh - ${FM_NAV_OFFSET_PX}px);
   display: flex;
   flex-direction: column;
@@ -162,7 +162,7 @@ html:has(.fm-matrix-root) {
   background-color: var(--bg-cream) !important;
 }
 .fm-matrix-root .teams-section {
-  background-color: var(--band) !important;
+  background-color: var(--bg-cream) !important;
 }
 .fm-matrix-root .contact-section {
   background-color: var(--bg-cream) !important;

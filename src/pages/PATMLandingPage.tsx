@@ -97,12 +97,15 @@ html:has(.patm-root) {
 .patm-root .teams-story-pin-inner {
   padding-top: 0 !important;
 }
-/* Progress: same track + fill + spacing as Snag360LandingPage (footer of pin). */
+/* Progress bar: pinned to the FOOTER of the scroll-pin so it stays visible while scrolling
+  regardless of how tall the active panel content is. Uses margin-top: auto so it gets
+   pushed to the bottom of the flex column rather than absolute positioning (absolute would
+  fight GSAP's inline position: fixed on the pin element). */
 .patm-root #teamsStoryPin .teams-story-progress {
   display: block !important;
   width: 100% !important;
   max-width: 480px !important;
-  margin: 28px auto 0 !important;
+  margin: 0 auto !important;
   padding: 0 20px !important;
   box-sizing: border-box !important;
   height: auto !important;
@@ -148,14 +151,25 @@ html:has(.patm-root) {
     overflow: hidden !important;
     overflow-x: hidden !important;
   }
+  /* Footer lock: pin the orange progress line to the bottom of the teams pin area. */
+  .patm-root #teamsStoryPin .teams-story-progress {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: clamp(16px, 2.4vh, 24px) !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    z-index: 3 !important;
+    pointer-events: none !important;
+  }
   .patm-root #teamsStoryPin .teams-story-pin-inner {
     flex: 1 1 auto !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
+    position: relative !important;
     overflow: hidden !important;
     padding-top: clamp(24px, 3vh, 40px) !important;
-    padding-bottom: 0 !important;
+    padding-bottom: clamp(42px, 6vh, 64px) !important;
   }
   /* Header + layout + progress must coexist in the viewport-height pin. Keep the header compact via
      type/line-height only — do NOT clip with max-height/overflow, or words get cut off. */
@@ -564,6 +578,9 @@ html:has(.patm-root) {
 .patm-root #teams .teams-layout .team-tab.active .team-tab-icon svg {
   color: var(--on-primary, #f6f4ee) !important;
   stroke: currentColor !important;
+}
+.patm-root #teams .team-content .team-info > a.btn-primary {
+  display: none !important;
 }
 .patm-root .btn-primary,
 .patm-root .btn-hero-primary,

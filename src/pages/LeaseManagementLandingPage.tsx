@@ -87,7 +87,7 @@ html:has(.lease-management-root) {
 }
 .lease-management-root #teamsStoryPin {
   z-index: 1 !important;
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   min-height: calc(100vh - ${LEASE_NAV_OFFSET_PX}px);
   display: flex;
   flex-direction: column;
@@ -118,7 +118,7 @@ html:has(.lease-management-root) {
   flex: 1;
 }
 .lease-management-root .pin-spacer {
-  background: var(--band, #E8E2D6) !important;
+  background: var(--cream, #F6F4EE) !important;
   margin: 0 !important;
   border: none !important;
   box-shadow: none !important;
@@ -184,7 +184,12 @@ html:has(.lease-management-root) {
 .lease-management-root .wt-tab.active {
   background-color: rgba(218,119,86,0.12) !important;
 }
-.lease-management-root .teams-section,
+.lease-management-root .teams-section {
+  background-color: var(--cream) !important;
+}
+.lease-management-root .teams-section::before {
+  display: none !important;
+}
 .lease-management-root .banner-section {
   background-color: var(--band) !important;
 }
@@ -291,11 +296,21 @@ html:has(.lease-management-root) {
 .lease-management-root .uc-modal-inner {
   background-color: var(--surface) !important;
 }
+.lease-management-root .team-panel-screen {
+  border: 1px solid rgba(196, 184, 157, 0.42) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  overflow: hidden !important;
+}
 .lease-management-root .team-panel.active {
   align-items: stretch !important;
 }
 .lease-management-root .team-panel.active > div {
   height: 100%;
+}
+.lease-management-root .team-panel.active > .team-panel-screen {
+  height: auto !important;
+  align-self: start !important;
 }
 .lease-management-root .usp-panel-card,
 .lease-management-root .mock-kpi,
@@ -304,6 +319,12 @@ html:has(.lease-management-root) {
 .lease-management-root .wt-screen,
 .lease-management-root .uc-modal-stat {
   background-color: var(--surface) !important;
+}
+.lease-management-root .team-panel-screen .mock-kpi,
+.lease-management-root .team-panel-screen .mock-list-item,
+.lease-management-root .team-panel-screen .mock-kanban-card {
+  background-color: var(--cream, #F6F4EE) !important;
+  border-color: rgba(196, 184, 157, 0.4) !important;
 }
 `
 
