@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -550,7 +554,11 @@ export default function ClubManagementLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${CLUB_MGMT_NO_BLUR_CSS}\n${CLUB_MANAGEMENT_ISOLATION_CSS}`)
+        setCssText(
+          `${styles}\n${CLUB_MGMT_NO_BLUR_CSS}\n${CLUB_MANAGEMENT_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'club-mgmt-root', panelClass: 'team-content' },
+          )}`,
+        )
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -572,6 +580,9 @@ export default function ClubManagementLandingPage() {
 
     const lenisScroll = createLenisScrollSync()
     const innerScrollCleanup = attachTeamStoryInnerScroll(root)
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'team-content',
+    })
 
     // NAVBAR SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -828,6 +839,7 @@ export default function ClubManagementLandingPage() {
     return () => {
       gsapCtx.revert()
       innerScrollCleanup()
+      detachAffordance()
       lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)

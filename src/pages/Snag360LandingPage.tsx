@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -687,7 +691,11 @@ export default function Snag360LandingPage() {
         }
 
         if (cancelled) return
-        setCssText(`${style}\n${SNAG360_ISOLATION_CSS}`)
+        setCssText(
+          `${style}\n${SNAG360_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'snag360-root', panelClass: 'team-content' },
+          )}`,
+        )
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -869,6 +877,9 @@ export default function Snag360LandingPage() {
       scrollDocumentToY(lenisScroll.instance, y)
     }
     teamsStoryTrigger = initSnagTeamsGsap(root, { teamTabs, switchTeamAt })
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'team-content',
+    })
     requestAnimationFrame(() => {
       lenisScroll.resize()
       ScrollTrigger.refresh()
@@ -911,6 +922,7 @@ export default function Snag360LandingPage() {
       counterTimers.forEach((t) => window.clearInterval(t))
       anchorHandlers.forEach(({ a, onClick }) => a.removeEventListener('click', onClick))
       teamsStoryTrigger?.kill(true)
+      detachAffordance()
       innerScrollCleanup()
       lenisScroll.destroy()
       teamsStoryTrigger = null

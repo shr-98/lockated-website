@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -610,6 +614,9 @@ html:has(.patm-root) {
   -webkit-text-fill-color: var(--dark, #2C2C2C) !important;
 }
 
+/* Smart scroll affordance for the pinned team panel — see
+   src/lib/teamPanelScrollAffordance.ts. Inserted via PATM_TEAM_AFFORDANCE_CSS. */
+
 /* Team use cases: Vendor Management — route CSS last; ensures #teams is never dimmed or stuck pre-reveal. */
 .patm-root .teams-section#teams,
 .patm-root .teams-section#teams .teams-section-header,
@@ -848,7 +855,11 @@ export default function PATMLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${BACKDROP_FILTER_FIX_CSS}\n${PATM_ISOLATION_CSS}`)
+        setCssText(
+          `${styles}\n${BACKDROP_FILTER_FIX_CSS}\n${PATM_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'patm-root', panelClass: 'team-content' },
+          )}`,
+        )
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -1071,6 +1082,12 @@ export default function PATMLandingPage() {
     const initialTeamTab = teamTabs.find((t) => t.classList.contains('active'))
     if (initialTeamTab?.dataset.team) switchTeam(initialTeamTab.dataset.team, initialTeamTab)
 
+    /* Smart inner-scroll affordance for `.team-content` panels — see
+       src/lib/teamPanelScrollAffordance.ts. */
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'team-content',
+    })
+
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
         lenisScroll.resize()
@@ -1229,6 +1246,8 @@ export default function PATMLandingPage() {
       progressObserver.disconnect()
       barObserver.disconnect()
       counterTimers.forEach((t) => window.clearInterval(t))
+
+      detachAffordance()
 
       uspClickHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       featureHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))

@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -659,7 +663,11 @@ export default function LoyaltyRuleEngineLandingPage() {
         }
 
         if (cancelled) return
-        setCssText(`${styles}\n${LOYALTY_RULE_ISOLATION_CSS}`)
+        setCssText(
+          `${styles}\n${LOYALTY_RULE_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'loyalty-rule-root', panelClass: 'team-panel' },
+          )}`,
+        )
         setBodyHtml(body)
         setLoadError(null)
       } catch (e) {
@@ -682,6 +690,9 @@ export default function LoyaltyRuleEngineLandingPage() {
     const loyaltyWindow: LoyaltyRuleWindow = window
     const lenisScroll = createLenisScrollSync()
     const innerScrollCleanup = attachTeamStoryInnerScroll(root)
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'team-panel',
+    })
 
     // NAV SCROLL
     const navbar = root.querySelector<HTMLElement>('#navbar')
@@ -1051,6 +1062,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       window.removeEventListener('resize', onWinResize)
       if (resizeTimer !== undefined) clearTimeout(resizeTimer)
       innerScrollCleanup()
+      detachAffordance()
       lenisScroll.destroy()
       if (raf !== null) window.cancelAnimationFrame(raf)
       delete loyaltyWindow.openIndustry

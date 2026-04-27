@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -423,7 +427,11 @@ export default function PostSalesLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${POST_SALES_ISOLATION_CSS}`)
+        setCssText(
+          `${styles}\n${POST_SALES_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'post-sales-root', panelClass: 'teams-panel' },
+          )}`,
+        )
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -789,6 +797,9 @@ ${chipSvgs}
     })
     const lenisScroll = createLenisScrollSync()
     const innerScrollCleanup = attachTeamStoryInnerScroll(root)
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'teams-panel',
+    })
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
       if (!teamIds[idx] || !teamTabs[idx]) return
@@ -867,6 +878,7 @@ ${chipSvgs}
 
     return () => {
       innerScrollCleanup()
+      detachAffordance()
       gsapCtx.revert()
       lenisScroll.destroy()
       clearTimeout(lateLayout)

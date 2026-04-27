@@ -4,6 +4,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
 import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
+import {
+  attachTeamPanelScrollAffordance,
+  getTeamPanelScrollAffordanceCSS,
+} from '../lib/teamPanelScrollAffordance'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -515,7 +519,11 @@ export default function PostPossessionLandingPage() {
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
         if (cancelled) return
-        setCssText(`${styles}\n${POST_POSSESSION_ISOLATION_CSS}`)
+        setCssText(
+          `${styles}\n${POST_POSSESSION_ISOLATION_CSS}\n${getTeamPanelScrollAffordanceCSS(
+            { rootClass: 'post-possession-root', panelClass: 'team-panel' },
+          )}`,
+        )
         setBodyHtml(body)
         setHeadLinks(links)
         setLoadError(null)
@@ -680,6 +688,10 @@ export default function PostPossessionLandingPage() {
     ;(window as any).selectTeam = selectTeamGlobal
     ;(window as any).selectTeamTab = selectTeamGlobal
 
+    const detachAffordance = attachTeamPanelScrollAffordance(root, {
+      panelClass: 'team-panel',
+    })
+
     const refreshTeamScroll = () => {
       requestAnimationFrame(() => {
         lenisScroll.resize()
@@ -727,6 +739,7 @@ export default function PostPossessionLandingPage() {
 
     return () => {
       innerScrollCleanup()
+      detachAffordance()
       gsapCtx.revert()
       lenisScroll.destroy()
       clearTimeout(lateLayout)
