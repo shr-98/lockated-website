@@ -105,6 +105,8 @@ ${root} ${panel} .lk-scroll-fade,
 ${root} ${panel} .lk-scroll-hint {
   display: none;
 }
+/* Position is set inline by JS to match each scrollport's bounding rect.
+   Stylesheet only defines visual style + transitions. */
 ${root} ${panel}.active .lk-scroll-fade {
   position: absolute;
   height: 56px;
@@ -112,17 +114,13 @@ ${root} ${panel}.active .lk-scroll-fade {
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 4;
-}
-${root} ${panel}.active .lk-scroll-fade--info {
+  /* Defaults overridden inline; bottom:auto/top:auto reset stale rules. */
   left: 0;
-  width: calc(50% - 14px);
-}
-${root} ${panel}.active .lk-scroll-fade--visual {
-  right: 0;
-  width: calc(50% - 14px);
+  right: auto;
+  width: 0;
 }
 ${root} ${panel}.active .lk-scroll-fade--bottom {
-  bottom: 0;
+  top: auto;
   background: linear-gradient(
     to bottom,
     rgba(${fadeRgb}, 0) 0%,
@@ -131,7 +129,7 @@ ${root} ${panel}.active .lk-scroll-fade--bottom {
   );
 }
 ${root} ${panel}.active .lk-scroll-fade--top {
-  top: 0;
+  bottom: auto;
   background: linear-gradient(
     to top,
     rgba(${fadeRgb}, 0) 0%,
@@ -143,36 +141,41 @@ ${root} ${panel}.active .lk-scroll-fade.is-visible {
   display: block;
   opacity: 1;
 }
-${root} ${panel}.active .lk-scroll-hint {
-  position: absolute;
-  bottom: 12px;
-  z-index: 5;
+/* Pill is appended to <body> (escapes any transformed/clipped ancestor),
+   so its rules are GLOBAL (un-scoped). Per-page color comes from inline
+   --lk-primary / --lk-primary-rgb CSS variables set on the pill itself. */
+.lk-scroll-hint {
+  position: fixed;
+  z-index: 9999;
   pointer-events: none;
   display: none;
   align-items: center;
-  gap: 8px;
-  padding: 9px 16px 9px 14px;
+  gap: 6px;
+  padding: 7px 14px 7px 13px;
   border: 0;
   border-radius: 100px;
-  background: ${primary};
+  background: var(--lk-primary, #DA7756);
   color: #fff;
   font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  white-space: nowrap;
   box-shadow:
-    0 12px 28px rgba(${primaryRgb}, 0.42),
-    0 2px 0 rgba(0, 0, 0, 0.05),
-    0 0 0 4px rgba(${primaryRgb}, 0.14),
-    0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    0 6px 18px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.32),
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 0 0 3px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.10),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
   opacity: 0;
-  transform: translate(-50%, 8px);
+  transform: translate(-50%, 6px);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
-${root} ${panel}.active .lk-scroll-hint--info  { left: calc(25% - 7px); }
-${root} ${panel}.active .lk-scroll-hint--visual { left: calc(75% - 7px); }
-${root} ${panel}.active .lk-scroll-hint.is-visible {
+.lk-scroll-hint--visual {
+  /* Avoid pill clutter — visual column is short and rarely needs hint. */
+  display: none !important;
+}
+.lk-scroll-hint.is-visible {
   display: inline-flex;
   opacity: 1;
   transform: translate(-50%, 0);
@@ -180,48 +183,35 @@ ${root} ${panel}.active .lk-scroll-hint.is-visible {
   pointer-events: auto;
   cursor: pointer;
 }
-${root} ${panel}.active .lk-scroll-hint.is-visible:hover {
+.lk-scroll-hint.is-visible:hover {
   filter: brightness(1.05);
   box-shadow:
-    0 14px 32px rgba(${primaryRgb}, 0.5),
-    0 2px 0 rgba(0, 0, 0, 0.05),
-    0 0 0 5px rgba(${primaryRgb}, 0.18),
-    0 1px 0 rgba(255, 255, 255, 0.35) inset;
+    0 8px 22px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.42),
+    0 1px 0 rgba(0, 0, 0, 0.05),
+    0 0 0 4px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.3) inset;
 }
-${root} ${panel}.active .lk-scroll-hint.is-visible:active {
+.lk-scroll-hint.is-visible:active {
   transform: translate(-50%, 2px);
 }
-${root} ${panel}.active .lk-scroll-hint.is-visible:focus-visible {
-  outline: 3px solid rgba(${primaryRgb}, 0.55);
+.lk-scroll-hint.is-visible:focus-visible {
+  outline: 3px solid rgba(var(--lk-primary-rgb, 218, 119, 86), 0.55);
   outline-offset: 3px;
 }
-${root} ${panel}.active .lk-scroll-hint svg {
-  width: 14px;
-  height: 14px;
+.lk-scroll-hint svg {
+  width: 12px;
+  height: 12px;
   stroke: currentColor;
 }
 @keyframes lkScrollHintBounce {
   0%, 100% { transform: translate(-50%, 0); }
-  50%      { transform: translate(-50%, 6px); }
+  50%      { transform: translate(-50%, 4px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  ${root} ${panel}.active .lk-scroll-hint.is-visible { animation: none; }
+  .lk-scroll-hint.is-visible { animation: none; }
 }
-/* Tablet (min..1100): only .team-info scrolls; hide visual fade/hint there. */
-@media (min-width: ${minW}px) and (max-width: 1100px) {
-  ${root} ${panel}.active .lk-scroll-fade--info,
-  ${root} ${panel}.active .lk-scroll-hint--info {
-    width: 100%;
-    left: 50%;
-    right: auto;
-  }
-  ${root} ${panel}.active .lk-scroll-fade--info {
-    transform: translateX(-50%);
-  }
-  ${root} ${panel}.active .lk-scroll-fade--visual,
-  ${root} ${panel}.active .lk-scroll-hint--visual {
-    display: none !important;
-  }
+@media (max-width: ${minW - 1}px) {
+  .lk-scroll-hint { display: none !important; }
 }
 /* Mobile (<min): no inner scroll, panels render full height. */
 @media (max-width: ${minW - 1}px) {
@@ -240,6 +230,9 @@ export type AttachOpts = {
   panelClass: string
   /** Hint label. Default 'Scroll to read more'. */
   hintLabel?: string
+  /** Primary brand color for the pill. Should match the page's
+   * `getTeamPanelScrollAffordanceCSS({ primary })`. Default `#DA7756`. */
+  primary?: string
 }
 
 type Pieces = {
@@ -287,8 +280,13 @@ export function attachTeamPanelScrollAffordance(
   )
   if (!panels.length) return () => {}
 
-  const hintLabel = opts.hintLabel ?? 'Scroll to read more'
+  const hintLabel = opts.hintLabel ?? 'Scroll to read'
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const primary = opts.primary ?? '#DA7756'
+  const primaryRgb = (() => {
+    const m = primary.replace('#', '')
+    return `${parseInt(m.slice(0, 2), 16)}, ${parseInt(m.slice(2, 4), 16)}, ${parseInt(m.slice(4, 6), 16)}`
+  })()
 
   const buildAffordance = (
     panel: HTMLElement,
@@ -302,10 +300,15 @@ export function attachTeamPanelScrollAffordance(
     hint.type = 'button'
     hint.className = `lk-scroll-hint lk-scroll-hint--${kind}`
     hint.setAttribute('aria-label', hintLabel)
+    hint.style.setProperty('--lk-primary', primary)
+    hint.style.setProperty('--lk-primary-rgb', primaryRgb)
     hint.innerHTML = `<span>${hintLabel}</span>${SCROLL_HINT_SVG}`
     panel.appendChild(topFade)
     panel.appendChild(bottomFade)
-    panel.appendChild(hint)
+    // The pill uses position: fixed and is appended to <body> so that
+    // GSAP pin transforms (which create a new containing block on every
+    // ancestor with `transform`) cannot displace or clip it.
+    document.body.appendChild(hint)
     return { topFade, bottomFade, hint }
   }
 
@@ -364,10 +367,63 @@ export function attachTeamPanelScrollAffordance(
   }
 
   const updateOne = (a: Pieces) => {
+    positionOverlays(a)
     evalPort(a.info, a.infoTopFade, a.infoBottomFade, a.infoHint, a.infoUserScrolled)
     evalPort(a.visual, a.visualTopFade, a.visualBottomFade, a.visualHint, a.visualUserScrolled)
   }
   const updateAll = () => all.forEach(updateOne)
+
+  /** Anchor each fade overlay + hint to the actual scrollport's bounding
+   * box relative to its panel — robust against per-page grid overrides
+   * (e.g. Snag360's `min(420px, 50%)` right column with `justify-self: end`). */
+  function positionOverlays(a: Pieces) {
+    const panel = a.panel
+    if (!panel.classList.contains('active')) return
+    const panelRect = panel.getBoundingClientRect()
+    const place = (
+      port: HTMLElement | null,
+      topFade: HTMLElement | null,
+      bottomFade: HTMLElement | null,
+      hint: HTMLElement | null,
+    ) => {
+      if (!port) return
+      // If the port itself is hidden (display:none on tablet/mobile), skip.
+      const portStyle = window.getComputedStyle(port)
+      if (portStyle.display === 'none' || portStyle.visibility === 'hidden') return
+      const r = port.getBoundingClientRect()
+      if (r.width <= 0 || r.height <= 0) return
+      const left = r.left - panelRect.left
+      const top = r.top - panelRect.top
+      const fadeH = 56
+      if (topFade) {
+        topFade.style.left = `${left}px`
+        topFade.style.width = `${r.width}px`
+        topFade.style.top = `${top}px`
+      }
+      if (bottomFade) {
+        bottomFade.style.left = `${left}px`
+        bottomFade.style.width = `${r.width}px`
+        bottomFade.style.top = `${top + r.height - fadeH}px`
+      }
+      if (hint) {
+        // Pill uses position:fixed (viewport coords) to escape any
+        // overflow:hidden ancestor (e.g. Snag360 panel) that would clip
+        // its shadow and the bounce-down animation.
+        const hintH = hint.offsetHeight || 30
+        // Center horizontally over the scrollport, but clamp to panel
+        // bounds so it never spills outside the active panel area.
+        const cx = r.left + r.width / 2
+        const minCx = panelRect.left + 60
+        const maxCx = panelRect.right - 60
+        const clampedCx = Math.max(minCx, Math.min(maxCx, cx))
+        // Sit just inside the bottom edge with a balanced 14px offset.
+        hint.style.left = `${clampedCx}px`
+        hint.style.top = `${r.bottom - 14 - hintH}px`
+      }
+    }
+    place(a.info, a.infoTopFade, a.infoBottomFade, a.infoHint)
+    place(a.visual, a.visualTopFade, a.visualBottomFade, a.visualHint)
+  }
 
   const cleanups: Array<() => void> = []
   all.forEach((a) => {
@@ -393,10 +449,18 @@ export function attachTeamPanelScrollAffordance(
     typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => updateAll()) : null
   if (ro) {
     all.forEach((a) => {
+      ro.observe(a.panel)
       if (a.info) ro.observe(a.info)
       if (a.visual) ro.observe(a.visual)
     })
   }
+  const onWindowResize = () => updateAll()
+  window.addEventListener('resize', onWindowResize, { passive: true })
+  cleanups.push(() => window.removeEventListener('resize', onWindowResize))
+  // Pill uses fixed positioning, so reposition on every page scroll too.
+  const onWindowScroll = () => updateAll()
+  window.addEventListener('scroll', onWindowScroll, { passive: true })
+  cleanups.push(() => window.removeEventListener('scroll', onWindowScroll))
 
   /* Click "Scroll to read more" pill → scroll the matching port down by
      ~80% of its viewport, then mark userScrolled so the pill stops nagging. */
