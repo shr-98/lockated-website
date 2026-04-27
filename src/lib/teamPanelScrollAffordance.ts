@@ -101,8 +101,7 @@ export function getTeamPanelScrollAffordanceCSS(opts: TeamPanelScrollAffordanceO
     filter: brightness(0.92);
   }
 }
-${root} ${panel} .lk-scroll-fade,
-${root} ${panel} .lk-scroll-hint {
+${root} ${panel} .lk-scroll-fade {
   display: none;
 }
 /* Position is set inline by JS to match each scrollport's bounding rect.
@@ -141,98 +140,17 @@ ${root} ${panel}.active .lk-scroll-fade.is-visible {
   display: block;
   opacity: 1;
 }
-/* Pill is appended to <body> (escapes any transformed/clipped ancestor),
-   so its rules are GLOBAL (un-scoped). Per-page color comes from inline
-   --lk-primary / --lk-primary-rgb CSS variables set on the pill itself. */
-.lk-scroll-hint {
-  position: fixed;
-  z-index: 9999;
-  pointer-events: none;
-  display: none;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px 7px 13px;
-  border: 0;
-  border-radius: 100px;
-  background: var(--lk-primary, #DA7756);
-  color: #fff;
-  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  white-space: nowrap;
-  box-shadow:
-    0 6px 18px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.32),
-    0 1px 0 rgba(0, 0, 0, 0.04),
-    0 0 0 3px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.10),
-    0 1px 0 rgba(255, 255, 255, 0.25) inset;
-  opacity: 0;
-  transform: translate(-50%, 6px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.lk-scroll-hint--visual {
-  /* Avoid pill clutter — visual column is short and rarely needs hint. */
-  display: none !important;
-}
-.lk-scroll-hint.is-visible {
-  display: inline-flex;
-  opacity: 1;
-  transform: translate(-50%, 0);
-  animation: lkScrollHintBounce 1.4s ease-in-out infinite;
-  pointer-events: auto;
-  cursor: pointer;
-}
-.lk-scroll-hint.is-visible:hover {
-  filter: brightness(1.05);
-  box-shadow:
-    0 8px 22px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.42),
-    0 1px 0 rgba(0, 0, 0, 0.05),
-    0 0 0 4px rgba(var(--lk-primary-rgb, 218, 119, 86), 0.14),
-    0 1px 0 rgba(255, 255, 255, 0.3) inset;
-}
-.lk-scroll-hint.is-visible:active {
-  transform: translate(-50%, 2px);
-}
-.lk-scroll-hint.is-visible:focus-visible {
-  outline: 3px solid rgba(var(--lk-primary-rgb, 218, 119, 86), 0.55);
-  outline-offset: 3px;
-}
-.lk-scroll-hint svg {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
-}
-@keyframes lkScrollHintBounce {
-  0%, 100% { transform: translate(-50%, 0); }
-  50%      { transform: translate(-50%, 4px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lk-scroll-hint.is-visible { animation: none; }
-}
 @media (max-width: ${minW - 1}px) {
-  .lk-scroll-hint { display: none !important; }
-}
-/* Mobile (<min): no inner scroll, panels render full height. */
-@media (max-width: ${minW - 1}px) {
-  ${root} ${panel} .lk-scroll-fade,
-  ${root} ${panel} .lk-scroll-hint {
+  ${root} ${panel} .lk-scroll-fade {
     display: none !important;
   }
 }
 `
 }
 
-const SCROLL_HINT_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`
-
 export type AttachOpts = {
   /** Same as CSS opts.panelClass — without dot. */
   panelClass: string
-  /** Hint label. Default 'Scroll to read more'. */
-  hintLabel?: string
-  /** Primary brand color for the pill. Should match the page's
-   * `getTeamPanelScrollAffordanceCSS({ primary })`. Default `#DA7756`. */
-  primary?: string
 }
 
 type Pieces = {
@@ -243,32 +161,8 @@ type Pieces = {
   infoBottomFade: HTMLElement | null
   visualTopFade: HTMLElement | null
   visualBottomFade: HTMLElement | null
-  infoHint: HTMLElement | null
-  visualHint: HTMLElement | null
   infoUserScrolled: boolean
   visualUserScrolled: boolean
-}
-
-/** Animate scrollTop programmatically over `dur` ms — looks like a real scroll
- * to the user (thumb moves, content slides) so it works as an affordance. */
-function animateScroll(el: HTMLElement, to: number, dur = 600): Promise<void> {
-  return new Promise((resolve) => {
-    const start = el.scrollTop
-    const delta = to - start
-    if (Math.abs(delta) < 1) {
-      resolve()
-      return
-    }
-    const t0 = performance.now()
-    const ease = (t: number) => 1 - Math.pow(1 - t, 3) // easeOutCubic
-    const step = (now: number) => {
-      const t = Math.min(1, (now - t0) / dur)
-      el.scrollTop = start + delta * ease(t)
-      if (t < 1) requestAnimationFrame(step)
-      else resolve()
-    }
-    requestAnimationFrame(step)
-  })
 }
 
 export function attachTeamPanelScrollAffordance(
@@ -280,36 +174,19 @@ export function attachTeamPanelScrollAffordance(
   )
   if (!panels.length) return () => {}
 
-  const hintLabel = opts.hintLabel ?? 'Scroll to read'
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const primary = opts.primary ?? '#DA7756'
-  const primaryRgb = (() => {
-    const m = primary.replace('#', '')
-    return `${parseInt(m.slice(0, 2), 16)}, ${parseInt(m.slice(2, 4), 16)}, ${parseInt(m.slice(4, 6), 16)}`
-  })()
 
   const buildAffordance = (
     panel: HTMLElement,
     kind: 'info' | 'visual',
-  ): { topFade: HTMLElement; bottomFade: HTMLElement; hint: HTMLButtonElement } => {
+  ): { topFade: HTMLElement; bottomFade: HTMLElement } => {
     const topFade = document.createElement('div')
     topFade.className = `lk-scroll-fade lk-scroll-fade--top lk-scroll-fade--${kind}`
     const bottomFade = document.createElement('div')
     bottomFade.className = `lk-scroll-fade lk-scroll-fade--bottom lk-scroll-fade--${kind}`
-    const hint = document.createElement('button')
-    hint.type = 'button'
-    hint.className = `lk-scroll-hint lk-scroll-hint--${kind}`
-    hint.setAttribute('aria-label', hintLabel)
-    hint.style.setProperty('--lk-primary', primary)
-    hint.style.setProperty('--lk-primary-rgb', primaryRgb)
-    hint.innerHTML = `<span>${hintLabel}</span>${SCROLL_HINT_SVG}`
     panel.appendChild(topFade)
     panel.appendChild(bottomFade)
-    // The pill uses position: fixed and is appended to <body> so that
-    // GSAP pin transforms (which create a new containing block on every
-    // ancestor with `transform`) cannot displace or clip it.
-    document.body.appendChild(hint)
-    return { topFade, bottomFade, hint }
+    return { topFade, bottomFade }
   }
 
   const all: Pieces[] = panels.map((panel) => {
@@ -319,19 +196,15 @@ export function attachTeamPanelScrollAffordance(
     let infoBottomFade: HTMLElement | null = null
     let visualTopFade: HTMLElement | null = null
     let visualBottomFade: HTMLElement | null = null
-    let infoHint: HTMLElement | null = null
-    let visualHint: HTMLElement | null = null
     if (info) {
       const a = buildAffordance(panel, 'info')
       infoTopFade = a.topFade
       infoBottomFade = a.bottomFade
-      infoHint = a.hint
     }
     if (visual) {
       const a = buildAffordance(panel, 'visual')
       visualTopFade = a.topFade
       visualBottomFade = a.bottomFade
-      visualHint = a.hint
     }
     return {
       panel,
@@ -341,8 +214,6 @@ export function attachTeamPanelScrollAffordance(
       infoBottomFade,
       visualTopFade,
       visualBottomFade,
-      infoHint,
-      visualHint,
       infoUserScrolled: false,
       visualUserScrolled: false,
     }
@@ -352,8 +223,6 @@ export function attachTeamPanelScrollAffordance(
     port: HTMLElement | null,
     topFade: HTMLElement | null,
     bottomFade: HTMLElement | null,
-    hint: HTMLElement | null,
-    userScrolled: boolean,
   ) => {
     if (!port) return
     const { scrollTop, scrollHeight, clientHeight } = port
@@ -363,13 +232,12 @@ export function attachTeamPanelScrollAffordance(
     const moreAbove = scrollable && scrollTop > 2
     if (topFade) topFade.classList.toggle('is-visible', moreAbove)
     if (bottomFade) bottomFade.classList.toggle('is-visible', moreBelow)
-    if (hint) hint.classList.toggle('is-visible', scrollable && !userScrolled && moreBelow)
   }
 
   const updateOne = (a: Pieces) => {
     positionOverlays(a)
-    evalPort(a.info, a.infoTopFade, a.infoBottomFade, a.infoHint, a.infoUserScrolled)
-    evalPort(a.visual, a.visualTopFade, a.visualBottomFade, a.visualHint, a.visualUserScrolled)
+    evalPort(a.info, a.infoTopFade, a.infoBottomFade)
+    evalPort(a.visual, a.visualTopFade, a.visualBottomFade)
   }
   const updateAll = () => all.forEach(updateOne)
 
@@ -384,7 +252,6 @@ export function attachTeamPanelScrollAffordance(
       port: HTMLElement | null,
       topFade: HTMLElement | null,
       bottomFade: HTMLElement | null,
-      hint: HTMLElement | null,
     ) => {
       if (!port) return
       // If the port itself is hidden (display:none on tablet/mobile), skip.
@@ -405,24 +272,9 @@ export function attachTeamPanelScrollAffordance(
         bottomFade.style.width = `${r.width}px`
         bottomFade.style.top = `${top + r.height - fadeH}px`
       }
-      if (hint) {
-        // Pill uses position:fixed (viewport coords) to escape any
-        // overflow:hidden ancestor (e.g. Snag360 panel) that would clip
-        // its shadow and the bounce-down animation.
-        const hintH = hint.offsetHeight || 30
-        // Center horizontally over the scrollport, but clamp to panel
-        // bounds so it never spills outside the active panel area.
-        const cx = r.left + r.width / 2
-        const minCx = panelRect.left + 60
-        const maxCx = panelRect.right - 60
-        const clampedCx = Math.max(minCx, Math.min(maxCx, cx))
-        // Sit just inside the bottom edge with a balanced 14px offset.
-        hint.style.left = `${clampedCx}px`
-        hint.style.top = `${r.bottom - 14 - hintH}px`
-      }
     }
-    place(a.info, a.infoTopFade, a.infoBottomFade, a.infoHint)
-    place(a.visual, a.visualTopFade, a.visualBottomFade, a.visualHint)
+    place(a.info, a.infoTopFade, a.infoBottomFade)
+    place(a.visual, a.visualTopFade, a.visualBottomFade)
   }
 
   const cleanups: Array<() => void> = []
@@ -457,61 +309,101 @@ export function attachTeamPanelScrollAffordance(
   const onWindowResize = () => updateAll()
   window.addEventListener('resize', onWindowResize, { passive: true })
   cleanups.push(() => window.removeEventListener('resize', onWindowResize))
-  // Pill uses fixed positioning, so reposition on every page scroll too.
+  // Reposition on page scroll (pin movement changes scrollport rect).
   const onWindowScroll = () => updateAll()
   window.addEventListener('scroll', onWindowScroll, { passive: true })
   cleanups.push(() => window.removeEventListener('scroll', onWindowScroll))
 
-  /* Click "Scroll to read more" pill → scroll the matching port down by
-     ~80% of its viewport, then mark userScrolled so the pill stops nagging. */
-  const onHintClick = (
-    a: Pieces,
-    which: 'info' | 'visual',
-  ) => (e: Event) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const port = which === 'info' ? a.info : a.visual
-    if (!port) return
-    const overflow = port.scrollHeight - port.clientHeight
-    if (overflow <= 4) return
-    const step = Math.max(120, Math.round(port.clientHeight * 0.8))
-    const target = Math.min(port.scrollTop + step, overflow)
-    if (which === 'info') a.infoUserScrolled = true
-    else a.visualUserScrolled = true
-    void animateScroll(port, target, 520).then(() => updateOne(a))
+  /** Auto-scroll the active panel's columns from top to bottom on a slow
+   * cubic ease so the user sees the full content (and the orange scrollbar
+   * thumb travel end-to-end). Cancels the moment the user interacts —
+   * wheel, touch, key, mousedown on the scrollbar — so it never fights the
+   * reader. Resets the `userScrolled` flag at start so the programmatic
+   * motion is not counted as user activity. */
+  const autoScrolls = new Map<HTMLElement, () => void>()
+  const cancelAutoScroll = (port: HTMLElement) => {
+    const c = autoScrolls.get(port)
+    if (c) c()
   }
-  all.forEach((a) => {
-    if (a.info && a.infoHint) {
-      const fn = onHintClick(a, 'info')
-      a.infoHint.addEventListener('click', fn)
-      cleanups.push(() => a.infoHint?.removeEventListener('click', fn))
-    }
-    if (a.visual && a.visualHint) {
-      const fn = onHintClick(a, 'visual')
-      a.visualHint.addEventListener('click', fn)
-      cleanups.push(() => a.visualHint?.removeEventListener('click', fn))
-    }
-  })
-
-  /** Scroll-nudge the active panel: down ~28px then back, in user-perceivable
-   * motion. Resets `userScrolled` flags first so the programmatic scroll does
-   * not trigger the "user has read it" path. */
-  const playNudge = async (a: Pieces) => {
+  const playAutoScroll = async (a: Pieces) => {
     if (reducedMotion) return
-    const ports: Array<HTMLElement | null> = [a.info, a.visual]
-    for (const port of ports) {
-      if (!port) continue
+    const ports: Array<{ port: HTMLElement; guard: 'infoUserScrolled' | 'visualUserScrolled' }> = []
+    if (a.info) ports.push({ port: a.info, guard: 'infoUserScrolled' })
+    if (a.visual) ports.push({ port: a.visual, guard: 'visualUserScrolled' })
+
+    for (const { port, guard } of ports) {
+      cancelAutoScroll(port)
       const overflow = port.scrollHeight - port.clientHeight
       if (overflow <= 4) continue
-      // Suppress the userScrolled flag during the programmatic animation.
-      const guard = port === a.info ? 'infoUserScrolled' : 'visualUserScrolled'
       a[guard] = false
-      const target = Math.min(28, overflow)
-      // Tiny delay so the pin settles after the active class flip.
-      await new Promise((r) => setTimeout(r, 60))
-      await animateScroll(port, target, 480)
-      await new Promise((r) => setTimeout(r, 120))
-      await animateScroll(port, 0, 420)
+
+      let cancelled = false
+      const cancel = () => {
+        cancelled = true
+      }
+      const onUserWheel = () => cancel()
+      const onUserTouch = () => cancel()
+      const onUserKey = (e: KeyboardEvent) => {
+        if (
+          e.key === 'ArrowDown' ||
+          e.key === 'ArrowUp' ||
+          e.key === 'PageDown' ||
+          e.key === 'PageUp' ||
+          e.key === 'Home' ||
+          e.key === 'End' ||
+          e.key === ' '
+        )
+          cancel()
+      }
+      port.addEventListener('wheel', onUserWheel, { passive: true })
+      port.addEventListener('touchstart', onUserTouch, { passive: true })
+      port.addEventListener('mousedown', onUserTouch, { passive: true })
+      window.addEventListener('keydown', onUserKey, { passive: true })
+      const teardown = () => {
+        port.removeEventListener('wheel', onUserWheel)
+        port.removeEventListener('touchstart', onUserTouch)
+        port.removeEventListener('mousedown', onUserTouch)
+        window.removeEventListener('keydown', onUserKey)
+        autoScrolls.delete(port)
+      }
+      autoScrolls.set(port, () => {
+        cancel()
+        teardown()
+      })
+
+      // Settle delay so the active-class flip + layout are committed.
+      await new Promise((r) => setTimeout(r, 220))
+      if (cancelled || !port.isConnected) {
+        teardown()
+        continue
+      }
+
+      const start = port.scrollTop
+      // Recompute overflow at animation start (fonts/affordance might have shifted layout).
+      const max = Math.max(0, port.scrollHeight - port.clientHeight)
+      const distance = max - start
+      if (distance < 8) {
+        teardown()
+        continue
+      }
+      // ~30ms per 100px, clamped — feels deliberate, not jarring.
+      const dur = Math.min(8500, Math.max(2400, distance * 14))
+      const t0 = performance.now()
+      const ease = (t: number) => 1 - Math.pow(1 - t, 3)
+      await new Promise<void>((resolve) => {
+        const step = (now: number) => {
+          if (cancelled || !port.isConnected) {
+            resolve()
+            return
+          }
+          const t = Math.min(1, (now - t0) / dur)
+          port.scrollTop = start + distance * ease(t)
+          if (t < 1) requestAnimationFrame(step)
+          else resolve()
+        }
+        requestAnimationFrame(step)
+      })
+      teardown()
       a[guard] = false
       updateOne(a)
     }
@@ -530,10 +422,16 @@ export function attachTeamPanelScrollAffordance(
         if (!a) continue
         a.infoUserScrolled = false
         a.visualUserScrolled = false
-        if (a.info) a.info.scrollTop = 0
-        if (a.visual) a.visual.scrollTop = 0
+        if (a.info) {
+          cancelAutoScroll(a.info)
+          a.info.scrollTop = 0
+        }
+        if (a.visual) {
+          cancelAutoScroll(a.visual)
+          a.visual.scrollTop = 0
+        }
         updateOne(a)
-        void playNudge(a)
+        void playAutoScroll(a)
       }
     }
   })
@@ -541,11 +439,11 @@ export function attachTeamPanelScrollAffordance(
     mo.observe(p, { attributes: true, attributeFilter: ['class'] }),
   )
 
-  /* Initial paint after layout settles + nudge the initially-active panel. */
+  /* Initial paint after layout settles + auto-scroll the initially-active panel. */
   const initTimer = window.setTimeout(() => {
     updateAll()
     const initial = all.find((a) => a.panel.classList.contains('active'))
-    if (initial) void playNudge(initial)
+    if (initial) void playAutoScroll(initial)
   }, 240)
 
   return () => {
@@ -553,13 +451,13 @@ export function attachTeamPanelScrollAffordance(
     cleanups.forEach((fn) => fn())
     ro?.disconnect()
     mo.disconnect()
+    autoScrolls.forEach((c) => c())
+    autoScrolls.clear()
     all.forEach((a) => {
       a.infoTopFade?.remove()
       a.infoBottomFade?.remove()
       a.visualTopFade?.remove()
       a.visualBottomFade?.remove()
-      a.infoHint?.remove()
-      a.visualHint?.remove()
     })
   }
 }

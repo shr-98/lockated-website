@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -94,6 +95,59 @@ html:has(.fm-matrix-root) {
   flex-direction: column;
   justify-content: center;
   margin-top: 32px !important;
+}
+/* Bounded-height pin so panel columns become their own scrollports — wheel
+   router (attachTeamStoryInnerScroll) routes deltas to them when cursor is
+   over the column. Parity with Snag 360 / PATM. */
+@media (min-width: 768px) {
+  .fm-matrix-root #teamsStoryPin {
+    height: calc(100dvh - ${FM_NAV_OFFSET_PX}px) !important;
+    max-height: calc(100dvh - ${FM_NAV_OFFSET_PX}px) !important;
+    box-sizing: border-box !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
+  .fm-matrix-root #teamsStoryPin .teams-story-pin-inner {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .fm-matrix-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  /* Panels live in an unnamed wrapper div sibling to .teams-tabs — bound it. */
+  .fm-matrix-root #teamsStoryPin .teams-layout > div:last-child {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .fm-matrix-root #teamsStoryPin .fm-matrix-teams-panel.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+  }
+  .fm-matrix-root #teamsStoryPin .fm-matrix-teams-panel.active > div {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 .fm-matrix-root .teams-story-pin-inner {
   padding-top: 0 !important;
@@ -360,6 +414,10 @@ export default function FmMatrixLandingPage() {
     // Vendor-style: pin #teams and advance tabs via scroll
     const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
     const teamsStoryTrigger = initFmTeamUseCasesGsap(root, { teamTabs, teamIds, switchTeam: switchFmTeam })
+    // Route wheel deltas to .team-info / .team-visual / .teams-tabs when cursor
+    // is over them so users can read full inner content before Lenis advances
+    // the pinned story (parity with PATM / Snag360 / etc.).
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     requestAnimationFrame(() => {
       lenisScroll.resize()
       ScrollTrigger.refresh()
@@ -499,6 +557,7 @@ export default function FmMatrixLandingPage() {
       countersObserver.disconnect()
       teamTabsAbort.abort()
       teamsStoryTrigger?.kill(true)
+      innerScrollCleanup()
       lenisScroll.destroy()
       window.removeEventListener('hashchange', onHashChange)
       anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))

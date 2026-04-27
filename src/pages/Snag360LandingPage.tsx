@@ -194,6 +194,10 @@ html:has(.snag360-root) {
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
+  /* Last item must clear the pinned progress + bottom fade so scroll reaches the
+     real end of the copy column instead of vanishing under the progress line. */
+  padding-bottom: clamp(72px, 10vh, 110px) !important;
+  scroll-padding-bottom: clamp(72px, 10vh, 110px) !important;
 }
 .snag360-root #teamsStoryPin .team-content.active > .team-visual {
   min-width: 0 !important;
@@ -203,6 +207,8 @@ html:has(.snag360-root) {
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
   box-sizing: border-box !important;
+  padding-bottom: clamp(72px, 10vh, 110px) !important;
+  scroll-padding-bottom: clamp(72px, 10vh, 110px) !important;
 }
 @media (max-width: 900px) {
   .snag360-root #teamsStoryPin .team-content.active {
@@ -851,9 +857,25 @@ export default function Snag360LandingPage() {
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.team-tab'))
     const teamPanels = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
     const progressFillEl = root.querySelector<HTMLElement>('#teamsStoryProgress')
+    /** Keep the active tab visible inside the .teams-tabs rail as the pin
+     * advances on scroll (otherwise the highlight can sit off-screen when there
+     * are many tabs). Scroll the rail itself, never the document. */
+    const ensureTabVisibleInRail = (tab: HTMLElement) => {
+      const rail = tab.closest<HTMLElement>('.teams-tabs')
+      if (!rail) return
+      const railRect = rail.getBoundingClientRect()
+      const tabRect = tab.getBoundingClientRect()
+      const pad = 12
+      const above = tabRect.top - railRect.top - pad
+      const below = tabRect.bottom - railRect.bottom + pad
+      if (above < 0) rail.scrollTop += above
+      else if (below > 0) rail.scrollTop += below
+    }
     const switchTeamAt = (idx: number) => {
       teamTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
       teamPanels.forEach((c, i) => c.classList.toggle('active', i === idx))
+      const activeTab = teamTabs[idx]
+      if (activeTab) ensureTabVisibleInRail(activeTab)
     }
     let teamsStoryTrigger: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {

@@ -32,6 +32,32 @@ export function createLenisScrollSync(): {
     lerp: 0.12,
     smoothWheel: true,
     wheelMultiplier: 0.9,
+    /* When the cursor is over an inner scrollport that still has overflow
+     * (team-use-case columns: tab rail, copy column, visual mock card,
+     * walkthrough info panes), Lenis must NOT also consume the wheel — that
+     * caused the pin to advance simultaneously with the inner column,
+     * producing the "center div doesn't scroll properly" jitter on
+     * Snag 360 / PATM / etc. The shared `attachTeamStoryInnerScroll`
+     * handler on the page root then drives the inner scrollTop directly. At
+     * column edge the inner host is no longer scrollable in the wheel
+     * direction, so this returns false and Lenis advances the pin. */
+    prevent: (node) => {
+      if (!(node instanceof Element)) return false
+      const sel =
+        '.team-info, .team-visual, .teams-tabs, .team-panel-info, .team-panel-screen, .wt-info, .feature-info'
+      let el: Element | null = node
+      while (el) {
+        if (el instanceof HTMLElement && el.matches(sel)) {
+          const cs = getComputedStyle(el)
+          const oy = cs.overflowY
+          if (oy === 'auto' || oy === 'scroll' || oy === 'overlay') {
+            if (el.scrollHeight > el.clientHeight + 2) return true
+          }
+        }
+        el = el.parentElement
+      }
+      return false
+    },
   })
   const onTick = (time: number) => {
     lenis.raf(time * 1000)

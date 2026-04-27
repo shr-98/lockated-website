@@ -5,7 +5,17 @@
  * `#teamsStoryPin` when overflow-y auto, then other leaf hosts.
  */
 export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
-  const leafSelectors = ['.team-info', '.team-panel-info', '.wt-info', '.feature-info']
+  const leafSelectors = [
+    '.team-info',
+    '.team-panel-info',
+    '.team-panel-screen',
+    '.wt-info',
+    '.feature-info',
+    // Lease/FmMatrix/Vendor: panel children have no class — match by structural selector.
+    '.team-panel.active > div',
+    '.fm-matrix-teams-panel.active > div',
+    '.teams-panel.active > div',
+  ]
 
   const getTeamInfo = (t: EventTarget | null): HTMLElement | null => {
     const el = t instanceof Element ? t.closest('.team-info') : null
@@ -115,39 +125,29 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
       return
     }
 
-    const teamInfo = getTeamInfo(e.target)
-    if (teamInfo) {
-      consume(teamInfo, e)
-      return
+    /* Build an ordered list of candidate scroll hosts under the pointer, from
+     * most-specific (column the cursor is actually over) to least-specific
+     * (outer wrappers). `consume()` returns false when the host can't actually
+     * scroll (e.g. wrapper with overflow: hidden, or content fits) — in that
+     * case we fall through to the next candidate so we never "trap" wheel on
+     * a non-scrollable ancestor like `.teams-main`. This is what lets each of
+     * the three columns (tabs / team-info / team-visual) scroll cleanly when
+     * the cursor is over it, regardless of nesting order. */
+    const candidates: HTMLElement[] = []
+    const push = (el: HTMLElement | null) => {
+      if (el && !candidates.includes(el)) candidates.push(el)
     }
 
-    const teamVisual = getTeamVisual(e.target)
-    if (teamVisual) {
-      consume(teamVisual, e)
-      return
-    }
+    push(getTeamInfo(e.target))
+    push(getTeamVisual(e.target))
+    push(getTeamsTabs(e.target))
+    push(getTeamsMain(e.target))
+    push(getTeamsStoryPin(e.target))
+    push(findLeafScrollHost(e.target))
 
-    const main = getTeamsMain(e.target)
-    if (main) {
-      consume(main, e)
-      return
+    for (const host of candidates) {
+      if (consume(host, e)) return
     }
-
-    const tabRail = getTeamsTabs(e.target)
-    if (tabRail) {
-      consume(tabRail, e)
-      return
-    }
-
-    const storyPin = getTeamsStoryPin(e.target)
-    if (storyPin) {
-      consume(storyPin, e)
-      return
-    }
-
-    const host = findLeafScrollHost(e.target)
-    if (!host) return
-    consume(host, e)
   }
 
   root.addEventListener('wheel', onWheel, { passive: false, capture: true })

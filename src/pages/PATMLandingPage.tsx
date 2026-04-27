@@ -56,8 +56,8 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Heading moved INSIDE #teamsStoryPin at runtime so it pins together with tabs + panels
-   (mirrors public/vendor-management.html). Tight spacing so tabs sit right under the title. */
+/* Header is moved INSIDE #teamsStoryPin at runtime so it pins together with tabs + panels
+   (mirrors snag-360.html). Snag 360-style typography: large title + breathing room. */
 .patm-root .teams-section .teams-section-header {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
@@ -65,17 +65,27 @@ html:has(.patm-root) {
 .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
   flex: 0 0 auto !important;
   width: 100% !important;
-  max-width: 1200px !important;
-  margin: 0 auto 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
+  text-align: left !important;
   box-sizing: border-box !important;
 }
+.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-eyebrow {
+  margin-bottom: 20px !important;
+}
 .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-title {
-  margin-top: 8px !important;
-  margin-bottom: 8px !important;
+  font-size: clamp(32px, 4vw, 52px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -1.5px !important;
+  line-height: 1.08 !important;
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
 }
 .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-sub {
-  margin-bottom: 0 !important;
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+  max-width: 560px !important;
+  margin-bottom: 40px !important;
 }
 /* Stacking: like vendor-mgmt route — do not over-stack; pin uses z-index 1. */
 .patm-root .teams-section#teams.patm-teams--app {
@@ -175,19 +185,10 @@ html:has(.patm-root) {
     padding-top: clamp(24px, 3vh, 40px) !important;
     padding-bottom: clamp(42px, 6vh, 64px) !important;
   }
-  /* Header + layout + progress must coexist in the viewport-height pin. Keep the header compact via
-     type/line-height only — do NOT clip with max-height/overflow, or words get cut off. */
+  /* Header + layout + progress must coexist in the viewport-height pin. Keep Snag 360-style
+     large header but allow it to use natural typography (route CSS above sets sizes). */
   .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
     flex: 0 0 auto !important;
-  }
-  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-title {
-    font-size: clamp(1.6rem, 3.2vw, 2.4rem) !important;
-    line-height: 1.15 !important;
-  }
-  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-sub {
-    font-size: clamp(0.9rem, 1.1vw, 1rem) !important;
-    line-height: 1.45 !important;
-    margin-top: 6px !important;
   }
   /* Room above footer progress: mirrors Snag .teams-main padding-bottom 32px. */
   .patm-root #teamsStoryPin .teams-layout {
@@ -235,9 +236,10 @@ html:has(.patm-root) {
     min-height: 0 !important;
     max-height: 100% !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    gap: clamp(28px, 3vw, 48px) !important;
-    align-items: center !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(420px, 50%)) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    gap: 40px !important;
+    align-items: start !important;
     overflow: hidden !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-info {
@@ -248,16 +250,23 @@ html:has(.patm-root) {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    /* Last list item must clear the pinned progress bar + bottom fade — without
+       this, scroll-to-end leaves the final feature row hidden under the progress
+       line. Matches "clamp(16px,2.4vh,24px)" progress offset + 56px fade height. */
+    padding-bottom: clamp(80px, 11vh, 120px) !important;
+    scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-visual {
-    align-self: center !important;
-    justify-self: center !important;
+    align-self: start !important;
+    justify-self: end !important;
     min-height: 0 !important;
     max-height: 100% !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    padding-bottom: clamp(80px, 11vh, 120px) !important;
+    scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
   }
 }
 /* 768–1100: tabs over copy, still pinned. */
@@ -305,6 +314,8 @@ html:has(.patm-root) {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    padding-bottom: clamp(80px, 11vh, 120px) !important;
+    scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-visual {
     display: none !important;
@@ -317,14 +328,14 @@ html:has(.patm-root) {
   box-shadow: none !important;
 }
 .patm-root .team-content.active {
-  align-items: center !important;
+  align-items: start !important;
 }
 .patm-root .team-content.active > .team-visual {
   height: auto !important;
-  align-self: center !important;
-  justify-self: center !important;
+  align-self: start !important;
+  justify-self: end !important;
   width: 100% !important;
-  max-width: min(100%, var(--team-visual-max-w, 420px)) !important;
+  max-width: min(100%, var(--team-visual-max-w, 380px)) !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -393,6 +404,44 @@ html:has(.patm-root) {
 }
 .patm-root #teamsStoryProgress {
   transform-origin: left center !important;
+}
+/* Compact panel typography in the pinned team story — match Snag 360 (smaller headline,
+   tighter spacing, smaller feature rows) so the center column height matches. */
+@media (min-width: ${PATM_TEAMS_PIN_MIN_WIDTH_PX}px) {
+  .patm-root #teamsStoryPin .team-content.active .team-badge {
+    margin-bottom: 14px !important;
+    padding: 3px 10px !important;
+    font-size: 10.5px !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-headline {
+    font-size: clamp(22px, 2.4vw, 30px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.6px !important;
+    margin-bottom: 12px !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-desc {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 18px !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-features {
+    gap: 8px !important;
+    margin-bottom: 20px !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-info .team-feature {
+    padding: 10px 14px !important;
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-info .team-feature-dot {
+    width: 16px !important;
+    height: 16px !important;
+    margin-top: 2px !important;
+  }
+  .patm-root #teamsStoryPin .team-content.active .team-modules {
+    gap: 6px !important;
+    margin-bottom: 16px !important;
+  }
 }
 .patm-root,
 .patm-root * {
@@ -880,15 +929,16 @@ export default function PATMLandingPage() {
     if (!root) return
     if (!bodyHtml) return
 
-    // Team use cases: keep the header ABOVE #teamsStoryPin so the section reads top-down like the
-    // "How we fix it" section — eyebrow + title + subtitle sit on top, content flows normally below.
-    // If a previous render moved the header into the pin, restore it.
+    // Team use cases (Snag 360 parity): the section header (eyebrow + title + subtitle) must sit
+    // INSIDE #teamsStoryPin so it pins together with the tabs/panels — exactly like snag-360.html.
     const teamsSection = root.querySelector<HTMLElement>('#teams')
     const teamsPin = root.querySelector<HTMLElement>('#teamsStoryPin')
     const teamsHeader = root.querySelector<HTMLElement>('#teams .teams-section-header')
-    if (teamsSection && teamsPin && teamsHeader && teamsPin.contains(teamsHeader)) {
-      teamsSection.insertBefore(teamsHeader, teamsPin)
-      teamsHeader.classList.remove('patm-teams-header--in-pin')
+    const teamsPinInner = root.querySelector<HTMLElement>('#teamsStoryPin .teams-story-pin-inner')
+    if (teamsSection && teamsPin && teamsHeader && !teamsPin.contains(teamsHeader)) {
+      const target = teamsPinInner ?? teamsPin
+      target.insertBefore(teamsHeader, target.firstChild)
+      teamsHeader.classList.add('patm-teams-header--in-pin')
     }
 
     // Team use cases (Snag 360): show `.reveal` in #teams immediately so nothing stays opacity:0 before IO / while pinned.
@@ -1033,11 +1083,26 @@ export default function PATMLandingPage() {
     // Teams: instant tab/panel swap only (no slide/fade — matches Vendor / other landings; scroll pin is separate).
     const teamTabs = Array.from(root.querySelectorAll<HTMLElement>('.teams-tabs .team-tab'))
     const teamContents = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
+    /** Keep the active tab visible inside the .teams-tabs rail as the pin
+     * advances on scroll (otherwise the highlight can sit off-screen when there
+     * are many tabs). Scroll the rail itself, never the document. */
+    const ensureTabVisibleInRail = (tab: HTMLElement) => {
+      const rail = tab.closest<HTMLElement>('.teams-tabs')
+      if (!rail) return
+      const railRect = rail.getBoundingClientRect()
+      const tabRect = tab.getBoundingClientRect()
+      const pad = 12
+      const above = tabRect.top - railRect.top - pad
+      const below = tabRect.bottom - railRect.bottom + pad
+      if (above < 0) rail.scrollTop += above
+      else if (below > 0) rail.scrollTop += below
+    }
     const switchTeam = (teamId: string, tabEl?: HTMLElement) => {
       teamTabs.forEach((t) => t.classList.remove('active'))
       teamContents.forEach((c) => c.classList.remove('active'))
       const tab = tabEl ?? teamTabs.find((t) => t.dataset.team === teamId)
       tab?.classList.add('active')
+      if (tab) ensureTabVisibleInRail(tab)
       const content = teamContents.find((c) => c.dataset.content === teamId)
       if (content) content.classList.add('active')
     }

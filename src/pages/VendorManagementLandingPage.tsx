@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -162,6 +163,40 @@ body::before {
 }
 .vendor-mgmt-root .wt-ui-body {
   flex: 1;
+}
+/* Bounded-height pin so panel columns become their own scrollports — wheel
+   router (attachTeamStoryInnerScroll) routes deltas to them when cursor is
+   over the column. Parity with Snag 360 / PATM. */
+@media (min-width: 768px) {
+  .vendor-mgmt-root #teamsStoryPin {
+    height: calc(100dvh - ${VENDOR_NAV_OFFSET_PX}px) !important;
+    max-height: calc(100dvh - ${VENDOR_NAV_OFFSET_PX}px) !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .vendor-mgmt-root #teamsStoryPin .teams-panel.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+  }
+  .vendor-mgmt-root #teamsStoryPin .teams-panel.active > div {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 `
 
@@ -669,6 +704,10 @@ export default function VendorManagementLandingPage() {
         })
       })
     }, root)
+    // Route wheel deltas to .team-info / .team-visual / .teams-tabs when cursor
+    // is over them so users can read full inner content before Lenis advances
+    // the pinned story (parity with PATM / Snag360 / etc.).
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     const onLayoutRefresh = () => refreshTeamScroll()
     if (document.readyState === 'complete') onLayoutRefresh()
     else window.addEventListener('load', onLayoutRefresh)
@@ -685,6 +724,7 @@ export default function VendorManagementLandingPage() {
 
     return () => {
       gsapCtx.revert()
+      innerScrollCleanup()
       lenisScroll.destroy()
       clearTimeout(lateLayout)
       window.removeEventListener('load', onLayoutRefresh)

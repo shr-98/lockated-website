@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { createLenisScrollSync, scrollDocumentToY } from '../lenis/lenisScrollSync'
+import { attachTeamStoryInnerScroll } from '../lenis/teamStoryInnerScroll'
 
 void gsap.registerPlugin(ScrollTrigger)
 
@@ -93,6 +94,59 @@ html:has(.lease-management-root) {
   flex-direction: column;
   justify-content: center;
   margin-top: 32px !important;
+}
+/* Bounded-height pin so center copy column (.team-panel-info) + screen column
+   become their own scrollports — wheel router (attachTeamStoryInnerScroll)
+   then routes deltas to them when cursor is over the column. Parity with
+   Snag 360 / PATM. */
+@media (min-width: 768px) {
+  .lease-management-root #teamsStoryPin {
+    height: calc(100dvh - ${LEASE_NAV_OFFSET_PX}px) !important;
+    max-height: calc(100dvh - ${LEASE_NAV_OFFSET_PX}px) !important;
+    box-sizing: border-box !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
+  .lease-management-root #teamsStoryPin .teams-story-pin-inner {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .lease-management-root #teamsStoryPin .teams-layout {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  .lease-management-root #teamsStoryPin .team-panels {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .lease-management-root #teamsStoryPin .team-panel.active {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+  }
+  .lease-management-root #teamsStoryPin .team-panel.active > .team-panel-info,
+  .lease-management-root #teamsStoryPin .team-panel.active > .team-panel-screen {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 .lease-management-root .teams-story-pin-inner {
   padding-top: 0 !important;
@@ -548,6 +602,10 @@ export default function LeaseManagementLandingPage() {
 
     const teamIds = teamTabs.map((t) => t.dataset.team || '').filter(Boolean)
     const teamsStoryTrigger = initLeaseTeamsGsap(root, { teamTabs, teamIds, switchTeam })
+    // Route wheel deltas to .team-info / .team-visual / .teams-tabs when cursor
+    // is over them so users can read full inner content before Lenis advances
+    // the pinned story (parity with PATM / Snag360 / Post Sales / etc.).
+    const innerScrollCleanup = attachTeamStoryInnerScroll(root)
     requestAnimationFrame(() => {
       lenisScroll.resize()
       ScrollTrigger.refresh()
@@ -576,6 +634,7 @@ export default function LeaseManagementLandingPage() {
       counterObserver.disconnect()
       anchorAbort.abort()
       teamsStoryTrigger?.kill(true)
+      innerScrollCleanup()
       lenisScroll.destroy()
       delete (window as unknown as { openUCModal?: unknown }).openUCModal
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
