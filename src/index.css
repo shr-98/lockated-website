@@ -63,3 +63,88 @@ h5,
     transition: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   Team use-case section — universal responsive safety net.
+   Each product landing page (PATM, FM Matrix, Snag 360, Club, Post
+   Possession, Post Sales, Lease, Loyalty, Vendor, CP, Survey) uses
+   a viewport-tall pinned container `#teamsStoryPin` with internal
+   scrolling. On short desktops (≤820px tall), tablets, and small
+   laptop viewports, that fixed `height: calc(100dvh - NAV)` clamp
+   clips tabs, the visual card, the features list, or pushes the
+   progress bar over content. These rules release the clamp
+   responsively so content flows naturally on viewports the pinned
+   design can't fit, while leaving the pinned story intact on tall
+   desktops where it works. Also guarantees inner panels are always
+   scrollable when content overflows so nothing is hidden.
+   ───────────────────────────────────────────────────────────────── */
+
+/* Always-on fallback: panels must be vertically scrollable so content
+   can never be permanently hidden, regardless of monitor height. */
+#teamsStoryPin .team-content.active > .team-info,
+#teamsStoryPin .team-content.active > .team-visual,
+#teamsStoryPin .teams-tabs {
+  overscroll-behavior: contain;
+}
+
+/* Short desktop heights (≤820px) — typical 1366×768 / 1440×900 with
+   browser chrome. Release the viewport-tall clamp so the team section
+   becomes naturally tall and every piece of content is visible. */
+@media (max-height: 820px) and (min-width: 768px) {
+  #teamsStoryPin {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  #teamsStoryPin .teams-story-pin-inner,
+  #teamsStoryPin .teams-layout,
+  #teamsStoryPin .teams-panels,
+  #teamsStoryPin .team-content.active,
+  #teamsStoryPin .team-content.active > .team-info,
+  #teamsStoryPin .team-content.active > .team-visual,
+  #teamsStoryPin .teams-tabs {
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  /* Avoid double padding meant for the absolutely-positioned progress
+     bar when we're letting content flow inline. */
+  #teamsStoryPin .team-content.active > .team-info,
+  #teamsStoryPin .team-content.active > .team-visual {
+    padding-bottom: 24px !important;
+  }
+  /* Bring the progress bar back inline below the panels instead of
+     absolutely pinned to the (now-tall) section's bottom. */
+  #teamsStoryPin .teams-story-progress {
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin: 28px auto 0 !important;
+  }
+}
+
+/* Very wide / ultrawide monitors — keep the inner content centered
+   and prevent the two-column layout from spreading too thin. */
+@media (min-width: 1800px) {
+  #teamsStoryPin .teams-story-pin-inner,
+  .teams-section .teams-inner,
+  .teams-section .section-inner {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Ensure the team section never overlaps the section that follows it
+   on any desktop, regardless of pin computation rounding. */
+.teams-section {
+  position: relative;
+  z-index: 1;
+}
+.teams-section + section,
+.teams-section + .section {
+  position: relative;
+  z-index: 2;
+}
