@@ -57,6 +57,56 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
     return null
   }
 
+  /* Edge-lock: when a scrollport is actively consuming wheel deltas, we keep
+     absorbing inertial/momentum deltas for a brief grace period AFTER it
+     reaches an edge — so trackpad fling doesn't immediately advance the
+     pinned story to the next tab while the user is still reading. The lock
+     resets the moment the user pauses (no wheel event for ~180ms). */
+  const EDGE_LOCK_MS = 380
+  const PAUSE_MS = 180
+  let lockedHost: HTMLElement | null = null
+  let lastWheelAt = 0
+  let lockUntil = 0
+
+  /** Try to consume a wheel delta on `host`. Returns true if the wheel event
+   * should be absorbed (preventDefault'd) — either because the host scrolled,
+   * or because the edge-lock is still active. Returns false to let outer
+   * (Lenis / pin) handle it. */
+  const consume = (host: HTMLElement, e: WheelEvent): boolean => {
+    const { scrollTop, scrollHeight, clientHeight } = host
+    if (scrollHeight <= clientHeight + 2) return false
+    const delta = e.deltaY
+    const atTop = scrollTop <= 0
+    const atBottom = scrollTop + clientHeight >= scrollHeight - 2
+    const down = delta > 0
+    const up = delta < 0
+    const now = e.timeStamp || performance.now()
+    const stillEngaged =
+      lockedHost === host && now - lastWheelAt < PAUSE_MS && now < lockUntil
+
+    if ((down && !atBottom) || (up && !atTop)) {
+      e.preventDefault()
+      e.stopPropagation()
+      host.scrollTop += delta
+      lockedHost = host
+      lastWheelAt = now
+      lockUntil = now + EDGE_LOCK_MS
+      return true
+    }
+    // At an edge in the direction of motion — only absorb if still engaged
+    // (i.e. trackpad momentum from a recent in-port scroll). Otherwise let
+    // Lenis advance.
+    if (stillEngaged) {
+      e.preventDefault()
+      e.stopPropagation()
+      lastWheelAt = now
+      return true
+    }
+    // User has paused or wheeled fresh at the edge → release.
+    if (lockedHost === host) lockedHost = null
+    return false
+  }
+
   const onWheel = (e: WheelEvent) => {
     // Industry / use-case modals (Snag 360, Post Possession, etc.): use native
     // scrolling inside `.modal-body` / `.modal-inner` — do not route wheel to Lenis targets.
@@ -67,102 +117,37 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
 
     const teamInfo = getTeamInfo(e.target)
     if (teamInfo) {
-      const { scrollTop, scrollHeight, clientHeight } = teamInfo
-      if (scrollHeight > clientHeight + 2) {
-        const delta = e.deltaY
-        const atTop = scrollTop <= 0
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-        const down = delta > 0
-        const up = delta < 0
-        if ((down && !atBottom) || (up && !atTop)) {
-          e.preventDefault()
-          teamInfo.scrollTop += delta
-        }
-        return
-      }
+      consume(teamInfo, e)
+      return
     }
 
     const teamVisual = getTeamVisual(e.target)
     if (teamVisual) {
-      const { scrollTop, scrollHeight, clientHeight } = teamVisual
-      if (scrollHeight > clientHeight + 2) {
-        const delta = e.deltaY
-        const atTop = scrollTop <= 0
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-        const down = delta > 0
-        const up = delta < 0
-        if ((down && !atBottom) || (up && !atTop)) {
-          e.preventDefault()
-          teamVisual.scrollTop += delta
-        }
-        return
-      }
+      consume(teamVisual, e)
+      return
     }
 
     const main = getTeamsMain(e.target)
     if (main) {
-      const { scrollTop, scrollHeight, clientHeight } = main
-      if (scrollHeight > clientHeight + 2) {
-        const delta = e.deltaY
-        const atTop = scrollTop <= 0
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-        const down = delta > 0
-        const up = delta < 0
-        if ((down && !atBottom) || (up && !atTop)) {
-          e.preventDefault()
-          main.scrollTop += delta
-        }
-        return
-      }
+      consume(main, e)
+      return
     }
 
     const tabRail = getTeamsTabs(e.target)
     if (tabRail) {
-      const { scrollTop, scrollHeight, clientHeight } = tabRail
-      if (scrollHeight > clientHeight + 2) {
-        const delta = e.deltaY
-        const atTop = scrollTop <= 0
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-        const down = delta > 0
-        const up = delta < 0
-        if ((down && !atBottom) || (up && !atTop)) {
-          e.preventDefault()
-          tabRail.scrollTop += delta
-        }
-        return
-      }
+      consume(tabRail, e)
+      return
     }
 
     const storyPin = getTeamsStoryPin(e.target)
     if (storyPin) {
-      const { scrollTop, scrollHeight, clientHeight } = storyPin
-      if (scrollHeight > clientHeight + 2) {
-        const delta = e.deltaY
-        const atTop = scrollTop <= 0
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-        const down = delta > 0
-        const up = delta < 0
-        if ((down && !atBottom) || (up && !atTop)) {
-          e.preventDefault()
-          storyPin.scrollTop += delta
-        }
-        return
-      }
+      consume(storyPin, e)
+      return
     }
 
     const host = findLeafScrollHost(e.target)
     if (!host) return
-    const { scrollTop, scrollHeight, clientHeight } = host
-    if (scrollHeight <= clientHeight + 2) return
-    const delta = e.deltaY
-    const atTop = scrollTop <= 0
-    const atBottom = scrollTop + clientHeight >= scrollHeight - 2
-    const down = delta > 0
-    const up = delta < 0
-    if ((down && !atBottom) || (up && !atTop)) {
-      e.preventDefault()
-      host.scrollTop += delta
-    }
+    consume(host, e)
   }
 
   root.addEventListener('wheel', onWheel, { passive: false, capture: true })
