@@ -12,7 +12,7 @@ import {
 void gsap.registerPlugin(ScrollTrigger)
 
 const SNAG_NAV_OFFSET_PX = 68
-const SNAG_TEAM_STORY_SCROLL_PER_TAB_VH = 1.2
+const SNAG_TEAM_STORY_SCROLL_PER_TAB_VH = 0.45
 
 function initSnagTeamsGsap(
   root: HTMLElement,
@@ -130,8 +130,9 @@ html:has(.snag360-root) {
   justify-content: flex-start !important;
   min-height: 0 !important;
   /* Definite height so pinned story never "floats" in the middle. */
-  height: calc(100dvh - ${SNAG_NAV_OFFSET_PX}px) !important;
-  max-height: calc(100dvh - ${SNAG_NAV_OFFSET_PX}px) !important;
+  min-height: calc(var(--app-height) - ${SNAG_NAV_OFFSET_PX}px) !important;
+  height: auto !important;
+  max-height: none !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   width: 100%;
@@ -164,8 +165,9 @@ html:has(.snag360-root) {
   align-items: stretch !important;
   overflow: hidden !important;
 }
-.snag360-root #teamsStoryPin .team-panels {
+.snag360-root #teamsStoryPin .teams-panel {
   min-width: 0 !important;
+  height: 430px !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -192,8 +194,8 @@ html:has(.snag360-root) {
   max-height: 100% !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
+  // overscroll-behavior: contain !important;
+  // -webkit-overflow-scrolling: touch !important;
   /* Last item must clear the pinned progress + bottom fade so scroll reaches the
      real end of the copy column instead of vanishing under the progress line. */
   padding-bottom: clamp(72px, 10vh, 110px) !important;
@@ -205,9 +207,9 @@ html:has(.snag360-root) {
   max-height: 100% !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  overscroll-behavior: contain !important;
+  // overscroll-behavior: contain !important;
   box-sizing: border-box !important;
-  padding-bottom: clamp(72px, 10vh, 110px) !important;
+  // padding-bottom: clamp(72px, 10vh, 110px) !important;
   scroll-padding-bottom: clamp(72px, 10vh, 110px) !important;
 }
 @media (max-width: 900px) {
@@ -240,7 +242,7 @@ html:has(.snag360-root) {
     padding-bottom: 0 !important;
   }
   .snag360-root #teamsStoryPin .teams-layout,
-  .snag360-root #teamsStoryPin .team-panels,
+  .snag360-root #teamsStoryPin .teams-panel,
   .snag360-root #teamsStoryPin .team-content.active {
     display: block !important;
     flex: none !important;
@@ -654,9 +656,9 @@ export default function Snag360LandingPage() {
           const useCasesLink = navLinks.querySelector('a[href="#usecases"]')?.closest('li')
 
           navLinks.innerHTML = ''
-          ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink].forEach((item) => {
-            if (item) navLinks.appendChild(item)
-          })
+            ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink].forEach((item) => {
+              if (item) navLinks.appendChild(item)
+            })
         }
 
         const hero = doc.querySelector('.hero')
@@ -671,21 +673,21 @@ export default function Snag360LandingPage() {
         const footer = doc.querySelector('footer')
 
         doc.body.innerHTML = ''
-        ;[
-          nav,
-          hero,
-          pain,
-          walkthrough,
-          features,
-          teams,
-          useCases,
-          ...modals,
-          endingBanner,
-          contact,
-          footer,
-        ].forEach((node) => {
-          if (node) doc.body.appendChild(node)
-        })
+          ;[
+            nav,
+            hero,
+            pain,
+            walkthrough,
+            features,
+            teams,
+            useCases,
+            ...modals,
+            endingBanner,
+            contact,
+            footer,
+          ].forEach((node) => {
+            if (node) doc.body.appendChild(node)
+          })
 
         const style = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')

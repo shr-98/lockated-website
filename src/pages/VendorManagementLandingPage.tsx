@@ -150,6 +150,10 @@ body::before {
 
 /* Teams "use cases" pinned story: prevent right-side UI card gaps on scroll by
    stretching the two-column panel and letting the UI card fill height. */
+.vendor-mgmt-root .teams-section .teams-section-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
 .vendor-mgmt-root .teams-panel.active {
   align-items: stretch !important;
 }
@@ -171,27 +175,29 @@ body::before {
   .vendor-mgmt-root #teamsStoryPin {
     height: calc(100dvh - ${VENDOR_NAV_OFFSET_PX}px) !important;
     max-height: calc(100dvh - ${VENDOR_NAV_OFFSET_PX}px) !important;
+    min-height: 0 !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
+    justify-content: center !important;
     overflow: hidden !important;
+    background: var(--bg) !important;
+    z-index: 1 !important;
   }
   .vendor-mgmt-root #teamsStoryPin .teams-panel.active {
-    flex: 1 1 auto !important;
+    flex: 0 0 auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
     max-height: 100% !important;
     overflow: hidden !important;
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    grid-template-rows: minmax(0, 1fr) !important;
-    align-items: stretch !important;
+    align-items: start !important;
   }
   .vendor-mgmt-root #teamsStoryPin .teams-panel.active > div {
     min-width: 0 !important;
     min-height: 0 !important;
-    max-height: 100% !important;
-    height: 100% !important;
+    max-height: max(100vh, calc(100vh - 250px)) !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
@@ -363,7 +369,7 @@ export default function VendorManagementLandingPage() {
       (entries) => {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
-          ;(e.target as HTMLElement).classList.add('visible')
+            ; (e.target as HTMLElement).classList.add('visible')
         })
       },
       { threshold: 0.15 },
@@ -510,30 +516,6 @@ export default function VendorManagementLandingPage() {
     if (initialTeamTab) {
       const match = (initialTeamTab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
       if (match?.[1]) switchTeam(match[1], initialTeamTab)
-    }
-
-    // Team panels use display toggling; different heights reflow the pin and fight scroll
-    // anchoring (feels like screen shake). Lock column height to the tallest panel once.
-    const teamsCol = teamPanels[0]?.parentElement
-    if (teamsCol && teamPanels.length > 0) {
-      const activePanel = teamPanels.find((p) => p.classList.contains('active'))
-      const savedKey = activePanel?.id?.replace(/^team-/, '') || teamIds[0] || ''
-      let maxH = 0
-      for (const p of teamPanels) {
-        const key = p.id?.replace(/^team-/, '') ?? ''
-        if (!key) continue
-        const tab = teamTabs[teamIds.indexOf(key)]
-        switchTeam(key, tab)
-        void teamsCol.offsetHeight
-        maxH = Math.max(maxH, teamsCol.getBoundingClientRect().height)
-      }
-      if (savedKey) {
-        const tab = teamTabs[teamIds.indexOf(savedKey)]
-        switchTeam(savedKey, tab)
-      }
-      if (maxH > 0) {
-        teamsCol.style.minHeight = `${Math.ceil(maxH)}px`
-      }
     }
 
     // Industry modal

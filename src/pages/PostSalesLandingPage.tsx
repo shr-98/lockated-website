@@ -130,9 +130,13 @@ html:has(.post-sales-root) {
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   min-height: 0 !important;
   box-sizing: border-box !important;
+}
+.post-sales-root .teams-section .teams-section-header {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 .post-sales-root #teamsStoryPin > .container:first-of-type {
   flex: 0 0 auto !important;
@@ -196,9 +200,36 @@ html:has(.post-sales-root) {
     background: rgba(44, 44, 44, 0.28);
     border-radius: 4px;
   }
+  .post-sales-root #teamsStoryPin .team-info {
+    max-height: min(60vh, calc(100vh - 250px)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .post-sales-root #teamsStoryPin .team-visual {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+  }
   .post-sales-root #teamsStoryPin .teams-panels {
     min-width: 0 !important;
-    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+  .post-sales-root #teamsStoryPin .team-panel.active {
+  .post-sales-root #teamsStoryPin .team-info {
+    max-height: min(45vh, calc(100vh - 250px)) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .post-sales-root #teamsStoryPin .team-visual {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+  }
+  .post-sales-root #teamsStoryPin .teams-panels {
+    min-width: 0 !important;
     max-height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
@@ -479,7 +510,7 @@ export default function PostSalesLandingPage() {
       (entries) => {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
-          ;(e.target as HTMLElement).classList.add('visible')
+            ; (e.target as HTMLElement).classList.add('visible')
           if ((e.target as HTMLElement).closest('#hero')) {
             metricNums.forEach((el) => window.setTimeout(() => animateCounter(el), 400))
           }
@@ -501,7 +532,7 @@ export default function PostSalesLandingPage() {
       uspVisuals.forEach((vis, i) => vis.classList.toggle('visible', i === idx))
       uspDots.forEach((d, i) => d.classList.toggle('active', i === idx))
     }
-    ;(window as any).openUsp = openUsp
+      ; (window as any).openUsp = openUsp
     openUsp(0)
 
     // Hero subtext carousel
@@ -510,10 +541,10 @@ export default function PostSalesLandingPage() {
     const heroSlideTimer =
       heroSlides.length > 1
         ? window.setInterval(() => {
-            heroSlides[heroSlideIdx]?.classList.remove('active')
-            heroSlideIdx = (heroSlideIdx + 1) % heroSlides.length
-            heroSlides[heroSlideIdx]?.classList.add('active')
-          }, 3000)
+          heroSlides[heroSlideIdx]?.classList.remove('active')
+          heroSlideIdx = (heroSlideIdx + 1) % heroSlides.length
+          heroSlides[heroSlideIdx]?.classList.add('active')
+        }, 3000)
         : null
 
     // Walkthrough tabs (selectWtTab)
@@ -776,7 +807,7 @@ ${chipSvgs}
           .join('')
       }
     }
-    ;(window as any).selectWtTab = selectWtTab
+      ; (window as any).selectWtTab = selectWtTab
     if (wtTabs.length) {
       const initial = wtTabs.findIndex((t) => t.classList.contains('active'))
       selectWtTab(initial >= 0 ? initial : 0)

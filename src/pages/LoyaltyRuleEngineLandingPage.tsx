@@ -38,7 +38,7 @@ function initLoyaltyTeamsGsap(
     pinSpacing: true,
     pinType: 'fixed',
     anticipatePin: 0,
-    fastScrollEnd: false,
+    // fastScrollEnd: false,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const idx = Math.min(n - 1, Math.max(0, Math.floor(self.progress * n)))
@@ -140,7 +140,6 @@ html:has(.loyalty-rule-root) {
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  overflow: hidden !important;
 }
 .loyalty-rule-root .teams-inner .teams-story-progress {
   margin-top: 24px;
@@ -155,7 +154,6 @@ html:has(.loyalty-rule-root) {
   grid-template-columns: minmax(0, 220px) minmax(0, 1fr) !important;
   grid-template-rows: minmax(0, 1fr) !important;
   gap: 32px !important;
-  margin-top: 48px !important;
   align-items: stretch !important;
   overflow: hidden !important;
 }
@@ -179,7 +177,7 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .team-tab-name {
   font-size: 13px !important;
 }
-.loyalty-rule-root .team-panels {
+.loyalty-rule-root .teams-panel {
   min-width: 0 !important;
   min-height: 0 !important;
   display: flex !important;
@@ -210,8 +208,8 @@ html:has(.loyalty-rule-root) {
   width: 100% !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
+  // overscroll-behavior: contain !important;
+  // -webkit-overflow-scrolling: touch !important;
   color: var(--dark, #2C2C2C) !important;
 }
 .loyalty-rule-root .team-panel.active > .team-info .team-name {
@@ -296,10 +294,9 @@ html:has(.loyalty-rule-root) {
     display: block !important;
     flex: none !important;
     max-height: none !important;
-    margin-top: 28px !important;
     overflow: visible !important;
   }
-  .loyalty-rule-root .team-panels {
+  .loyalty-rule-root .teams-panel {
     display: block !important;
     flex: none !important;
     overflow: visible !important;
@@ -311,7 +308,7 @@ html:has(.loyalty-rule-root) {
     overflow: visible !important;
   }
   .loyalty-rule-root .team-panel.active > .team-info {
-    overflow: visible !important;
+    // overflow: visible !important;
     max-height: none !important;
   }
   .loyalty-rule-root .team-panel.active > .team-visual {
@@ -620,9 +617,9 @@ export default function LoyaltyRuleEngineLandingPage() {
           const contactLink = navLinks.querySelector('a[href="#contact"]')?.closest('li')
 
           navLinks.innerHTML = ''
-          ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink, contactLink].forEach((item) => {
-            if (item) navLinks.appendChild(item)
-          })
+            ;[painLink, walkLink, featuresLink, teamsLink, useCasesLink, contactLink].forEach((item) => {
+              if (item) navLinks.appendChild(item)
+            })
         }
 
         const hero = doc.querySelector('.hero')
@@ -637,21 +634,21 @@ export default function LoyaltyRuleEngineLandingPage() {
         const footer = doc.querySelector('footer')
 
         doc.body.innerHTML = ''
-        ;[
-          nav,
-          hero,
-          pain,
-          walkthrough,
-          features,
-          teams,
-          useCases,
-          popup,
-          endingBanner,
-          contact,
-          footer,
-        ].forEach((node) => {
-          if (node) doc.body.appendChild(node)
-        })
+          ;[
+            nav,
+            hero,
+            pain,
+            walkthrough,
+            features,
+            teams,
+            useCases,
+            popup,
+            endingBanner,
+            contact,
+            footer,
+          ].forEach((node) => {
+            if (node) doc.body.appendChild(node)
+          })
 
         const styles = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')

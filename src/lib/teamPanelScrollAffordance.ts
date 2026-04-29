@@ -11,9 +11,6 @@
  *   2. Top + bottom fade gradient overlays that flip on/off as content slides
  *   3. Bouncing "Scroll to read more" pill — auto-hides the moment the user
  *      scrolls 1px (so it never feels naggy)
- *   4. One-time programmatic scrollTop nudge (~28px down then back) when a
- *      tab activates, so the user SEES content move and the scrollbar thumb
- *      travel — strongest possible "this scrolls" signal
  *
  * Each landing page calls `getTeamPanelScrollAffordanceCSS` to embed scoped
  * styles, then `attachTeamPanelScrollAffordance` from inside its main effect
@@ -65,59 +62,59 @@ export function getTeamPanelScrollAffordanceCSS(opts: TeamPanelScrollAffordanceO
   ${root} ${pin} ${panel}.active {
     position: relative !important;
   }
-  ${root} ${pin} ${panel}.active > .team-info,
-  ${root} ${pin} ${panel}.active > .team-visual {
-    scroll-behavior: smooth !important;
-    scrollbar-gutter: stable !important;
-    scrollbar-width: auto !important;
-    scrollbar-color: rgba(${primaryRgb}, 0.85) rgba(44, 44, 44, 0.08) !important;
-  }
+  // ${root} ${pin} ${panel}.active > .team-info,
+  // ${root} ${pin} ${panel}.active > .team-visual {
+  //   scroll-behavior: smooth !important;
+  //   scrollbar-gutter: stable !important;
+  //   scrollbar-width: auto !important;
+  //   scrollbar-color: rgba(${primaryRgb}, 0.85) rgba(44, 44, 44, 0.08) !important;
+  // }
   ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar,
   ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar {
     width: 12px !important;
     height: 12px !important;
-    display: block !important;
+    display: none !important;
     background: rgba(44, 44, 44, 0.06) !important;
   }
-  ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-track,
-  ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-track {
-    background: rgba(44, 44, 44, 0.06) !important;
-    border-radius: 100px !important;
-    margin: 4px 0 !important;
-  }
-  ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-thumb,
-  ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-thumb {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 100%),
-      ${primary} !important;
-    border: 2px solid ${fade} !important;
-    border-radius: 100px !important;
-    min-height: 36px !important;
-    box-shadow: 0 0 0 1px rgba(${primaryRgb}, 0.25) !important;
-  }
-  ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-thumb:hover,
-  ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-thumb:hover {
-    background: rgba(${primaryRgb}, 1) !important;
-    filter: brightness(0.92);
-  }
+  // ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-track,
+  // ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-track {
+  //   background: rgba(44, 44, 44, 0.06) !important;
+  //   border-radius: 100px !important;
+  //   margin: 4px 0 !important;
+  // }
+  // ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-thumb,
+  // ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-thumb {
+  //   background:
+  //     linear-gradient(180deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 100%),
+  //     ${primary} !important;
+  //   border: 2px solid ${fade} !important;
+  //   border-radius: 100px !important;
+  //   min-height: 36px !important;
+  //   box-shadow: 0 0 0 1px rgba(${primaryRgb}, 0.25) !important;
+  // }
+  // ${root} ${pin} ${panel}.active > .team-info::-webkit-scrollbar-thumb:hover,
+  // ${root} ${pin} ${panel}.active > .team-visual::-webkit-scrollbar-thumb:hover {
+  //   background: rgba(${primaryRgb}, 1) !important;
+  //   filter: brightness(0.92);
+  // }
 }
 ${root} ${panel} .lk-scroll-fade {
   display: none;
 }
 /* Position is set inline by JS to match each scrollport's bounding rect.
    Stylesheet only defines visual style + transitions. */
-${root} ${panel}.active .lk-scroll-fade {
-  position: absolute;
-  height: 56px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 4;
-  /* Defaults overridden inline; bottom:auto/top:auto reset stale rules. */
-  left: 0;
-  right: auto;
-  width: 0;
-}
+// ${root} ${panel}.active .lk-scroll-fade {
+//   position: absolute;
+//   height: 56px;
+//   pointer-events: none;
+//   opacity: 0;
+//   transition: opacity 0.2s ease;
+//   z-index: 4;
+//   /* Defaults overridden inline; bottom:auto/top:auto reset stale rules. */
+//   left: 0;
+//   right: auto;
+//   width: 0;
+// }
 ${root} ${panel}.active .lk-scroll-fade--bottom {
   top: auto;
   background: linear-gradient(
@@ -161,8 +158,6 @@ type Pieces = {
   infoBottomFade: HTMLElement | null
   visualTopFade: HTMLElement | null
   visualBottomFade: HTMLElement | null
-  infoUserScrolled: boolean
-  visualUserScrolled: boolean
 }
 
 export function attachTeamPanelScrollAffordance(
@@ -172,7 +167,7 @@ export function attachTeamPanelScrollAffordance(
   const panels = Array.from(
     root.querySelectorAll<HTMLElement>(`.${opts.panelClass}`),
   )
-  if (!panels.length) return () => {}
+  if (!panels.length) return () => { }
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -214,8 +209,6 @@ export function attachTeamPanelScrollAffordance(
       infoBottomFade,
       visualTopFade,
       visualBottomFade,
-      infoUserScrolled: false,
-      visualUserScrolled: false,
     }
   })
 
@@ -281,7 +274,6 @@ export function attachTeamPanelScrollAffordance(
   all.forEach((a) => {
     if (a.info) {
       const onScroll = () => {
-        if (a.info && a.info.scrollTop > 2) a.infoUserScrolled = true
         updateOne(a)
       }
       a.info.addEventListener('scroll', onScroll, { passive: true })
@@ -289,7 +281,6 @@ export function attachTeamPanelScrollAffordance(
     }
     if (a.visual) {
       const onScroll = () => {
-        if (a.visual && a.visual.scrollTop > 2) a.visualUserScrolled = true
         updateOne(a)
       }
       a.visual.addEventListener('scroll', onScroll, { passive: true })
@@ -314,102 +305,7 @@ export function attachTeamPanelScrollAffordance(
   window.addEventListener('scroll', onWindowScroll, { passive: true })
   cleanups.push(() => window.removeEventListener('scroll', onWindowScroll))
 
-  /** Auto-scroll the active panel's columns from top to bottom on a slow
-   * cubic ease so the user sees the full content (and the orange scrollbar
-   * thumb travel end-to-end). Cancels the moment the user interacts —
-   * wheel, touch, key, mousedown on the scrollbar — so it never fights the
-   * reader. Resets the `userScrolled` flag at start so the programmatic
-   * motion is not counted as user activity. */
-  const autoScrolls = new Map<HTMLElement, () => void>()
-  const cancelAutoScroll = (port: HTMLElement) => {
-    const c = autoScrolls.get(port)
-    if (c) c()
-  }
-  const playAutoScroll = async (a: Pieces) => {
-    if (reducedMotion) return
-    const ports: Array<{ port: HTMLElement; guard: 'infoUserScrolled' | 'visualUserScrolled' }> = []
-    if (a.info) ports.push({ port: a.info, guard: 'infoUserScrolled' })
-    if (a.visual) ports.push({ port: a.visual, guard: 'visualUserScrolled' })
-
-    for (const { port, guard } of ports) {
-      cancelAutoScroll(port)
-      const overflow = port.scrollHeight - port.clientHeight
-      if (overflow <= 4) continue
-      a[guard] = false
-
-      let cancelled = false
-      const cancel = () => {
-        cancelled = true
-      }
-      const onUserWheel = () => cancel()
-      const onUserTouch = () => cancel()
-      const onUserKey = (e: KeyboardEvent) => {
-        if (
-          e.key === 'ArrowDown' ||
-          e.key === 'ArrowUp' ||
-          e.key === 'PageDown' ||
-          e.key === 'PageUp' ||
-          e.key === 'Home' ||
-          e.key === 'End' ||
-          e.key === ' '
-        )
-          cancel()
-      }
-      port.addEventListener('wheel', onUserWheel, { passive: true })
-      port.addEventListener('touchstart', onUserTouch, { passive: true })
-      port.addEventListener('mousedown', onUserTouch, { passive: true })
-      window.addEventListener('keydown', onUserKey, { passive: true })
-      const teardown = () => {
-        port.removeEventListener('wheel', onUserWheel)
-        port.removeEventListener('touchstart', onUserTouch)
-        port.removeEventListener('mousedown', onUserTouch)
-        window.removeEventListener('keydown', onUserKey)
-        autoScrolls.delete(port)
-      }
-      autoScrolls.set(port, () => {
-        cancel()
-        teardown()
-      })
-
-      // Settle delay so the active-class flip + layout are committed.
-      await new Promise((r) => setTimeout(r, 220))
-      if (cancelled || !port.isConnected) {
-        teardown()
-        continue
-      }
-
-      const start = port.scrollTop
-      // Recompute overflow at animation start (fonts/affordance might have shifted layout).
-      const max = Math.max(0, port.scrollHeight - port.clientHeight)
-      const distance = max - start
-      if (distance < 8) {
-        teardown()
-        continue
-      }
-      // ~30ms per 100px, clamped — feels deliberate, not jarring.
-      const dur = Math.min(8500, Math.max(2400, distance * 14))
-      const t0 = performance.now()
-      const ease = (t: number) => 1 - Math.pow(1 - t, 3)
-      await new Promise<void>((resolve) => {
-        const step = (now: number) => {
-          if (cancelled || !port.isConnected) {
-            resolve()
-            return
-          }
-          const t = Math.min(1, (now - t0) / dur)
-          port.scrollTop = start + distance * ease(t)
-          if (t < 1) requestAnimationFrame(step)
-          else resolve()
-        }
-        requestAnimationFrame(step)
-      })
-      teardown()
-      a[guard] = false
-      updateOne(a)
-    }
-  }
-
-  /* When a panel becomes `.active`: reset state, repaint affordance, nudge. */
+  /* When a panel becomes `.active`: reset state, repaint affordance. */
   const mo = new MutationObserver((records) => {
     for (const r of records) {
       if (r.attributeName !== 'class' || !(r.target instanceof HTMLElement)) continue
@@ -420,18 +316,13 @@ export function attachTeamPanelScrollAffordance(
       ) {
         const a = all.find((x) => x.panel === target)
         if (!a) continue
-        a.infoUserScrolled = false
-        a.visualUserScrolled = false
         if (a.info) {
-          cancelAutoScroll(a.info)
           a.info.scrollTop = 0
         }
         if (a.visual) {
-          cancelAutoScroll(a.visual)
           a.visual.scrollTop = 0
         }
         updateOne(a)
-        void playAutoScroll(a)
       }
     }
   })
@@ -439,11 +330,9 @@ export function attachTeamPanelScrollAffordance(
     mo.observe(p, { attributes: true, attributeFilter: ['class'] }),
   )
 
-  /* Initial paint after layout settles + auto-scroll the initially-active panel. */
+  /* Initial paint after layout settles. */
   const initTimer = window.setTimeout(() => {
     updateAll()
-    const initial = all.find((a) => a.panel.classList.contains('active'))
-    if (initial) void playAutoScroll(initial)
   }, 240)
 
   return () => {
@@ -451,8 +340,6 @@ export function attachTeamPanelScrollAffordance(
     cleanups.forEach((fn) => fn())
     ro?.disconnect()
     mo.disconnect()
-    autoScrolls.forEach((c) => c())
-    autoScrolls.clear()
     all.forEach((a) => {
       a.infoTopFade?.remove()
       a.infoBottomFade?.remove()

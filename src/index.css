@@ -112,7 +112,7 @@ h5,
      bar when we're letting content flow inline. */
   #teamsStoryPin .team-content.active > .team-info,
   #teamsStoryPin .team-content.active > .team-visual {
-    padding-bottom: 24px !important;
+    /* padding-bottom: 24px !important; */
   }
   /* Bring the progress bar back inline below the panels instead of
      absolutely pinned to the (now-tall) section's bottom. */

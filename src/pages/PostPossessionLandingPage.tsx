@@ -610,7 +610,7 @@ export default function PostPossessionLandingPage() {
       const dots = root.querySelectorAll<HTMLElement>('#uspDots .testi-dot')
       dots.forEach((d, i) => d.classList.toggle('active', i === idx))
     }
-    ;(window as any).openUsp = (idx: number) => setUsp(Number(idx) || 0)
+      ; (window as any).openUsp = (idx: number) => setUsp(Number(idx) || 0)
     setUsp(0)
 
     // Walkthrough tabs (inline onclick="selectWtTab(idx)")
@@ -637,7 +637,7 @@ export default function PostPossessionLandingPage() {
           .join('')
       }
     }
-    ;(window as any).selectWtTab = (idx: number) => setWt(Number(idx) || 0)
+      ; (window as any).selectWtTab = (idx: number) => setWt(Number(idx) || 0)
     setWt(0)
 
     // Team tabs — scroll-driven story (desktop) + click-to-scroll; static HTML <script> does not run here
@@ -685,8 +685,8 @@ export default function PostPossessionLandingPage() {
       const i = Math.max(0, Math.min(teamIds.length - 1, Math.floor(Number(idx) || 0)))
       scrollToTeamIndex(i)
     }
-    ;(window as any).selectTeam = selectTeamGlobal
-    ;(window as any).selectTeamTab = selectTeamGlobal
+      ; (window as any).selectTeam = selectTeamGlobal
+      ; (window as any).selectTeamTab = selectTeamGlobal
 
     const detachAffordance = attachTeamPanelScrollAffordance(root, {
       panelClass: 'team-panel',

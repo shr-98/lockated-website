@@ -76,7 +76,7 @@ html:has(.patm-root) {
   z-index: 1 !important;
 }
 .patm-root #teamsStoryPin {
-  margin-top: 32px !important;
+  // margin-top: 32px !important;
 }
 .patm-root .teams-story-pin-inner {
   padding-top: 0 !important;
@@ -228,7 +228,7 @@ html:has(.patm-root) {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
-    padding-bottom: clamp(80px, 11vh, 120px) !important;
+    // padding-bottom: clamp(80px, 11vh, 120px) !important;
     scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
   }
 }
@@ -1166,14 +1166,14 @@ export default function PATMLandingPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return
-          ;(entry.target as HTMLElement).querySelectorAll<HTMLElement>('.progress-bar-fill').forEach((bar) => {
-            const width = bar.style.width
-            if (!width) return
-            bar.style.width = '0%'
-            window.setTimeout(() => {
-              bar.style.width = width
-            }, 100)
-          })
+            ; (entry.target as HTMLElement).querySelectorAll<HTMLElement>('.progress-bar-fill').forEach((bar) => {
+              const width = bar.style.width
+              if (!width) return
+              bar.style.width = '0%'
+              window.setTimeout(() => {
+                bar.style.width = width
+              }, 100)
+            })
         })
       },
       { threshold: 0.3 },
@@ -1312,7 +1312,7 @@ export default function PATMLandingPage() {
         lenisScroll.start()
       }
     }
-    ;(window as any).closeModal = closeModal
+      ; (window as any).closeModal = closeModal
 
     const usecaseCards = Array.from(root.querySelectorAll<HTMLElement>('.usecase-card'))
     const usecaseCardHandlers: Array<{ el: HTMLElement; fn: () => void }> = []
@@ -1374,17 +1374,17 @@ export default function PATMLandingPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return
-          ;(entry.target as HTMLElement)
-            .querySelectorAll<HTMLElement>('.bar-fill, .float-progress-fill')
-            .forEach((bar) => {
-              const w = bar.style.width
-              if (!w) return
-              bar.style.width = '0%'
-              bar.style.transition = 'width 1.2s cubic-bezier(0.23,1,0.32,1)'
-              window.setTimeout(() => {
-                bar.style.width = w
-              }, 100)
-            })
+            ; (entry.target as HTMLElement)
+              .querySelectorAll<HTMLElement>('.bar-fill, .float-progress-fill')
+              .forEach((bar) => {
+                const w = bar.style.width
+                if (!w) return
+                bar.style.width = '0%'
+                bar.style.transition = 'width 1.2s cubic-bezier(0.23,1,0.32,1)'
+                window.setTimeout(() => {
+                  bar.style.width = w
+                }, 100)
+              })
         })
       },
       { threshold: 0.3 },

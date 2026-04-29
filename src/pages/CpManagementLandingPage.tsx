@@ -162,7 +162,7 @@ html:has(.cp-management-root) {
   box-shadow: none !important;
 }
 .cp-management-root .teams-section .team-info {
-  max-height: min(72vh, calc(100vh - 200px));
+  max-height: min(45vh, calc(100vh - 200px));
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -280,7 +280,7 @@ export default function CpManagementLandingPage() {
       (entries) => {
         entries.forEach((e) => {
           if (!e.isIntersecting) return
-          ;(e.target as HTMLElement).querySelectorAll<HTMLElement>('.pill-n').forEach(animN)
+            ; (e.target as HTMLElement).querySelectorAll<HTMLElement>('.pill-n').forEach(animN)
           pillObs.unobserve(e.target)
         })
       },
@@ -395,27 +395,27 @@ export default function CpManagementLandingPage() {
       }
     }
 
-    ;(window as any).openM = (k: string) => {
-      const d = MD[k]
-      if (!d || !mbd) return
-      const mIco = root.querySelector<HTMLElement>('#mIco')
-      const mTtl = root.querySelector<HTMLElement>('#mTtl')
-      const mSub = root.querySelector<HTMLElement>('#mSub')
-      const mImps = root.querySelector<HTMLElement>('#mImps')
-      const mBody = root.querySelector<HTMLElement>('#mBody')
-      if (mIco) mIco.innerHTML = `<i class="fa-solid ${d.ico}"></i>`
-      if (mTtl) mTtl.textContent = d.ttl
-      if (mSub) mSub.textContent = d.sub
-      if (mImps) mImps.innerHTML = d.imps.map((i) => `<div class="m-ic"><div class="v">${i.v}</div><div class="l">${i.l}</div></div>`).join('')
-      if (mBody) mBody.innerHTML = d.body
-      mbd.classList.add('on')
-      document.body.style.overflow = 'hidden'
-    }
-    ;(window as any).closeM = (e: MouseEvent) => {
-      if (!mbd) return
-      if (e.target === mbd) popupClose(true)
-    }
-    ;(window as any).closeMd = () => popupClose(true)
+      ; (window as any).openM = (k: string) => {
+        const d = MD[k]
+        if (!d || !mbd) return
+        const mIco = root.querySelector<HTMLElement>('#mIco')
+        const mTtl = root.querySelector<HTMLElement>('#mTtl')
+        const mSub = root.querySelector<HTMLElement>('#mSub')
+        const mImps = root.querySelector<HTMLElement>('#mImps')
+        const mBody = root.querySelector<HTMLElement>('#mBody')
+        if (mIco) mIco.innerHTML = `<i class="fa-solid ${d.ico}"></i>`
+        if (mTtl) mTtl.textContent = d.ttl
+        if (mSub) mSub.textContent = d.sub
+        if (mImps) mImps.innerHTML = d.imps.map((i) => `<div class="m-ic"><div class="v">${i.v}</div><div class="l">${i.l}</div></div>`).join('')
+        if (mBody) mBody.innerHTML = d.body
+        mbd.classList.add('on')
+        document.body.style.overflow = 'hidden'
+      }
+      ; (window as any).closeM = (e: MouseEvent) => {
+        if (!mbd) return
+        if (e.target === mbd) popupClose(true)
+      }
+      ; (window as any).closeMd = () => popupClose(true)
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') popupClose(true)
@@ -437,14 +437,14 @@ export default function CpManagementLandingPage() {
       const m = (tab.getAttribute('onclick') ?? '').match(/switchTeam\(this,\s*'([^']+)'\s*\)/)
       if (m?.[1]) teamIds.push(m[1])
     })
-    ;(window as unknown as { switchTeam?: (el: HTMLElement, id: string) => void }).switchTeam = (
-      _el: HTMLElement,
-      id: string,
-    ) => {
-      const idx = teamIds.indexOf(id)
-      if (idx >= 0 && teamTabs[idx]) switchTeam(id, teamTabs[idx]!)
-      else switchTeam(id)
-    }
+      ; (window as unknown as { switchTeam?: (el: HTMLElement, id: string) => void }).switchTeam = (
+        _el: HTMLElement,
+        id: string,
+      ) => {
+        const idx = teamIds.indexOf(id)
+        if (idx >= 0 && teamTabs[idx]) switchTeam(id, teamTabs[idx]!)
+        else switchTeam(id)
+      }
 
     let teamStorySt: ScrollTrigger | null = null
     const scrollToTeamIndex = (idx: number) => {
