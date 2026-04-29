@@ -259,8 +259,7 @@ html:has(.snag360-root) {
   flex-shrink: 0;
   align-self: stretch;
   background: transparent !important;
-  /* Make the tab rail more compact so all teams fit in view. */
-  gap: 6px !important;
+  gap: 8px !important;
   max-height: 100% !important;
   overflow-y: auto !important;
   scrollbar-width: none;
@@ -273,11 +272,15 @@ html:has(.snag360-root) {
   color: var(--dark, #2c2c2c) !important;
   border: 1.5px solid transparent !important;
   background-image: none !important;
-  padding: 10px 12px !important;
-  border-radius: 9px !important;
+  min-height: 48px !important;
+  padding: 16px 18px !important;
+  gap: 14px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 .snag360-root .teams-layout button.team-tab .team-tab-text {
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 .snag360-root .teams-layout button.team-tab:not(.active) {
   background: var(--surface, #f0eae1) !important;
@@ -295,13 +298,14 @@ html:has(.snag360-root) {
 .snag360-root .teams-layout .team-tab-icon {
   background: var(--cream, #f6f4ee) !important;
   border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 10px !important;
 }
 .snag360-root .teams-layout .team-tab-icon svg {
-  width: 14px !important;
-  height: 14px !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 .snag360-root .teams-layout .team-tab.active .team-tab-icon {
   background: var(--primary, #da7756) !important;
@@ -347,7 +351,7 @@ html:has(.snag360-root) {
 .snag360-root .team-visual {
   background: var(--surface, #F0EAE1) !important;
   border: 1px solid #c4b89d !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: none !important;
 }
 .snag360-root .team-visual-header {
   background: var(--cream, #F6F4EE) !important;

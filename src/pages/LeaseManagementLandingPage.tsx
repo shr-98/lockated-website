@@ -350,10 +350,20 @@ html:has(.lease-management-root) {
 .lease-management-root .uc-modal-inner {
   background-color: var(--surface) !important;
 }
+.lease-management-root .uc-modal {
+  position: fixed !important;
+  z-index: 10100 !important;
+}
+.lease-management-root .uc-modal-inner {
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  max-height: 88vh !important;
+}
 .lease-management-root .team-panel-screen {
   border: 1px solid rgba(196, 184, 157, 0.42) !important;
   border-radius: 20px !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: none !important;
   overflow: hidden !important;
 }
 .lease-management-root .team-panel.active {
@@ -499,9 +509,25 @@ export default function LeaseManagementLandingPage() {
     )
     if (countdown) counterObserver.observe(countdown)
 
+    // Use-case modals: move all modals to document.body so they are never
+    // clipped by GSAP's will-change:transform on the pin container.
+    // Apply overflow styles directly (inline) because isolation CSS selectors
+    // no longer match after the elements are moved outside .lease-management-root.
+    root.querySelectorAll<HTMLElement>('.uc-modal').forEach((m) => {
+      if (m.parentElement !== document.body) document.body.appendChild(m)
+      const inner = m.querySelector<HTMLElement>('.uc-modal-inner')
+      if (inner) {
+        inner.style.overflowY = 'auto'
+        inner.style.overflowX = 'hidden'
+        inner.style.maxHeight = '88vh'
+        inner.style.overscrollBehavior = 'contain'
+        ;(inner.style as CSSStyleDeclaration & { webkitOverflowScrolling: string }).webkitOverflowScrolling = 'touch'
+      }
+    })
+
     // Use-case modals (HTML uses onclick="openUCModal('...')".)
     ;(window as unknown as { openUCModal: (id: string) => void }).openUCModal = (id: string) => {
-      const modal = root.querySelector<HTMLElement>('#modal-' + id)
+      const modal = document.getElementById('modal-' + id)
       if (modal) {
         modal.classList.add('open')
         document.body.style.overflow = 'hidden'
@@ -509,7 +535,7 @@ export default function LeaseManagementLandingPage() {
       }
     }
     ;(window as unknown as { closeUCModal: (id: string) => void }).closeUCModal = (id: string) => {
-      const modal = root.querySelector<HTMLElement>('#modal-' + id)
+      const modal = document.getElementById('modal-' + id)
       if (modal) {
         modal.classList.remove('open')
         document.body.style.overflow = ''
@@ -519,7 +545,7 @@ export default function LeaseManagementLandingPage() {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        root.querySelectorAll<HTMLElement>('.uc-modal.open').forEach((m) => m.classList.remove('open'))
+        document.querySelectorAll<HTMLElement>('.uc-modal.open').forEach((m) => m.classList.remove('open'))
         document.body.style.overflow = ''
         lenisScroll.start()
       }
@@ -638,6 +664,8 @@ export default function LeaseManagementLandingPage() {
       lenisScroll.destroy()
       delete (window as unknown as { openUCModal?: unknown }).openUCModal
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
+      // Remove modals that were moved to document.body
+      document.querySelectorAll<HTMLElement>('.uc-modal').forEach((m) => m.remove())
     }
   }, [bodyHtml])
 

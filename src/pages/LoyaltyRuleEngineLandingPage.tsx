@@ -151,31 +151,32 @@ html:has(.loyalty-rule-root) {
   flex: 1 1 auto !important;
   max-height: 100% !important;
   display: grid !important;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1fr) !important;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr) !important;
   grid-template-rows: minmax(0, 1fr) !important;
-  gap: 32px !important;
+  gap: 40px !important;
   align-items: stretch !important;
   overflow: hidden !important;
 }
-/* Compact vertical tabs (smaller rail than Vendor default) */
+/* Tab sizing — matches Lease Management exactly */
 .loyalty-rule-root .team-tab {
-  padding: 9px 11px !important;
-  gap: 10px !important;
-  border-radius: 10px !important;
-  font-size: 13px !important;
-  line-height: 1.25 !important;
+  padding: 16px 18px !important;
+  gap: 14px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 .loyalty-rule-root .team-tab-icon {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 10px !important;
 }
 .loyalty-rule-root .team-tab-icon svg {
-  width: 15px !important;
-  height: 15px !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 .loyalty-rule-root .team-tab-name {
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 .loyalty-rule-root .teams-panel {
   min-width: 0 !important;
@@ -321,17 +322,18 @@ html:has(.loyalty-rule-root) {
 }
 .loyalty-rule-root .teams-tabs {
   background: transparent !important;
-  gap: 3px !important;
+  gap: 8px !important;
 }
 .loyalty-rule-root .teams-layout button.team-tab {
   color: var(--dark, #2c2c2c) !important;
   border: 1.5px solid transparent !important;
   background-image: none !important;
-  padding: 9px 11px !important;
-  gap: 10px !important;
-  border-radius: 10px !important;
-  font-size: 13px !important;
-  line-height: 1.25 !important;
+  min-height: 48px !important;
+  padding: 16px 18px !important;
+  gap: 14px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 .loyalty-rule-root .teams-layout button.team-tab:not(.active) {
   background: var(--surface, #f0eae1) !important;
@@ -342,15 +344,16 @@ html:has(.loyalty-rule-root) {
 }
 .loyalty-rule-root .teams-layout .team-tab-name {
   color: rgba(44, 44, 44, 0.6) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 .loyalty-rule-root .teams-layout .team-tab.active .team-tab-name {
   color: var(--dark, #2c2c2c) !important;
 }
 .loyalty-rule-root .teams-layout .team-tab-icon {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 10px !important;
   background: var(--cream, #f6f4ee) !important;
   border: 1px solid var(--divider, rgba(196, 184, 157, 0.55)) !important;
 }
@@ -363,8 +366,8 @@ html:has(.loyalty-rule-root) {
   stroke: currentColor !important;
 }
 .loyalty-rule-root .teams-layout .team-tab-icon svg {
-  width: 15px !important;
-  height: 15px !important;
+  width: 18px !important;
+  height: 18px !important;
   color: rgba(44, 44, 44, 0.5) !important;
   stroke: currentColor !important;
 }
@@ -487,7 +490,7 @@ html:has(.loyalty-rule-root) {
 .loyalty-rule-root .team-visual {
   background: var(--surface, #F0EAE1) !important;
   border: 1px solid #c4b89d !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: none !important;
   color: var(--dark, #2C2C2C) !important;
 }
 .loyalty-rule-root .team-visual-header {

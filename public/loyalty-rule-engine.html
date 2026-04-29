@@ -2796,8 +2796,8 @@
     /* Vertical tab rail + panels (compact rail, two-col row for copy + mock) */
     .teams-layout {
       display: grid;
-      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
-      gap: 32px;
+      grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+      gap: 40px;
       align-items: start;
     }
 
@@ -2808,7 +2808,7 @@
     .teams-tabs {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 8px;
       border-bottom: none;
       overflow: visible;
       scrollbar-width: none;
@@ -2822,9 +2822,9 @@
     .team-tab {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 9px 11px;
-      border-radius: 10px;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 12px;
       cursor: pointer;
       border: 1.5px solid transparent;
       background: var(--surface);
@@ -2832,13 +2832,13 @@
       width: 100%;
       text-align: left;
       font-family: var(--font);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: rgba(44, 44, 44, 0.6);
       -webkit-appearance: none;
       appearance: none;
       margin: 0;
-      line-height: 1.25;
+      line-height: 1.4;
     }
 
     .team-tab:hover {
@@ -2852,9 +2852,9 @@
     }
 
     .team-tab-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       background: var(--cream);
       display: flex;
       align-items: center;
@@ -2865,8 +2865,8 @@
     }
 
     .team-tab-icon svg {
-      width: 15px;
-      height: 15px;
+      width: 18px;
+      height: 18px;
       stroke: currentColor;
       color: rgba(44, 44, 44, 0.5);
     }
@@ -2885,7 +2885,7 @@
     }
 
     .team-tab-name {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: rgba(44, 44, 44, 0.6);
     }
@@ -3022,7 +3022,7 @@
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--border);
-      box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1);
+      box-shadow: none;
     }
 
     .team-visual-header {

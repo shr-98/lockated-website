@@ -343,7 +343,7 @@ html:has(.club-mgmt-root) {
 .club-mgmt-root .team-visual {
   background-color: var(--surface, #F0EAE1) !important;
   border: 1px solid #c4b89d !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: none !important;
 }
 .club-mgmt-root .team-visual-header {
   background: var(--cream, #F6F4EE) !important;

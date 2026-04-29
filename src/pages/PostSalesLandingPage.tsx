@@ -395,7 +395,7 @@ html:has(.post-sales-root) {
 .post-sales-root .team-visual {
   background-color: var(--bg-card, #F0EAE1) !important;
   border: 1px solid #c4b89d !important;
-  box-shadow: 0 16px 48px rgba(44, 44, 44, 0.1) !important;
+  box-shadow: none !important;
 }
 .post-sales-root .team-visual-header {
   background-color: var(--bg, #F6F4EE) !important;
