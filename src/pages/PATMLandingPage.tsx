@@ -56,37 +56,7 @@ html:has(.patm-root) {
 .patm-root #navbar {
   z-index: 10050;
 }
-/* Header is moved INSIDE #teamsStoryPin at runtime so it pins together with tabs + panels
-   (mirrors snag-360.html). Snag 360-style typography: large title + breathing room. */
-.patm-root .teams-section .teams-section-header {
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-  box-sizing: border-box !important;
-}
-.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-eyebrow {
-  margin-bottom: 20px !important;
-}
-.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-title {
-  font-size: clamp(32px, 4vw, 52px) !important;
-  font-weight: 800 !important;
-  letter-spacing: -1.5px !important;
-  line-height: 1.08 !important;
-  margin-top: 0 !important;
-  margin-bottom: 16px !important;
-}
-.patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin .section-sub {
-  font-size: 16px !important;
-  line-height: 1.65 !important;
-  max-width: 560px !important;
-  margin-bottom: 40px !important;
-}
+/* Section header scrolls naturally (like Lease Management); only tabs+panel get pinned. */
 /* Stacking: like vendor-mgmt route — do not over-stack; pin uses z-index 1. */
 .patm-root .teams-section#teams.patm-teams--app {
   position: relative !important;
@@ -185,11 +155,6 @@ html:has(.patm-root) {
     padding-top: clamp(24px, 3vh, 40px) !important;
     padding-bottom: clamp(42px, 6vh, 64px) !important;
   }
-  /* Header + layout + progress must coexist in the viewport-height pin. Keep Snag 360-style
-     large header but allow it to use natural typography (route CSS above sets sizes). */
-  .patm-root #teamsStoryPin .teams-section-header.patm-teams-header--in-pin {
-    flex: 0 0 auto !important;
-  }
   /* Room above footer progress: mirrors Snag .teams-main padding-bottom 32px. */
   .patm-root #teamsStoryPin .teams-layout {
     padding-bottom: 12px !important;
@@ -203,7 +168,7 @@ html:has(.patm-root) {
     min-height: 0 !important;
     min-width: 0 !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr) !important;
     grid-template-rows: minmax(0, 1fr) !important;
     gap: clamp(28px, 3vw, 48px) !important;
     align-items: stretch !important;
@@ -250,11 +215,9 @@ html:has(.patm-root) {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
-    /* Last list item must clear the pinned progress bar + bottom fade — without
-       this, scroll-to-end leaves the final feature row hidden under the progress
-       line. Matches "clamp(16px,2.4vh,24px)" progress offset + 56px fade height. */
     padding-bottom: clamp(80px, 11vh, 120px) !important;
     scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
+    align-self: start !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-visual {
     align-self: start !important;
@@ -311,11 +274,13 @@ html:has(.patm-root) {
     flex: 1 1 auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     -webkit-overflow-scrolling: touch !important;
     padding-bottom: clamp(80px, 11vh, 120px) !important;
     scroll-padding-bottom: clamp(80px, 11vh, 120px) !important;
+    align-self: start !important;
   }
   .patm-root #teamsStoryPin .team-content.active > .team-visual {
     display: none !important;
@@ -586,11 +551,11 @@ html:has(.patm-root) {
   color: rgba(44, 44, 44, 0.5) !important;
   opacity: 1 !important;
 }
-/* Pinned #teams tab rail: compact sizing like Snag 360 (gap 6, 12px label, 30px icon). */
+/* Pinned #teams tab rail: Lease Management-style sizing (8px gap, 14px label, 40px icon). */
 .patm-root #teams .teams-tabs {
   flex-shrink: 0 !important;
   align-self: stretch !important;
-  gap: 6px !important;
+  gap: 8px !important;
   max-height: 100% !important;
   overflow-y: auto !important;
   scrollbar-width: none !important;
@@ -602,28 +567,29 @@ html:has(.patm-root) {
 }
 .patm-root #teams .teams-layout button.team-tab {
   background-image: none !important;
-  min-height: 0 !important;
-  padding: 10px 12px !important;
-  border-radius: 9px !important;
+  min-height: 48px !important;
+  padding: 16px 18px !important;
+  border-radius: 12px !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  font-size: 12px !important;
-  line-height: 1.35 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  gap: 14px !important;
 }
 .patm-root #teams .teams-layout .team-tab-text {
-  font-size: 12px !important;
-  line-height: 1.35 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 .patm-root #teams .teams-layout .team-tab-icon {
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 30px !important;
-  min-height: 30px !important;
-  border-radius: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  border-radius: 10px !important;
 }
 .patm-root #teams .teams-layout .team-tab-icon svg {
-  width: 14px !important;
-  height: 14px !important;
+  width: 18px !important;
+  height: 18px !important;
   flex-shrink: 0 !important;
   color: rgba(44, 44, 44, 0.5) !important;
   stroke: currentColor !important;
@@ -634,6 +600,114 @@ html:has(.patm-root) {
 }
 .patm-root #teams .team-content .team-info > a.btn-primary {
   display: none !important;
+}
+/* ── PATM team panel: match Lease Management structure ────────────────────────
+   Lease panel is: eyebrow (small uppercase orange) → title → description →
+   chip tags → bordered "Used by" callout. PATM HTML has a prominent feature
+   checklist + a pill badge — hide the checklist and restyle badge/title/desc/
+   chips to mirror the lease-management.html visuals exactly. Selectors use
+   #teamsStoryPin .team-content.active to outrank the compact-typography
+   block earlier in this file. */
+.patm-root #teamsStoryPin .team-content.active .team-features,
+.patm-root #teams .team-content .team-features {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-bottom: 20px !important;
+  list-style: none !important;
+  padding: 0 !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-info .team-feature,
+.patm-root #teams .team-content .team-info .team-feature {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  background: var(--surface, #f0eae1) !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: var(--dark, #2c2c2c) !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-info .team-feature-dot,
+.patm-root #teams .team-content .team-info .team-feature-dot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  border-radius: 5px !important;
+  background: rgba(218, 119, 86, 0.15) !important;
+  flex-shrink: 0 !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-badge,
+.patm-root #teams .team-content .team-badge {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: var(--primary, #da7756) !important;
+  margin-bottom: 12px !important;
+  border-radius: 0 !important;
+  display: block !important;
+  width: auto !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-headline,
+.patm-root #teams .team-content .team-headline {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--dark, #2c2c2c) !important;
+  letter-spacing: -0.5px !important;
+  line-height: 1.25 !important;
+  margin-bottom: 12px !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-desc,
+.patm-root #teams .team-content .team-desc {
+  font-size: 14px !important;
+  color: rgba(44, 44, 44, 0.6) !important;
+  line-height: 1.7 !important;
+  margin-bottom: 20px !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-modules,
+.patm-root #teams .team-content .team-modules {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-module-chip,
+.patm-root #teams .team-content .team-module-chip {
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: var(--dark, #2c2c2c) !important;
+  background: rgba(44, 44, 44, 0.06) !important;
+  padding: 5px 12px !important;
+  border-radius: 100px !important;
+  border: 1px solid rgba(196, 184, 157, 0.4) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+/* "Used by" callout injected at runtime — see PATMLandingPage.tsx panel decoration. */
+.patm-root #teamsStoryPin .team-content.active .team-panel-quote,
+.patm-root #teams .team-content .team-panel-quote {
+  font-size: 13px !important;
+  color: rgba(44, 44, 44, 0.5) !important;
+  line-height: 1.5 !important;
+  background: var(--primary-8, rgba(218, 119, 86, 0.08)) !important;
+  padding: 12px 16px !important;
+  border-radius: 10px !important;
+  border-left: 3px solid var(--primary, #da7756) !important;
+  margin-top: 4px !important;
+  display: block !important;
+}
+.patm-root #teamsStoryPin .team-content.active .team-panel-quote strong,
+.patm-root #teams .team-content .team-panel-quote strong {
+  color: var(--dark, #2c2c2c) !important;
+  font-weight: 700 !important;
 }
 .patm-root .btn-primary,
 .patm-root .btn-hero-primary,
@@ -929,21 +1003,47 @@ export default function PATMLandingPage() {
     if (!root) return
     if (!bodyHtml) return
 
-    // Team use cases (Snag 360 parity): the section header (eyebrow + title + subtitle) must sit
-    // INSIDE #teamsStoryPin so it pins together with the tabs/panels — exactly like snag-360.html.
-    const teamsSection = root.querySelector<HTMLElement>('#teams')
-    const teamsPin = root.querySelector<HTMLElement>('#teamsStoryPin')
-    const teamsHeader = root.querySelector<HTMLElement>('#teams .teams-section-header')
-    const teamsPinInner = root.querySelector<HTMLElement>('#teamsStoryPin .teams-story-pin-inner')
-    if (teamsSection && teamsPin && teamsHeader && !teamsPin.contains(teamsHeader)) {
-      const target = teamsPinInner ?? teamsPin
-      target.insertBefore(teamsHeader, target.firstChild)
-      teamsHeader.classList.add('patm-teams-header--in-pin')
-    }
-
-    // Team use cases (Snag 360): show `.reveal` in #teams immediately so nothing stays opacity:0 before IO / while pinned.
+    // Team use cases: show `.reveal` in #teams immediately so nothing stays opacity:0 before IO / while pinned.
     root.querySelectorAll<HTMLElement>('#teams .reveal, #teams .fade-up').forEach((el) => {
       el.classList.add('visible', 'in-view', 'reveal--in')
+    })
+
+    // Inject checkmark SVG into each empty .team-feature-dot
+    const CHECK_SVG = `<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#DA7756" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>`
+    root.querySelectorAll<HTMLElement>('#teams .team-feature-dot').forEach((dot) => {
+      if (!dot.querySelector('svg')) dot.innerHTML = CHECK_SVG
+    })
+
+    // Inject "Used by" callout into each PATM team panel — mirrors lease-management.html
+    // panel structure (eyebrow → title → desc → chips → bordered quote callout). Keyed by
+    // data-content so each panel gets its own copy.
+    const PATM_TEAM_QUOTES: Record<string, string> = {
+      leadership:
+        'Used <strong>daily</strong> by CXOs and Department Heads. Replaces weekly status meetings with live dashboards.',
+      dev: 'Used <strong>daily</strong> by Engineering teams. Sprint velocity up 22% vs. tools like Jira and Asana.',
+      pm: 'Used <strong>daily</strong> by Project Managers. MoM auto-conversion eliminates 100% of forgotten action items.',
+      hr: 'Used <strong>weekly</strong> by HR &amp; Finance. Zero manual reconciliation; policies version-controlled on company servers.',
+      ops: 'Used <strong>daily</strong> by Operations teams. End-to-end visibility across vendors, sites, and SLAs.',
+      marketing:
+        'Used <strong>weekly</strong> by Marketing teams. Campaign timelines, briefs, and analytics — all in one place.',
+    }
+    root.querySelectorAll<HTMLElement>('#teams .team-content').forEach((panel) => {
+      const info = panel.querySelector<HTMLElement>('.team-info')
+      if (!info) return
+      if (info.querySelector('.team-panel-quote')) return
+      const key = panel.dataset.content || ''
+      const quote = PATM_TEAM_QUOTES[key]
+      if (!quote) return
+      const div = document.createElement('div')
+      div.className = 'team-panel-quote'
+      div.innerHTML = quote
+      // Place after .team-modules if present, else at the end (before any CTA).
+      const modules = info.querySelector('.team-modules')
+      if (modules && modules.parentElement === info) {
+        modules.insertAdjacentElement('afterend', div)
+      } else {
+        info.appendChild(div)
+      }
     })
 
     // Navbar scroll
@@ -1104,7 +1204,19 @@ export default function PATMLandingPage() {
       tab?.classList.add('active')
       if (tab) ensureTabVisibleInRail(tab)
       const content = teamContents.find((c) => c.dataset.content === teamId)
-      if (content) content.classList.add('active')
+      if (content) {
+        content.classList.add('active')
+        // Reset inner scrollers so the new panel always shows from the top
+        // (eyebrow + title visible) instead of inheriting the previous panel's
+        // scroll position.
+        const resetScroll = () => {
+          content.querySelectorAll<HTMLElement>('.team-info, .team-visual').forEach((el) => {
+            el.scrollTop = 0
+          })
+        }
+        resetScroll()
+        requestAnimationFrame(resetScroll)
+      }
     }
     const teamIds = teamTabs.map((t) => t.dataset.team).filter(Boolean) as string[]
     const lenisScroll = createLenisScrollSync()

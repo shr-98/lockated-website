@@ -100,8 +100,8 @@ html:has(.club-mgmt-root) {
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
-.club-mgmt-root #teamsStoryPin .teams-header {
-  flex: 0 0 auto !important;
+.club-mgmt-root #teams .teams-header {
+  margin-bottom: 40px !important;
 }
 .club-mgmt-root #teamsStoryPin .teams-main {
   flex: 1 1 auto !important;
@@ -122,6 +122,7 @@ html:has(.club-mgmt-root) {
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
+    padding-top: clamp(24px, 3vh, 40px) !important;
     padding-bottom: 0 !important;
     scroll-padding-bottom: 0 !important;
   }
@@ -130,47 +131,47 @@ html:has(.club-mgmt-root) {
     min-height: 0 !important;
     min-width: 0 !important;
     display: grid !important;
-    grid-template-columns: minmax(0, 260px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr) !important;
     grid-template-rows: minmax(0, 1fr) !important;
     gap: 40px !important;
     align-items: stretch !important;
     margin-top: 0 !important;
     overflow: hidden !important;
   }
-  /* Tab rail: compact rows so all role tabs fit without scrolling the rail. */
+  /* Tab rail: matches Lease Management sizing exactly. */
   .club-mgmt-root #teamsStoryPin .teams-tabs {
     align-self: start !important;
     width: 100% !important;
-    max-width: 260px !important;
+    max-width: 300px !important;
     box-sizing: border-box !important;
     overflow: visible !important;
-    gap: 6px !important;
+    gap: 8px !important;
     padding-bottom: env(safe-area-inset-bottom, 0px) !important;
   }
   .club-mgmt-root #teamsStoryPin .teams-layout button.team-tab {
-    min-height: 0 !important;
-    padding: 8px 12px !important;
-    border-radius: 10px !important;
+    min-height: 48px !important;
+    padding: 16px 18px !important;
+    border-radius: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    font-size: 13px !important;
-    line-height: 1.3 !important;
-    gap: 10px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    gap: 14px !important;
   }
   .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-text {
-    font-size: 13px !important;
-    line-height: 1.3 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
   }
   .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-icon {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
-    border-radius: 8px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 10px !important;
   }
   .club-mgmt-root #teamsStoryPin .teams-layout .team-tab-icon svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 18px !important;
+    height: 18px !important;
   }
   .club-mgmt-root #teamsStoryPin .team-panels {
     min-width: 0 !important;

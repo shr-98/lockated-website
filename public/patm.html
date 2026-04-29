@@ -2055,7 +2055,7 @@ svg { display: block; }
 /* Team use cases: left rail tabs + main panel (same pattern as Vendor Management) */
 .teams-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 300px 1fr;
   gap: 40px;
   align-items: start;
   margin-top: 0;
@@ -2073,14 +2073,14 @@ svg { display: block; }
 }
 .teams-tabs::-webkit-scrollbar { display: none; }
 .team-tab {
-  display: flex; align-items: center; gap: 16px;
-  min-height: 48px; padding: 12px 14px; border-radius: 12px;
+  display: flex; align-items: center; gap: 14px;
+  min-height: 48px; padding: 16px 18px; border-radius: 12px;
   cursor: pointer; border: 1.5px solid transparent;
   background: var(--surface); transition: all 0.2s ease;
-  font-family: var(--font); font-size: 15px; font-weight: 600;
+  font-family: var(--font); font-size: 14px; font-weight: 600;
   text-align: left; width: 100%;
   -webkit-appearance: none; appearance: none; margin: 0;
-  line-height: 1.35; color: rgba(44,44,44,0.6);
+  line-height: 1.4; color: rgba(44,44,44,0.6);
   box-sizing: border-box;
 }
 .team-tab:hover { border-color: var(--border); }
@@ -4462,6 +4462,13 @@ document.querySelectorAll('.screen-analytics, .feature-screen-body').forEach(el 
           <li class="team-feature"><div class="team-feature-dot"></div>Documents: briefs, brand guidelines, and assets on your servers</li>
           <li class="team-feature"><div class="team-feature-dot"></div>Recognition feed for campaign wins and team celebrations</li>
         </ul>
+        <div class="team-modules">
+          <span class="team-module-chip">Campaigns</span>
+          <span class="team-module-chip">Kanban</span>
+          <span class="team-module-chip">MoM</span>
+          <span class="team-module-chip">Documents</span>
+          <span class="team-module-chip">Recognition</span>
+        </div>
         <a href="#" class="btn-primary" style="width:fit-content;">
           <span>Contact Sales</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
