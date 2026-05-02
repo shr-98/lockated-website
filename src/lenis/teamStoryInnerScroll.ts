@@ -137,8 +137,8 @@ export function attachTeamStoryInnerScroll(root: HTMLElement): () => void {
   const onWheel = (e: WheelEvent) => {
     const t = e.target
 
-    // Allow native modal scrolling
-    if (t instanceof Element && t.closest('.usecase-modal.open')) return
+    // Allow native modal scrolling (works for .usecase-modal and .modal-overlay patterns)
+    if (t instanceof Element && (t.closest('.usecase-modal.open') || t.closest('.modal-overlay.open'))) return
 
     const pin = root.querySelector('#teamsStoryPin') as HTMLElement | null
     const pinActive = isPinActive()

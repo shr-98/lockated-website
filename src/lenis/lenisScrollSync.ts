@@ -44,7 +44,7 @@ export function createLenisScrollSync(): {
     prevent: (node) => {
       if (!(node instanceof Element)) return false
       const sel =
-        '.uc-modal-inner, .modal-inner, .team-info, .team-visual, .teams-tabs, .team-panel-info, .team-panel-screen, .wt-info, .feature-info'
+        '.uc-modal-inner, .modal-inner, .modal-box, .team-info, .team-visual, .teams-tabs, .team-panel-info, .team-panel-screen, .wt-info, .feature-info'
       let el: Element | null = node
       while (el) {
         if (el instanceof HTMLElement && el.matches(sel)) {

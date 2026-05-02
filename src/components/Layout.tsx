@@ -25,6 +25,11 @@ const PRODUCTS_TYPES = [
   'Vendor Management',
   'Post Sales',
   'Club Management',
+  'Procurement',
+  'Permit to Work',
+  'Tenant Management',
+  'Gate Management',
+  'Survey',
 ] as const
 
 const CLIENT_TYPE_LINKS: Record<(typeof CLIENT_TYPES)[number], string> = {
@@ -51,6 +56,11 @@ const PRODUCTS_TYPE_LINKS: Record<(typeof PRODUCTS_TYPES)[number], string> = {
   'Vendor Management': '/vendor-management',
   'Post Sales': '/post-sales',
   'Club Management': '/club-management',
+  Procurement: '/procurement-management',
+  'Permit to Work': '/permit-to-work',
+  'Tenant Management': '/tenant-management',
+  'Gate Management': '/gate-management',
+  Survey: '/survey',
 }
 
 const SOLUTION_TYPES = [

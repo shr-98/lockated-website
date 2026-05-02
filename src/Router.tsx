@@ -18,6 +18,10 @@ import SurveyLandingPage from './pages/SurveyLandingPage'
 import VendorManagementLandingPage from './pages/VendorManagementLandingPage'
 import PostSalesLandingPage from './pages/PostSalesLandingPage'
 import ClubManagementLandingPage from './pages/ClubManagementLandingPage'
+import ProcurementManagementLandingPage from './pages/ProcurementManagementLandingPage'
+import PermitToWorkLandingPage from './pages/PermitToWorkLandingPage'
+import TenantManagementLandingPage from './pages/TenantManagementLandingPage'
+import GateManagementLandingPage from './pages/GateManagementLandingPage'
 import SlugPage from './pages/SlugPage'
 import ScrollStoryTimelineDemoPage from './pages/ScrollStoryTimelineDemoPage'
 
@@ -38,6 +42,10 @@ export default function Router() {
       <Route path="vendor-management" element={<VendorManagementLandingPage />} />
       <Route path="post-sales" element={<PostSalesLandingPage />} />
       <Route path="club-management" element={<ClubManagementLandingPage />} />
+      <Route path="procurement-management" element={<ProcurementManagementLandingPage />} />
+      <Route path="permit-to-work" element={<PermitToWorkLandingPage />} />
+      <Route path="tenant-management" element={<TenantManagementLandingPage />} />
+      <Route path="gate-management" element={<GateManagementLandingPage />} />
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />

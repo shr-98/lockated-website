@@ -1,21 +1,67 @@
-import { LandingPageLoader } from '../components/LandingPageLoader'
 import { useEffect, useRef, useState } from 'react'
+import { LandingPageLoader } from '../components/LandingPageLoader'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
+type ExternalScript = { src: string }
+type InlineScript = { code: string }
 
-const SURVEY_RENDER_FIX_CSS = `
-/* Survey integration fix:
-   Some sections can look blurred/soft when left in transform-based reveal states.
-   Force reveal helpers to render sharply. */
-.survey-root .reveal {
-  opacity: 1 !important;
-  transform: none !important;
-  filter: none !important;
-  transition: none !important;
+const SURVEY_NAV_OFFSET_PX = 70
+
+/**
+ * `public/survey-landing.html` is a self-contained design with its own fixed nav,
+ * fonts, and inline `<script>` (counters, reveal observer, walkthrough/feature
+ * tabs, scroll-driven team panels, industry modal). We fetch it, inject styles
+ * + body, then execute the inline scripts so the original behavior runs unmodified.
+ */
+const SURVEY_ISOLATION_CSS = `
+.survey-root {
+  position: relative;
+  isolation: isolate;
 }
-.survey-root .reveal.in-view {
+html:has(.survey-root) {
+  scroll-padding-top: ${SURVEY_NAV_OFFSET_PX}px;
+  scrollbar-gutter: stable;
+}
+.survey-root section[id] {
+  scroll-margin-top: ${SURVEY_NAV_OFFSET_PX + 4}px;
+}
+.survey-root #navbar {
+  z-index: 10050;
+}
+/* The exported HTML adds a global noise overlay on body::before. Disable it on this route. */
+body::before {
+  content: none !important;
+  display: none !important;
+}
+.survey-root h1,
+.survey-root h2,
+.survey-root h3,
+.survey-root h4,
+.survey-root h5,
+.survey-root h6 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+}
+/* Override the global SPA .reveal blur (index.css adds filter:blur(6px)) so this
+   page matches the standalone HTML — opacity + translateY only, no blur. */
+.survey-root .reveal {
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
+  filter: none !important;
+  will-change: auto !important;
+  transition: opacity 0.65s ease, transform 0.65s ease !important;
+}
+.survey-root .reveal.visible {
   opacity: 1 !important;
-  transform: none !important;
+  transform: translateY(0) !important;
+  filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .survey-root .reveal,
+  .survey-root .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 `
 
@@ -24,6 +70,8 @@ export default function SurveyLandingPage() {
   const [cssText, setCssText] = useState('')
   const [bodyHtml, setBodyHtml] = useState('')
   const [headLinks, setHeadLinks] = useState<HeadLinks>([])
+  const [externalScripts, setExternalScripts] = useState<ExternalScript[]>([])
+  const [inlineScripts, setInlineScripts] = useState<InlineScript[]>([])
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -31,20 +79,33 @@ export default function SurveyLandingPage() {
 
     async function load() {
       try {
-        const res = await fetch('/survey.html', { cache: 'no-cache' })
-        if (!res.ok) throw new Error(`Failed to load /survey.html (${res.status})`)
-
+        const ts = Date.now()
+        const url = `/survey-landing.html?ts=${ts}`
+        const res = await fetch(url, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`HTTP ${res.status} loading ${url}`)
         const text = await res.text()
+
+        if (!/id=["']?navbar["']?/.test(text) || !/Survey/i.test(text)) {
+          throw new Error(
+            'Loaded /survey-landing.html does not look like the Survey page. Ensure the file exists in public/.',
+          )
+        }
+
         const doc = new DOMParser().parseFromString(text, 'text/html')
 
         const styles = Array.from(doc.querySelectorAll('style'))
           .map((s) => s.textContent ?? '')
           .join('\n')
-        const body = doc.body?.innerHTML ?? ''
 
-        if (!styles.trim() || !body.trim()) {
-          throw new Error('`public/survey.html` must contain <style> and full <body> markup.')
+        let body = doc.body?.innerHTML ?? ''
+        if (!body.trim()) {
+          const m = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
+          if (m?.[1]) body = m[1]
         }
+        if (!body.trim()) throw new Error('Could not extract <body> markup.')
+
+        // Strip <script> tags out of injected body — re-execute them after mount.
+        body = body.replace(/<script[\s\S]*?<\/script>/gi, '')
 
         const links: HeadLinks = Array.from(doc.head?.querySelectorAll('link[rel]') ?? [])
           .map((l) => ({
@@ -54,10 +115,21 @@ export default function SurveyLandingPage() {
           }))
           .filter((l) => Boolean(l.href) && (l.rel === 'stylesheet' || l.rel === 'preconnect'))
 
+        const allScripts = Array.from(doc.querySelectorAll('script'))
+        const externals: ExternalScript[] = []
+        const inlines: InlineScript[] = []
+        for (const s of allScripts) {
+          const src = s.getAttribute('src')
+          if (src) externals.push({ src })
+          else if ((s.textContent ?? '').trim()) inlines.push({ code: s.textContent ?? '' })
+        }
+
         if (cancelled) return
-        setCssText(`${styles}\n${SURVEY_RENDER_FIX_CSS}`)
+        setCssText(`${styles}\n${SURVEY_ISOLATION_CSS}`)
         setBodyHtml(body)
         setHeadLinks(links)
+        setExternalScripts(externals)
+        setInlineScripts(inlines)
         setLoadError(null)
       } catch (e) {
         if (cancelled) return
@@ -71,268 +143,66 @@ export default function SurveyLandingPage() {
     }
   }, [])
 
+  // Execute the original page scripts after the body markup is mounted.
   useEffect(() => {
-    const root = rootRef.current
-    if (!root || !bodyHtml) return
+    if (!bodyHtml) return
 
-    // Scroll progress line
-    const progressLine = root.querySelector<HTMLElement>('#progress-line')
-    const updateProgress = () => {
-      if (!progressLine) return
-      const scrollTotal = document.documentElement.scrollHeight - window.innerHeight
-      const pct = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0
-      progressLine.style.width = `${Math.max(0, Math.min(100, pct))}%`
-    }
+    const created: HTMLScriptElement[] = []
 
-    // Navbar scroll
-    const navbar = root.querySelector<HTMLElement>('#navbar')
-    const onScroll = () => {
-      navbar?.classList.toggle('scrolled', window.scrollY > 50)
-      updateProgress()
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-
-    // Bento Grid Animation (hero background)
-    const bentoBg = root.querySelector<HTMLElement>('#bentoBg')
-    const bentoCells: HTMLElement[] = []
-    let bentoTimer: number | null = null
-    if (bentoBg) {
-      // Avoid duplicating on HMR
-      bentoBg.querySelectorAll('.bento-cell').forEach((n) => n.remove())
-      for (let i = 0; i < 12; i++) {
-        const cell = document.createElement('div')
-        cell.className = 'bento-cell'
-        cell.style.left = `${Math.random() * 80}%`
-        cell.style.top = `${Math.random() * 80}%`
-        cell.style.width = `${Math.floor(Math.random() * 120) + 80}px`
-        cell.style.height = `${Math.floor(Math.random() * 80) + 80}px`
-        cell.style.borderRadius = '12px 24px'
-        bentoBg.appendChild(cell)
-        bentoCells.push(cell)
+    const appendInlineScripts = () => {
+      for (const { code } of inlineScripts) {
+        const s = document.createElement('script')
+        s.textContent = code
+        s.dataset.surveyInline = 'true'
+        document.body.appendChild(s)
+        created.push(s)
       }
-      bentoTimer = window.setInterval(() => {
-        if (!bentoCells.length) return
-        const rand = Math.floor(Math.random() * bentoCells.length)
-        bentoCells.forEach((c, idx) => c.classList.toggle('lit', idx === rand))
-      }, 2500)
     }
 
-    // Reveal on scroll
-    const revealEls = Array.from(root.querySelectorAll<HTMLElement>('.reveal'))
-    const markRevealsInView = () => {
-      const vh = window.innerHeight || 0
-      revealEls.forEach((el) => {
-        if (el.classList.contains('in-view')) return
-        const r = el.getBoundingClientRect()
-        if (r.top < vh * 0.92) el.classList.add('in-view')
-      })
-    }
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return
-          ;(e.target as HTMLElement).classList.add('in-view')
-        })
-      },
-      { threshold: 0.15 },
-    )
-    revealEls.forEach((el) => revealObserver.observe(el))
-    markRevealsInView()
-    window.addEventListener('scroll', markRevealsInView, { passive: true })
-    window.addEventListener('resize', markRevealsInView, { passive: true })
-
-    // Counters
-    const counters = Array.from(root.querySelectorAll<HTMLElement>('.counter'))
-    const counterTimers: number[] = []
-    const startCounter = (el: HTMLElement) => {
-      const target = Number(el.getAttribute('data-target') ?? '0')
-      const suffix = el.getAttribute('data-suffix') ?? ''
-      const prefix = el.getAttribute('data-prefix') ?? ''
-      const isDecimal = (el.getAttribute('data-decimal') ?? '') === 'true'
-      let current = 0
-      const step = Math.max(1, Math.ceil(target / 40))
-      const tick = () => {
-        current += step
-        if (current >= target) current = target
-        const val = isDecimal ? current.toFixed(1) : String(current)
-        el.textContent = `${prefix}${val}${suffix}`
-        if (current < target) {
-          const id = window.requestAnimationFrame(tick)
-          counterTimers.push(id)
+    if (externalScripts.length === 0) {
+      appendInlineScripts()
+    } else {
+      let remaining = externalScripts.length
+      const onDone = () => {
+        remaining -= 1
+        if (remaining === 0) appendInlineScripts()
+      }
+      for (const { src } of externalScripts) {
+        const existing = document.querySelector<HTMLScriptElement>(
+          `script[data-survey-external="${src}"]`,
+        )
+        if (existing) {
+          onDone()
+          continue
         }
+        const s = document.createElement('script')
+        s.src = src
+        s.async = false
+        s.dataset.surveyExternal = src
+        s.onload = onDone
+        s.onerror = onDone
+        document.head.appendChild(s)
+        created.push(s)
       }
-      tick()
     }
-    const counterObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          counterObs.unobserve(entry.target)
-          startCounter(entry.target as HTMLElement)
-        })
-      },
-      { threshold: 0.6 },
-    )
-    counters.forEach((c) => counterObs.observe(c))
-
-    // Feature accordion (left list controls fv-screen)
-    const featureItems = Array.from(root.querySelectorAll<HTMLElement>('.feature-item'))
-    const fvScreens = Array.from(root.querySelectorAll<HTMLElement>('.fv-screen'))
-    const setFeatureActive = (item: HTMLElement) => {
-      featureItems.forEach((fi) => fi.classList.remove('active'))
-      fvScreens.forEach((s) => s.classList.remove('visible'))
-      item.classList.add('active')
-      const screenId = item.getAttribute('data-screen')
-      if (screenId) root.querySelector<HTMLElement>(`#${CSS.escape(screenId)}`)?.classList.add('visible')
-    }
-    const featureHeaderHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
-    featureItems.forEach((item) => {
-      const header = item.querySelector<HTMLElement>('.feature-header')
-      if (!header) return
-      const fn = (e: Event) => {
-        e.preventDefault()
-        e.stopPropagation()
-        const isActive = item.classList.contains('active')
-        if (isActive) {
-          const first = featureItems[0]
-          if (first) setFeatureActive(first)
-        } else {
-          setFeatureActive(item)
-        }
-      }
-      header.addEventListener('click', fn)
-      featureHeaderHandlers.push({ el: header, fn })
-    })
-    // Ensure initial visible screen matches the active feature item
-    const initialActive = featureItems.find((fi) => fi.classList.contains('active')) ?? featureItems[0]
-    if (initialActive) setFeatureActive(initialActive)
-
-    // Walkthrough tabs
-    const walkthroughTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('#walkthroughTabs .feature-tab'))
-    const walkthroughPanels = Array.from(root.querySelectorAll<HTMLElement>('.walkthrough-section .feature-content'))
-    const setWalkTab = (idx: number) => {
-      walkthroughTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
-      walkthroughPanels.forEach((p, i) => {
-        p.style.display = i === idx ? 'grid' : 'none'
-      })
-      markRevealsInView()
-    }
-    const walkHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
-    walkthroughTabs.forEach((tab, idx) => {
-      const fn = (e: Event) => {
-        e.preventDefault()
-        setWalkTab(idx)
-      }
-      tab.addEventListener('click', fn)
-      walkHandlers.push({ el: tab, fn })
-    })
-    if (walkthroughTabs.length) setWalkTab(walkthroughTabs.findIndex((t) => t.classList.contains('active')) || 0)
-
-    // Testimonials slider
-    const testiCards = Array.from(root.querySelectorAll<HTMLElement>('.testi-card'))
-    const testiDots = Array.from(root.querySelectorAll<HTMLElement>('.testi-dot'))
-    let testiIndex = 0
-    const goTesti = (idx: number) => {
-      if (!testiCards.length) return
-      testiIndex = ((idx % testiCards.length) + testiCards.length) % testiCards.length
-      testiCards.forEach((c, i) => {
-        c.classList.remove('card-active', 'card-back1', 'card-back2')
-        if (i === testiIndex) c.classList.add('card-active')
-        else if (i === testiIndex - 1 || (testiIndex === 0 && i === testiCards.length - 1))
-          c.classList.add('card-back1')
-        else c.classList.add('card-back2')
-      })
-      testiDots.forEach((d, i) => d.classList.toggle('active', i === testiIndex))
-    }
-    const dotHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
-    testiDots.forEach((dot, idx) => {
-      const fn = (e: Event) => {
-        e.preventDefault()
-        goTesti(idx)
-      }
-      dot.addEventListener('click', fn)
-      dotHandlers.push({ el: dot, fn })
-    })
-    goTesti(0)
-    const testiTimer = testiCards.length ? window.setInterval(() => goTesti(testiIndex + 1), 5000) : null
-
-    // Team tabs
-    const teamTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('#teamsTabs .team-tab'))
-    const teamContents = Array.from(root.querySelectorAll<HTMLElement>('.team-content'))
-    const setTeamTab = (idx: number) => {
-      teamTabs.forEach((t, i) => t.classList.toggle('active', i === idx))
-      teamContents.forEach((c, i) => c.classList.toggle('active', i === idx))
-      markRevealsInView()
-    }
-    const teamHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
-    teamTabs.forEach((tab, idx) => {
-      const fn = (e: Event) => {
-        e.preventDefault()
-        setTeamTab(idx)
-      }
-      tab.addEventListener('click', fn)
-      teamHandlers.push({ el: tab, fn })
-    })
-    if (teamTabs.length) setTeamTab(teamTabs.findIndex((t) => t.classList.contains('active')) || 0)
-
-    // Modals (exposed for inline onclick compatibility)
-    const openModal = (id: string) => {
-      const el = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`)
-      if (!el) return
-      el.classList.add('open')
-      document.body.style.overflow = 'hidden'
-    }
-    const closeModal = (id: string) => {
-      const el = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`)
-      if (!el) return
-      el.classList.remove('open')
-      document.body.style.overflow = ''
-    }
-    ;(window as any).openModal = openModal
-    ;(window as any).closeModal = closeModal
-
-    const modalBackdrops = Array.from(root.querySelectorAll<HTMLElement>('.uc-modal'))
-    const modalBackdropHandlers: Array<{ el: HTMLElement; fn: (e: Event) => void }> = []
-    modalBackdrops.forEach((m) => {
-      const fn = (e: Event) => {
-        if (e.target !== m) return
-        closeModal(m.id)
-      }
-      m.addEventListener('click', fn)
-      modalBackdropHandlers.push({ el: m, fn })
-    })
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
-      modalBackdrops.forEach((m) => m.classList.contains('open') && closeModal(m.id))
-    }
-    document.addEventListener('keydown', onKeyDown)
 
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('scroll', markRevealsInView)
-      window.removeEventListener('resize', markRevealsInView)
-      revealObserver.disconnect()
-      counterObs.disconnect()
-      counterTimers.forEach((t) => window.cancelAnimationFrame(t))
-
-      if (bentoTimer) window.clearInterval(bentoTimer)
-      if (testiTimer) window.clearInterval(testiTimer)
-
-      featureHeaderHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      walkHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      dotHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      teamHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      modalBackdropHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
-      document.removeEventListener('keydown', onKeyDown)
-
-      delete (window as any).openModal
-      delete (window as any).closeModal
+      for (const s of created) {
+        if (s.parentNode) s.parentNode.removeChild(s)
+      }
     }
-  }, [bodyHtml])
+  }, [bodyHtml, externalScripts, inlineScripts])
+
+  useEffect(() => {
+    const original = document.title
+    document.title = 'Survey by Lockated | Lockated'
+    return () => {
+      document.title = original
+    }
+  }, [])
 
   return (
-    <div ref={rootRef} className="survey-root">
+    <div ref={rootRef} className="survey-root min-h-dvh bg-[#F6F4EE]">
       {headLinks.map((l) => (
         <link
           key={`${l.rel}:${l.href}`}
@@ -360,4 +230,3 @@ export default function SurveyLandingPage() {
     </div>
   )
 }
-

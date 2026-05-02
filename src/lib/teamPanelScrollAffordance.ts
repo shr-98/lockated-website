@@ -169,8 +169,6 @@ export function attachTeamPanelScrollAffordance(
   )
   if (!panels.length) return () => { }
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
   const buildAffordance = (
     panel: HTMLElement,
     kind: 'info' | 'visual',
