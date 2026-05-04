@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -551,6 +552,8 @@ export default function FmMatrixLandingPage() {
     }
     window.addEventListener('hashchange', onHashChange)
 
+    const cleanupLeadForm = hookLeadForm(root, 'fm-matrix')
+
     return () => {
       window.removeEventListener('scroll', onScroll)
       revealObserver.disconnect()
@@ -561,6 +564,7 @@ export default function FmMatrixLandingPage() {
       lenisScroll.destroy()
       window.removeEventListener('hashchange', onHashChange)
       anchorHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

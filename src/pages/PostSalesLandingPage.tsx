@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -907,6 +908,8 @@ ${chipSvgs}
     }
     window.addEventListener('resize', onResize, { passive: true })
 
+    const cleanupLeadForm = hookLeadForm(root, 'post-sales')
+
     return () => {
       innerScrollCleanup()
       detachAffordance()
@@ -924,6 +927,7 @@ ${chipSvgs}
       teamHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       delete (window as any).openUsp
       delete (window as any).selectWtTab
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

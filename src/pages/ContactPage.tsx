@@ -1,4 +1,43 @@
+import { useState } from 'react'
+import { submitLead } from '../lib/leadCapture'
+
 export default function ContactPage() {
+  const [form, setForm] = useState({
+    full_name: '', email: '', phone: '', country: '',
+    company: '', property_type: 'Residential', solution: 'Lead Management', message: '',
+  })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setStatus('sending')
+    setErrorMsg('')
+
+    const [first_name, ...rest] = form.full_name.trim().split(/\s+/)
+    const result = await submitLead({
+      first_name,
+      last_name: rest.join(' ') || first_name,
+      email: form.email,
+      phone: form.phone,
+      company: form.company,
+      industry: form.property_type,
+      message: `Solution: ${form.solution}. ${form.message}`.trim(),
+      source: 'website-contact',
+    })
+
+    if (result.success) {
+      setStatus('success')
+    } else {
+      setStatus('error')
+      setErrorMsg(result.error ?? 'Something went wrong. Please try again.')
+    }
+  }
+
   return (
     <>
       {/* Hero */}
@@ -16,8 +55,7 @@ export default function ContactPage() {
                 Contact Lockated
               </h1>
               <p className="mt-4 text-[23px] font-normal leading-[1.4] text-black">
-                Got a question? Our teams are here to help. Simply fill out the form, and we&#8217;ll be in touch as
-                soon as possible.
+                Got a question? Our teams are here to help. Simply fill out the form, and we'll be in touch as soon as possible.
               </p>
               <p className="mt-4 text-[23px] font-medium leading-[1.4] text-black">
                 Customer Care: +91 7303434567
@@ -25,7 +63,6 @@ export default function ContactPage() {
                 Email: customercare@lockated.com
               </p>
             </div>
-
             <div className="flex justify-center md:justify-end">
               <img
                 src="/lockated/pages/contact/hero-home.png"
@@ -44,89 +81,113 @@ export default function ContactPage() {
           <div className="h-[71px]" />
         </div>
         <div className="mx-auto max-w-[1200px] px-4">
-          <h2 className="py-1 text-center text-[25px] uppercase text-black">We had love to get you started</h2>
+          <h2 className="py-1 text-center text-[25px] uppercase text-black">We'd love to get you started</h2>
         </div>
       </section>
 
       {/* Form */}
       <section className="bg-[#f7f8f9] pb-14">
         <div className="mx-auto max-w-[1200px] px-4">
-          <form className="mx-auto max-w-[1200px]">
-            <div className="-mx-[5px] grid grid-cols-1 gap-y-[10px] md:grid-cols-3">
-              {[
-                { label: 'Name', placeholder: 'Full Name', type: 'text', autoComplete: 'name' },
-                { label: 'Company Email', placeholder: 'yourname@companyname.com', type: 'email', autoComplete: 'email' },
-                { label: 'Phone', placeholder: '555 666 7777', type: 'tel', autoComplete: 'tel' },
-                { label: 'Country', placeholder: 'Your Country', type: 'text', autoComplete: 'country-name' },
-                { label: 'Company Name', placeholder: 'Your Company Name', type: 'text', autoComplete: 'organization' },
-              ].map((f) => (
-                <label key={f.label} className="px-[5px]">
-                  <div className="text-sm text-black">{f.label}</div>
+          {status === 'success' ? (
+            <div className="mx-auto max-w-lg rounded-xl bg-green-50 border border-green-200 p-10 text-center">
+              <div className="text-4xl mb-3">✓</div>
+              <h3 className="text-xl font-semibold text-green-800 mb-2">Message Sent!</h3>
+              <p className="text-green-700">Thank you for reaching out. Our team will get back to you shortly.</p>
+              <button
+                onClick={() => { setStatus('idle'); setForm({ full_name: '', email: '', phone: '', country: '', company: '', property_type: 'Residential', solution: 'Lead Management', message: '' }) }}
+                className="mt-6 inline-flex items-center justify-center rounded bg-[#CA575D] px-6 py-2.5 text-sm font-semibold text-white"
+              >
+                Send Another
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="mx-auto max-w-[1200px]">
+              <div className="-mx-[5px] grid grid-cols-1 gap-y-[10px] md:grid-cols-3">
+                {[
+                  { label: 'Name', name: 'full_name', placeholder: 'Full Name', type: 'text', autoComplete: 'name', required: true },
+                  { label: 'Company Email', name: 'email', placeholder: 'yourname@companyname.com', type: 'email', autoComplete: 'email', required: true },
+                  { label: 'Phone', name: 'phone', placeholder: '555 666 7777', type: 'tel', autoComplete: 'tel', required: true },
+                  { label: 'Country', name: 'country', placeholder: 'Your Country', type: 'text', autoComplete: 'country-name', required: false },
+                  { label: 'Company Name', name: 'company', placeholder: 'Your Company Name', type: 'text', autoComplete: 'organization', required: true },
+                ].map((f) => (
+                  <label key={f.name} className="px-[5px]">
+                    <div className="text-sm text-black">{f.label}</div>
+                    <input
+                      type={f.type}
+                      name={f.name}
+                      autoComplete={f.autoComplete}
+                      placeholder={f.placeholder}
+                      required={f.required}
+                      value={(form as any)[f.name]}
+                      onChange={onChange}
+                      className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
+                    />
+                  </label>
+                ))}
+
+                <label className="px-[5px]">
+                  <div className="text-sm text-black">Property Type</div>
+                  <select
+                    name="property_type"
+                    value={form.property_type}
+                    onChange={onChange}
+                    className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
+                  >
+                    <option value="Residential">Residential</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="mt-[10px] grid grid-cols-1 gap-y-[10px] md:grid-cols-2">
+                <label className="px-[5px]">
+                  <div className="text-sm text-black">Solution Interested In</div>
+                  <select
+                    name="solution"
+                    value={form.solution}
+                    onChange={onChange}
+                    className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
+                  >
+                    {[
+                      'Lead Management', 'CRM', 'Brokers Management', 'Site Management',
+                      'Snagging / QC Management', 'Handover Management',
+                      'Access & Visitor Management', 'Commercial Community Management',
+                      'Residential Community Management',
+                    ].map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="px-[5px]">
+                  <div className="text-sm text-black">Your Message</div>
                   <input
-                    type={f.type}
-                    autoComplete={f.autoComplete}
-                    placeholder={f.placeholder}
-                    required={f.label !== 'Country'}
+                    type="text"
+                    name="message"
+                    placeholder="Your Message"
+                    value={form.message}
+                    onChange={onChange}
                     className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
                   />
                 </label>
-              ))}
+              </div>
 
-              <label className="px-[5px]">
-                <div className="text-sm text-black">Property Type</div>
-                <select
-                  required
-                  className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
-                  defaultValue="Residential"
+              {status === 'error' && (
+                <p className="mt-3 px-[5px] text-sm text-red-600">{errorMsg}</p>
+              )}
+
+              <div className="mt-[10px] px-[5px]">
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="inline-flex w-full items-center justify-center rounded bg-[#CA575D] py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                 >
-                  <option value="Residential">Residential</option>
-                  <option value="Commercial">Commercial</option>
-                  <option value="Others">Others</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="mt-[10px] grid grid-cols-1 gap-y-[10px] md:grid-cols-2">
-              <label className="px-[5px]">
-                <div className="text-sm text-black">Solution Interested In</div>
-                <select className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]">
-                  {[
-                    'Lead Management',
-                    'CRM',
-                    'Brokers Management',
-                    'Site Management',
-                    'Snagging / QC Management',
-                    'Handover Management',
-                    'Access & Visitor Management',
-                    'Commercial Community Management',
-                    'Residential Community Management',
-                  ].map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="px-[5px]">
-                <div className="text-sm text-black">Your Message</div>
-                <input
-                  type="text"
-                  placeholder="Your Messgae"
-                  className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#CA575D]"
-                />
-              </label>
-            </div>
-
-            <div className="mt-[10px] px-[5px]">
-              <button
-                type="button"
-                className="inline-flex w-full items-center justify-center rounded bg-[#CA575D] py-2.5 text-sm font-semibold text-white"
-              >
-                Send
-              </button>
-            </div>
-          </form>
+                  {status === 'sending' ? 'Sending…' : 'Send'}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </section>
 
@@ -138,7 +199,6 @@ export default function ContactPage() {
             style={{ backgroundImage: 'url(/lockated/pages/contact/cta-shapes.png)' }}
           />
         </div>
-
         <div className="relative mx-auto min-h-[665px] max-w-[1200px] px-5 pb-16 pt-28">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <div className="md:pr-[30px]">
@@ -164,4 +224,3 @@ export default function ContactPage() {
     </>
   )
 }
-

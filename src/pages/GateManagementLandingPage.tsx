@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 
 /**
  * `public/gate-management.html` is a self-unpacking design bundle (59MB of
@@ -95,8 +96,11 @@ export default function GateManagementLandingPage() {
   useEffect(() => {
     const original = document.title
     document.title = 'Gate Management Platform | Lockated'
+    const root = iframeRef.current
+    const cleanupLeadForm = hookLeadForm(root, 'gate-management')
     return () => {
       document.title = original
+      cleanupLeadForm()
     }
   }, [])
 

@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -652,6 +653,8 @@ export default function LeaseManagementLandingPage() {
       a.addEventListener('click', onClick, { signal: anchorAbort.signal })
     })
 
+    const cleanupLeadForm = hookLeadForm(root, 'lease-management')
+
     return () => {
       cleanups.forEach((fn) => fn())
       window.removeEventListener('scroll', onScroll)
@@ -666,6 +669,7 @@ export default function LeaseManagementLandingPage() {
       delete (window as unknown as { closeUCModal?: unknown }).closeUCModal
       // Remove modals that were moved to document.body
       document.querySelectorAll<HTMLElement>('.uc-modal').forEach((m) => m.remove())
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

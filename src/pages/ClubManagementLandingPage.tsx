@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -837,6 +838,8 @@ export default function ClubManagementLandingPage() {
 `
     document.head.appendChild(animStyle)
 
+    const cleanupLeadForm = hookLeadForm(root, 'club-management')
+
     return () => {
       gsapCtx.revert()
       innerScrollCleanup()
@@ -863,6 +866,7 @@ export default function ClubManagementLandingPage() {
       delete (window as any).openUCModal
       delete (window as any).closeUCModal
       document.body.style.overflow = ''
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 
 type HeadLinks = { href: string; rel: string; crossOrigin?: string | null }[]
 type ExternalScript = { src: string }
@@ -186,10 +187,13 @@ export default function PermitToWorkLandingPage() {
       }
     }
 
+    const root = rootRef.current
+    const cleanupLeadForm = hookLeadForm(root, 'permit-to-work')
     return () => {
       for (const s of created) {
         if (s.parentNode) s.parentNode.removeChild(s)
       }
+      cleanupLeadForm()
     }
   }, [bodyHtml, externalScripts, inlineScripts])
 

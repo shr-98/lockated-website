@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -1393,20 +1394,7 @@ export default function PATMLandingPage() {
       .querySelectorAll<HTMLElement>('.team-visual-body, .end-banner, #cta-banner')
       .forEach((el) => barObserver.observe(el))
 
-    // Contact submit
-    const submitBtn = root.querySelector<HTMLButtonElement>('.form-submit')
-    const onSubmit = (e: Event) => {
-      e.preventDefault()
-      if (!submitBtn) return
-      const span = submitBtn.querySelector('span')
-      if (span) span.textContent = 'Message Sent!'
-      submitBtn.style.background = '#798C5E'
-      window.setTimeout(() => {
-        if (span) span.textContent = 'Send Message'
-        submitBtn.style.background = ''
-      }, 3000)
-    }
-    submitBtn?.addEventListener('click', onSubmit)
+    const cleanupLeadForm = hookLeadForm(root, 'patm')
 
     return () => {
       gsapCtx.revert()
@@ -1437,7 +1425,7 @@ export default function PATMLandingPage() {
       modalBackdropHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       modalInnerHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn))
       usecaseHoverHandlers.forEach(({ el, onMove }) => el.removeEventListener('mousemove', onMove))
-      submitBtn?.removeEventListener('click', onSubmit)
+      cleanupLeadForm()
       document.removeEventListener('keydown', onKeyDown)
       delete (window as any).closeModal
     }

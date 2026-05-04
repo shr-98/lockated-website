@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -522,6 +523,8 @@ export default function CpManagementLandingPage() {
       anchorHandlers.push({ el: a, fn })
     })
 
+    const cleanupLeadForm = hookLeadForm(root, 'cp-management')
+
     return () => {
       innerScrollCleanup()
       gsapCtx.revert()
@@ -537,6 +540,7 @@ export default function CpManagementLandingPage() {
       document.removeEventListener('keydown', onKeyDown)
       pillObs.disconnect()
       rv.disconnect()
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

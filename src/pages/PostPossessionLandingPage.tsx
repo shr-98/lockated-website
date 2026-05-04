@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -737,6 +738,8 @@ export default function PostPossessionLandingPage() {
       anchorHandlers.push({ a, onClick })
     })
 
+    const cleanupLeadForm = hookLeadForm(root, 'post-possession')
+
     return () => {
       innerScrollCleanup()
       detachAffordance()
@@ -756,6 +759,7 @@ export default function PostPossessionLandingPage() {
       delete (window as any).selectWtTab
       delete (window as any).selectTeam
       delete (window as any).selectTeamTab
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -1041,6 +1042,8 @@ export default function LoyaltyRuleEngineLandingPage() {
     }
     window.addEventListener('hashchange', onHashChange)
 
+    const cleanupLeadForm = hookLeadForm(root, 'lre')
+
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('scroll', onScrollParallax)
@@ -1068,6 +1071,7 @@ export default function LoyaltyRuleEngineLandingPage() {
       delete loyaltyWindow.openIndustry
       delete loyaltyWindow.closeIndustry
       delete loyaltyWindow.submitForm
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

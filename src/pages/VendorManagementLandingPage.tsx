@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -704,6 +705,8 @@ export default function VendorManagementLandingPage() {
     }
     window.addEventListener('resize', onResize, { passive: true })
 
+    const cleanupLeadForm = hookLeadForm(root, 'vendor-management')
+
     return () => {
       gsapCtx.revert()
       innerScrollCleanup()
@@ -723,6 +726,7 @@ export default function VendorManagementLandingPage() {
       modalOverlay?.removeEventListener('click', onModalBg)
       closeBtn?.removeEventListener('click', onCloseBtn)
       document.removeEventListener('keydown', onKeyDown)
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 

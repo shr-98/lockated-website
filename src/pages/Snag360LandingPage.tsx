@@ -1,4 +1,5 @@
 import { LandingPageLoader } from '../components/LandingPageLoader'
+import { hookLeadForm } from '../lib/leadCapture'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -941,6 +942,8 @@ export default function Snag360LandingPage() {
     }
     document.addEventListener('keydown', onKeyDown)
 
+    const cleanupLeadForm = hookLeadForm(root, 'snag-360')
+
     return () => {
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('keydown', onKeyDown)
@@ -959,6 +962,7 @@ export default function Snag360LandingPage() {
       delete snagWindow.openModal
       delete snagWindow.closeModal
       delete snagWindow.switchTeam
+      cleanupLeadForm()
     }
   }, [bodyHtml])
 
