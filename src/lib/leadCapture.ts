@@ -82,7 +82,7 @@ function selectByLabel(root: Element, text: string): string {
 // Splits "Full Name" into first/last
 function splitName(full: string): { first_name: string; last_name: string } {
   const parts = full.trim().split(/\s+/)
-  return { first_name: parts[0] ?? '', last_name: parts.slice(1).join(' ') || parts[0] ?? '' }
+  return { first_name: parts[0] ?? '', last_name: parts.slice(1).join(' ') || (parts[0] ?? '') }
 }
 
 // ── Generic form extractor — works across all product HTML files ──────────────
@@ -175,7 +175,7 @@ export function extractFormData(root: Element, source: string): LeadPayload {
 // ── Wire up a submit button in an injected HTML root ─────────────────────────
 // Returns cleanup function.
 export function hookLeadForm(
-  root: Element,
+  root: Element | null,
   source: string,
   options?: {
     /** Extra selectors to try for the submit button. Defaults include common patterns. */
@@ -184,6 +184,8 @@ export function hookLeadForm(
     onResult?: (ok: boolean, msg: string) => void
   },
 ): () => void {
+  if (!root) return () => {}
+
   const selectors = options?.submitSelectors ?? [
     '.form-submit button',
     '.btn-form-submit',
@@ -232,7 +234,7 @@ export function hookLeadForm(
     if (result.success) {
       submitBtn!.textContent = '✓ Request Sent!'
       submitBtn!.style.background = '#798C5E'
-      options?.onResult?.(true, result.message ?? 'Thank you! We'll be in touch shortly.')
+      options?.onResult?.(true, result.message ?? "Thank you! We'll be in touch shortly.")
       setTimeout(() => {
         submitBtn!.disabled = false
         submitBtn!.textContent = originalText
